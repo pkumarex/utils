@@ -141,7 +141,7 @@ fi
 
 update_kbshostname_in_conf_file()
 {
-	sed -i 's|PCCS_URL=.*|PCCS_URL=https:\/\/$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g' $SGX_DEFAULT_PATH
+	sed -i "s|PCCS_URL=.*|PCCS_URL=https:\/\/$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g" $SGX_DEFAULT_PATH
 	echo "$KBS_IP  $KBS_HOSTNAME" >> /etc/hosts
 }
 
