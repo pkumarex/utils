@@ -163,7 +163,7 @@ echo "SQVS Token $SQVS_TOKEN"
 KMS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kmsuser@kms","password": "kmspassword"}'`
 KMS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=kmsuser@kms -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created KMS User with user ID $KMS_USER_ID"
-KMS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KMS TLS Certificate;SAN='$KMS_IP',$KMS_HOSTNAME;certType=TLS"}' | jq -r ".role_id"`
+KMS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KMS TLS Certificate;SAN='$KMS_IP','$KMS_HOSTNAME';certType=TLS"}' | jq -r ".role_id"`
 echo "Created KMS TLS cert role with ID $KMS_ROLE_ID1"
 KMS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
 echo "Retrieved KMS Administrator role with ID $KMS_ROLE_ID2"
@@ -212,6 +212,7 @@ echo "################ Installed SQVS....  #################"
 
 echo "################ Update KBS env....  #################"
 sed -i "s/^\(JETTY_TLS_CERT_IP\s*=\s*\).*\$/\1$KMS_IP/" ~/kms.env
+sed -i "s/^\(JETTY_TLS_CERT_DNS\s*=\s*\).*\$/\1$KMS_HOSTNAME/" ~/kms.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KMS_TOKEN/" ~/kms.env
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kms.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kms.env
