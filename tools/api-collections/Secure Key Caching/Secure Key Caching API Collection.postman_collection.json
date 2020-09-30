@@ -1,0 +1,895 @@
+{
+	"info": {
+		"_postman_id": "3f7c8d91-a2c9-40fc-8141-fe06060f6642",
+		"name": "Secure Key Caching API Collection",
+		"description": "Key Protection is implemented by the SKC Client -- a set of libraries - which must be linked with a\ntenant workload, like Nginx, deployed in a CSP environment and the Key Broker Service (KBS)\ndeployed in the tenant's enterprise environment. The SKC Client retrieves the keys needed by the\nworkload from KBS after proving that the key can be protected in an SGX enclave.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "createKmsToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f55b5f9e-656c-4c86-9507-67fd6e84ee5e",
+								"exec": [
+									"pm.environment.set(\"bearerTokenKms\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/jwt",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{kmsUser}}\",\r\n    \"password\": \"{{kmsPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/jwt",
+										"type": "text"
+									},
+									{
+										"key": "Content-Transfer-Encoding",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{kmsUser}}\",\r\n    \"password\": \"{{kmsPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 13:14:33 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "843"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6ImExMGFkYzJmNjA0OTg3NTRlYzExZjExNGQ0MDE3ZDI5ZDBjZmFiOWUiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IktNUyIsIm5hbWUiOiJLZXlDUlVEIn1dLCJwZXJtaXNzaW9ucyI6W3sic2VydmljZSI6IktNUyIsInJ1bGVzIjpbIio6KjoqIl19XSwiZXhwIjoxNTk5ODMwMDczLCJpYXQiOjE1OTk2NTcyNDMsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoiRVR1c2VyIn0.hNOT_2JXJ0x9xx9XUULLYtDQLFn_Z8FeyXC85_EJ5Ha5Z0yTSz_noD_c_EHE-RZYzYcncCa_0JKboQb7YuU7tO4zQEF4OsxQkHkaIvgNoxChRskY4UDSfQgJImM9YGFWF3iLAavlJPJ0K7IorCFSYajABi1try4XND0tDDo7ah8GPszLtFwpKLCb9-_C6r-_JlbNUGYy_P9gq4IgPaC7lisr46id-sCBgNd-a8Z6Pf55mcPcJVqWIay7EWirSF9qo3cZLtUJ_aHs-38z1qZXJpJklD7AVhPR-MQdwiyturDe57wUC5-XrF2UKiZ4sWSe3YNcVKrwTNiXk0FC2WC5mNOoFV7Rr294zLyrXeF_xThtViqdReT5C7SWuAvng37y52nPUL1S4tBbsH7zqYl1o8hityZAlaYVGb_0dw1eklUXkYfW-KzKcfJRt2PJ9fVE-bkBFkWPyoJv10Gt7eiufxIlJBM8bo1itPaxboOUH4BCZfXlkwICOx5T0W6CbtYo"
+						}
+					]
+				},
+				{
+					"name": "createSqvsToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "003777cc-77f2-4d6e-bbc8-1bdbfbccb4e6",
+								"exec": [
+									"pm.environment.set(\"bearerTokenSqvs\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{sqvsUser}}\",\r\n    \"password\": \"{{sqvsPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/jwt"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{sqvsUser}}\",\r\n    \"password\": \"{{sqvsPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Sep 2020 11:12:41 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "934"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6Ijc0ZGY4M2U1ZWQ1Yjc0NmVhMzUyYzU5NWY4MmIzNjUyOTAxYjg3NzgiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U1FWUyBUTFMgQ2VydGlmaWNhdGU7U0FOPTEwLjgwLjIwNy4xNTtDRVJUVFlQRT1UTFMifSx7InNlcnZpY2UiOiJTUVZTIiwibmFtZSI6IlF1b3RlVmVyaWZpZXIifV0sImV4cCI6MTYwMDUxMzk2MSwiaWF0IjoxNjAwMzQxMTMxLCJpc3MiOiJBQVMgSldUIElzc3VlciIsInN1YiI6InNxdnN1c2VyQHNxdnMifQ.Z_-iSxnYTcqwhIsQLt5kBPfNVKHNbrO2kwl_TV4g2SS80cCYWu8ZRkRxq6cdQVdugkn9AIaI_GJfFCkBugCEmBDWWJ3jk2kWwIgqbr6txKCk_3G_Z0dBdF2hogAiToJrOqejvKKscKGCP2xzBSN6MQ7lPYRykZc2_oEDnqoIpoI5w7P2fd1OhWC-nxrtgXBwcOKPJplktETHm7SI7lDsWJXRx5gaakA4VH6wMr5Qd1-FzOCPa7w3iDAhjih0M_McV7Uj-llI0NcmRNVJvWvkomYB5_NHVPM-l6XOJKeILRqCbkbg3Mgml87G7dhMMqbXTF7TiIKD4dfneLAmcg7ENHYXPnsJXENIHAjaycBthDrAHb7wrCf3llISfON9JKNFmT51Afa3NLMOPTH1p38SxIJbB_Idp33OEOUIJmeUlWXJNO9Owp9eivbBrDhuzuoNVMEdTEpRb8TE1uqWkUgWDpwyw69U7OLykG_vD2zt6KqEcOhYUr2iA5Se3Jdp5M17"
+						}
+					]
+				}
+			],
+			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b2450adf-5b19-4110-9839-138dd510cc4b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb22ea41-118d-4096-8296-4bf24c093e4f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify Services",
+			"item": [],
+			"description": "The command-line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify KMS:\n\n```\nkms status\n```\n\nVerify SQVS:\n\n```\nsqvs status\n```\n\nVerify SCS:\n\n```\nscs status\n```",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0b04473f-a4ef-4e37-9ada-fc9b4352a303",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2fee559e-d38d-4af9-a575-1f95c79068cc",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create a Asymmetric (RSA) Key",
+			"item": [
+				{
+					"name": "keyTransferPolicy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{bearerTokenKms}}",
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgx_enclave_issuer_anyof\": [\r\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\r\n    ],\r\n    \"sgx_enclave_issuer_product_id_anyof\": [\r\n        0\r\n    ],\r\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\r\n        \"00000000000000000000000000000000\"\r\n    ],\r\n    \"sgx_enclave_measurement_anyof\": [\r\n        \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\r\n    ],\r\n    \"sgx_config_id_svn\": 0,\r\n    \"sgx_enclave_svn_minimum\": 1,\r\n    \"sgx_config_id_anyof\": [\r\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\r\n    ],\r\n    \"tls_client_certificate_issuer_cn_anyof\": [\r\n        \"CMSCA\",\r\n        \"CMS TLS Client CA\"\r\n    ],\r\n    \"client_permissions_allof\": [\r\n        \"nginx\",\r\n        \"USA\"\r\n    ],\r\n    \"attestation_type_anyof\": [\r\n        \"SGX\"\r\n    ],\r\n    \"sgx_enforce_tcb_up_to_date\": false\r\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "https://{{kms}}:{{kmsPort}}/v1/key-transfer-policies",
+							"protocol": "https",
+							"host": [
+								"{{kms}}"
+							],
+							"port": "{{kmsPort}}",
+							"path": [
+								"v1",
+								"key-transfer-policies"
+							]
+						},
+						"description": "Creates a new Key Transfer Policy. Key Transfer Policy is defined by the enterprise administrator for application by Key Server during APK transfer to validate before release. A valid bearer token is required to authorize this REST call.\r\n\r\nExecute the below command in the host machine to get the SGX_MEASUREMENT value.\r\n\r\n```\r\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \r\n```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenKms}}",
+										"type": "text",
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgx_enclave_issuer_anyof\": [\r\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\r\n    ],\r\n    \"sgx_enclave_issuer_product_id_anyof\": [\r\n        0\r\n    ],\r\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\r\n        \"00000000000000000000000000000000\"\r\n    ],\r\n    \"sgx_enclave_measurement_anyof\": [\r\n        \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\r\n    ],\r\n    \"sgx_config_id_svn\": 0,\r\n    \"sgx_enclave_svn_minimum\": 1,\r\n    \"sgx_config_id_anyof\": [\r\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\r\n    ],\r\n    \"tls_client_certificate_issuer_cn_anyof\": [\r\n        \"CMSCA\",\r\n        \"CMS TLS Client CA\"\r\n    ],\r\n    \"client_permissions_allof\": [\r\n        \"nginx\",\r\n        \"USA\"\r\n    ],\r\n    \"attestation_type_anyof\": [\r\n        \"SGX\"\r\n    ],\r\n    \"sgx_enforce_tcb_up_to_date\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{kms}}:{{kmsPort}}/v1/key-transfer-policies",
+									"protocol": "https",
+									"host": [
+										"{{kms}}"
+									],
+									"port": "{{kmsPort}}",
+									"path": [
+										"v1",
+										"key-transfer-policies"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 13:15:03 GMT"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "JSESSIONID=node0nbpvrbx5mip2bv3ad2f4mi0y93.node0; Path=/; Secure"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 13:15:03 GMT"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
+								},
+								{
+									"key": "Content-Length",
+									"value": "834"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"operation\": \"create key transfer policy\",\n    \"created\": [\n        {\n            \"created_at\": \"2020-09-09T06:15:03-0700\",\n            \"id\": \"{{keyTransferPolicyId}}\",\n            \"sgx_enclave_issuer_anyof\": [\n                \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\n            ],\n            \"sgx_enclave_issuer_product_id_anyof\": [\n                0\n            ],\n            \"sgx_enclave_issuer_extended_product_id_anyof\": [\n                \"00000000000000000000000000000000\"\n            ],\n            \"sgx_enclave_measurement_anyof\": [\n                \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\n            ],\n            \"sgx_enclave_svn_minimum\": 1,\n            \"sgx_config_id_anyof\": [\n                \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n            ],\n            \"sgx_config_id_svn\": 0,\n            \"tls_client_certificate_issuer_cn_anyof\": [\n                \"CMSCA\",\n                \"CMS TLS Client CA\"\n            ],\n            \"client_permissions_allof\": [\n                \"nginx\",\n                \"USA\"\n            ],\n            \"attestation_type_anyof\": [\n                \"SGX\"\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "keyUsagePolicy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenKms}}",
+								"type": "text",
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"not_after\": \"2021-08-17T22:24:20-08:00\",\r\n    \"not_before\": \"2020-08-17T22:24:20-08:00\",\r\n    \"lease_time_limit\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{kms}}:{{kmsPort}}/v1/key-usage-policies",
+							"protocol": "https",
+							"host": [
+								"{{kms}}"
+							],
+							"port": "{{kmsPort}}",
+							"path": [
+								"v1",
+								"key-usage-policies"
+							]
+						},
+						"description": "Creates a new Key Usage Policy. Key Usage Policy is defined by the enterprise administrator for application by Key Agent to validate before release during crypto operations at workload VM. A valid bearer token is required to authorize this REST call."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenKms}}",
+										"type": "text",
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"not_after\": \"2021-08-17T22:24:20-08:00\",\r\n    \"not_before\": \"2020-08-17T22:24:20-08:00\",\r\n    \"lease_time_limit\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{kms}}:{{kmsPort}}/v1/key-usage-policies",
+									"protocol": "https",
+									"host": [
+										"{{kms}}"
+									],
+									"port": "{{kmsPort}}",
+									"path": [
+										"v1",
+										"key-usage-policies"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 13:16:57 GMT"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "JSESSIONID=node0z9uy2a2c5jbj1736l3ysvz1vn104.node0; Path=/; Secure"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 13:16:57 GMT"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
+								},
+								{
+									"key": "Content-Length",
+									"value": "258"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"operation\": \"create key usage policy\",\n    \"created\": [\n        {\n            \"not_after\": \"2021-08-17T22:24:20-08:00\",\n            \"not_before\": \"2020-08-17T22:24:20-08:00\",\n            \"lease_time_limit\": 1,\n            \"created_at\": \"2020-09-09T06:16:57-0700\",\n            \"id\": \"{{keyUsagePolicyId}}\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "createKey",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenKms}}",
+								"type": "text",
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\r\n    \"algorithm\": \"RSA\",\r\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\r\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\r\n    \"private_key\": \"{{privateKey}}\"\r\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "https://{{kms}}:{{kmsPort}}/v1/keys",
+							"protocol": "https",
+							"host": [
+								"{{kms}}"
+							],
+							"port": "{{kmsPort}}",
+							"path": [
+								"v1",
+								"keys"
+							]
+						},
+						"description": "Creates a new Application Key based on the provided Key Algorithm, Key Transfer Policy and Key Usage Policy details in the request body. Decision to switch to appropriate plugin for different applications is based on descriptor_uri. The generated secret key is encoded in JSON format and stored in a file (keyId as filename) on the disk. A valid bearer token is required to authorize this REST call."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenKms}}",
+										"type": "text",
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\r\n    \"algorithm\": \"RSA\",\r\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\r\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\r\n    \"private_key\": \"{{privateKey}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{kms}}:{{kmsPort}}/v1/keys",
+									"protocol": "https",
+									"host": [
+										"{{kms}}"
+									],
+									"port": "{{kmsPort}}",
+									"path": [
+										"v1",
+										"keys"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 17:53:55 GMT"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "JSESSIONID=node0g2xvwllcvu761i7i23mziijjs172.node0; Path=/; Secure"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 17:53:55 GMT"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
+								},
+								{
+									"key": "Content-Length",
+									"value": "852"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"meta\": {\n        \"operation\": \"register key\",\n        \"status\": \"success\"\n    },\n    \"id\": \"<keyId>\",\n    \"created_date\": \"2020-09-09T10:53:55-07:00\",\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\n    \"algorithm\": \"RSA\",\n    \"key_length\": 2048,\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\n    \"transfer_link\": \"https://<kms>:<kmsPort>/v1/keys/<keyId>/transfer\",\n    \"public_key\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3dyvJrOS/c5d1+nYJOZpSnWNCXTA0aXczWgfLCHRnbUxS6OEfepgyVOtl/ofFFhly0AJJAwXu5ITWvxTbXkPDo9bPjVtH1K3ku2WsG9NgEtkcS+0cG7n3JA0j+cGLVJ+gZsRML74Z+S9InUHXyt0Tms8Pzep4JYybn0iAVaJFCMR5dPIpep7xKACo9Znq5TtdeI+rmRsWAyBaH/PKVN4auQ2FK7HYFG/L3BpzvAgjbCNRiHnZt+XMRRJvFjlFomIMyz++MMTLuk4NhCfwC+3+2p6Mse/IZZYIAUkqTBG2tUHeGME6orRcokp6Yo7tOrTqO722KiA1ciyGZHC2hTlwIDAQAB\"\n}"
+						}
+					]
+				}
+			],
+			"description": "To create a asymmetric (RSA) key, execute the \"run.sh\" script present in /root/workspace/skc_automation/kbs_script/. KMS_IP and BEARER_TOKEN should be configured in this script manually.\n\nUpdate transfer_policy_request.json with modified sgx_* values in the file with corresponding values obtained by running the below command on the host machine.\n\n```\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \n```\n\nThe \"run.sh\" script will create the Key Transfer Policy, Key Usage Policy, and Asymmetric (RSA) Key by calling the following Key Broker Service (KBS) REST endpoints.\n\nThen we have to copy the created certificate to the SGX Compute Node /root directory.\n\n```\ncp output/server.cert output/<keyId>.crt\n```\n\n```\nscp output/<keyId>.crt root@<SGX Compute Node>:/root/\n```",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b7ea5996-f231-48a5-abc7-235cf69fd5ce",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "223632d1-4fbb-435f-9429-1b2c3e49bb71",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Configure Ngnix on SGX Compute Node",
+			"item": [],
+			"description": "We should configure Ngnix on SGX Compute Node by following the below steps:\n\n1. Update the SSL certificate path and Key ID in the nginx configuration file \"/etc/nginx/nginx.conf\". \n2. Add a new attribute \"preload_keys\" with its value \"keys.txt\" file path in the core section of \"pkcs11-apimodule.ini\" file.\n3. Update the \"keys.txt\" file with the Key ID and object as per the nginx configuration file.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "08acf839-6512-45e3-bf1f-60a132858993",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "1683898d-1e78-4305-aee7-15717dbb9aee",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Establish Session and Transfer Key",
+			"item": [
+				{
+					"name": "verifyQuote",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenSqvs}}",
+								"type": "text",
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quote\": \"<string>\"\r\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "https://{{sqvs}}:{{sqvsPort}}/svs/v1/verifyQuote",
+							"protocol": "https",
+							"host": [
+								"{{sqvs}}"
+							],
+							"port": "{{sqvsPort}}",
+							"path": [
+								"svs",
+								"v1",
+								"verifyQuote"
+							]
+						},
+						"description": "Verifies the quote provided in the request body by checking whether the quote is ECDSA or software quote (for testing purpose) and performs the set of validation steps if the quote is ECDSA. Quote verifier requests SGX Quote Verification Service (SQVS) to verify a quote. SQVS parses the quote, verifies all the parameters in the quote and returns the response."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenSqvs}}",
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quote\": \"AQAAAAAAAAB7EwAAAQAAAAEAAAADAAAAAAEAANwGAAAtLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRTZEQ0NCSTJnQXdJQkFnSVVMYW1oN3R6RWpZSm5qUVl6U2syOWV3a0FGT1l3Q2dZSUtvWkl6ajBFQXdJd2NERWlNQ0FHQTFVRQpBd3daU1c1MFpXd2dVMGRZSUZCRFN5QlFiR0YwWm05eWJTQkRRVEVhTUJnR0ExVUVDZ3dSU1c1MFpXd2dRMjl5Y0c5eVlYUnBiMjR4CkZEQVNCZ05WQkFjTUMxTmhiblJoSUVOc1lYSmhNUXN3Q1FZRFZRUUlEQUpEUVRFTE1Ba0dBMVVFQmhNQ1ZWTXdIaGNOTWpBd05qRTEKTURjME9ETTFXaGNOTWpjd05qRTFNRGMwT0RNMVdqQndNU0l3SUFZRFZRUUREQmxKYm5SbGJDQlRSMWdnVUVOTElFTmxjblJwWm1sagpZWFJsTVJvd0dBWURWUVFLREJGSmJuUmxiQ0JEYjNKd2IzSmhkR2x2YmpFVU1CSUdBMVVFQnd3TFUyRnVkR0VnUTJ4aGNtRXhDekFKCkJnTlZCQWdNQWtOQk1Rc3dDUVlEVlFRR0V3SlZVekJaTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEEwSUFCS1c5K3JYNmF5UmkKN2lTbG1HalVRMHlKYzRFUDNOMnBkY3BucVR4Y0ROTzhZOHRtVnZ1SHNnUml5WmVPd25jUVByVHlWUm44QWpoNkJ2QXl6L1RXRmR1agpnZ01ETUlJQy96QWZCZ05WSFNNRUdEQVdnQlJaSTlPblNxaGpWQzQ1Y0szZ0R3Y3JWeVFxdHpCaUJnTlZIUjhFV3pCWk1GZWdWYUJUCmhsRm9kSFJ3Y3pvdkwzTmllQzVoY0drdWRISjFjM1JsWkhObGNuWnBZMlZ6TG1sdWRHVnNMbU52YlM5elozZ3ZZMlZ5ZEdsbWFXTmgKZEdsdmJpOTJNeTl3WTJ0amNtdy9ZMkU5Y0d4aGRHWnZjbTB3SFFZRFZSME9CQllFRklOVENPUWVqVVl6MkFYV0ZxRUJEdmZsN0tKcQpNQTRHQTFVZER3RUIvd1FFQXdJR3dEQU1CZ05WSFJNQkFmOEVBakFBTUlJQ09RWUpLb1pJaHZoTkFRMEJCSUlDS2pDQ0FpWXdIZ1lLCktvWklodmhOQVEwQkFRUVF3akR6OUFPZ0V0emJUMU9ORDNOcXlUQ0NBV01HQ2lxR1NJYjRUUUVOQVFJd2dnRlRNQkFHQ3lxR1NJYjQKVFFFTkFRSUJBZ0VDTUJBR0N5cUdTSWI0VFFFTkFRSUNBZ0VDTUJBR0N5cUdTSWI0VFFFTkFRSURBZ0VBTUJBR0N5cUdTSWI0VFFFTgpBUUlFQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlGQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlHQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlICkFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJSUFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJSkFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJS0FnRUEKTUJBR0N5cUdTSWI0VFFFTkFRSUxBZ0VBTUJBR0N5cUdTSWI0VFFFTkFRSU1BZ0VBTUJBR0N5cUdTSWI0VFFFTkFRSU5BZ0VBTUJBRwpDeXFHU0liNFRRRU5BUUlPQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlQQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlRQWdFQU1CQUdDeXFHClNJYjRUUUVOQVFJUkFnRUtNQjhHQ3lxR1NJYjRUUUVOQVFJU0JCQUNBZ0FBQUFBQUFBQUFBQUFBQUFBQU1CQUdDaXFHU0liNFRRRU4KQVFNRUFnQUFNQlFHQ2lxR1NJYjRUUUVOQVFRRUJpQmdhZ0FBQURBUEJnb3Foa2lHK0UwQkRRRUZDZ0VCTUI0R0NpcUdTSWI0VFFFTgpBUVlFRVBoRTdjQWpscElwRVEraXlPY0RUa1V3UkFZS0tvWklodmhOQVEwQkJ6QTJNQkFHQ3lxR1NJYjRUUUVOQVFjQkFRSC9NQkFHCkN5cUdTSWI0VFFFTkFRY0NBUUgvTUJBR0N5cUdTSWI0VFFFTkFRY0RBUUgvTUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFDZk5CVDMKZnRpdzR4eXNsWWVSRnVCaXg0Z1NsSm1JNEF3L0l2MVZuYU9PUndJaEFNSzNMSGNsdXQyaW5pRUUyQlBwQi9uYTh5bVBDQjBsc2FVTwpwZzJyVkhJbwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tAQABtlLCWbh0Nd/KPbPVXlbRY47bTv4gHzZZTvDwjSU7iS61+sDSpS106UYnzPIyBtmxVlUV/h6L7F0EEXn4YhHw1/B1zZTlE0HvTCb1H7LYGaEbmVcnKMr6Y92f+q+gyomazAOJ9YQefK7uyciYuIIbW9Kz6yGGJr9T5S7/zNqk8iC20NYXirD8xo2MQvviUSLhwYN4dBhroou/0cB3k/4dhi8FkCFQpBCQlECnFl6238xUfeskByc7xWZhvj67N4M3yvObFxUp5Sv61yHxfB6I50OXbqsYHPJRc2eqEJWUkOJEKbVqPid5f+kZpwwDmDs8cS95CpgQShFJG+rbL0cXwwMAAgAAAAAABQAKAJOacjP3nEyplAoNs5V/BgeBQLt6zEGoQQnp6JTMP8nEAAAAAAICAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAA5wAAAAAAAAABxguWF7L5blPLde8B4NzOo6/Ht5kml+q7j3FLLM0ZUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzRccVpQcbOSWkLRV9pHZyKBMLkPgpNMPdS+lKFx+5X8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvDSDf0Bdju4V2/odzPVoOQjq7SqbzOKKqVE8qCVj1KEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMQQAACssgLdcHu9LUnzApZmDsLpG33bk8A2Yrr9U7HSWP4D48nAGbwDZ+55iBMkd+caeDgSHNX42Z1cJRiPkWIthgSi+cO+GrWWavHXxFEyUf5yu1bW7y44gZWDuckM1jlKGgLUhWQ+zDL0dgmIMjMeTqhN7jxc0O1MCQ5j6PS6EgGIewICAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUAAAAAAAAA5wAAAAAAAADNyt+32yKtpf1gNFXN4b+folj6XyhNzW4MYzkvYzoRBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjE9XddeWUD6WE393xoqCmgBWrI3tcBQLCBsJRJDFe/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0aaKNxd+jk3SIzWQ3uCbO0ORrDDyRNGRDqoyqUKQHmEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB9H+9x+f2Ilttd1qg1E1NRybnoV66QS3pTCGOsuH4buHe2oRRNvr5zM0TGTS3UbCupbV3EyZhzbkqko+jNfcUYgAAABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fBQBcDgAALS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUU2RENDQkkyZ0F3SUJBZ0lVTGFtaDd0ekVqWUpualFZelNrMjlld2tBRk9Zd0NnWUlLb1pJemowRUF3SXdjREVpTUNBR0ExVUUKQXd3WlNXNTBaV3dnVTBkWUlGQkRTeUJRYkdGMFptOXliU0JEUVRFYU1CZ0dBMVVFQ2d3UlNXNTBaV3dnUTI5eWNHOXlZWFJwYjI0eApGREFTQmdOVkJBY01DMU5oYm5SaElFTnNZWEpoTVFzd0NRWURWUVFJREFKRFFURUxNQWtHQTFVRUJoTUNWVk13SGhjTk1qQXdOakUxCk1EYzBPRE0xV2hjTk1qY3dOakUxTURjME9ETTFXakJ3TVNJd0lBWURWUVFEREJsSmJuUmxiQ0JUUjFnZ1VFTkxJRU5sY25ScFptbGoKWVhSbE1Sb3dHQVlEVlFRS0RCRkpiblJsYkNCRGIzSndiM0poZEdsdmJqRVVNQklHQTFVRUJ3d0xVMkZ1ZEdFZ1EyeGhjbUV4Q3pBSgpCZ05WQkFnTUFrTkJNUXN3Q1FZRFZRUUdFd0pWVXpCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQktXOStyWDZheVJpCjdpU2xtR2pVUTB5SmM0RVAzTjJwZGNwbnFUeGNETk84WTh0bVZ2dUhzZ1JpeVplT3duY1FQclR5VlJuOEFqaDZCdkF5ei9UV0ZkdWoKZ2dNRE1JSUMvekFmQmdOVkhTTUVHREFXZ0JSWkk5T25TcWhqVkM0NWNLM2dEd2NyVnlRcXR6QmlCZ05WSFI4RVd6QlpNRmVnVmFCVApobEZvZEhSd2N6b3ZMM05pZUM1aGNHa3VkSEoxYzNSbFpITmxjblpwWTJWekxtbHVkR1ZzTG1OdmJTOXpaM2d2WTJWeWRHbG1hV05oCmRHbHZiaTkyTXk5d1kydGpjbXcvWTJFOWNHeGhkR1p2Y20wd0hRWURWUjBPQkJZRUZJTlRDT1FlalVZejJBWFdGcUVCRHZmbDdLSnEKTUE0R0ExVWREd0VCL3dRRUF3SUd3REFNQmdOVkhSTUJBZjhFQWpBQU1JSUNPUVlKS29aSWh2aE5BUTBCQklJQ0tqQ0NBaVl3SGdZSwpLb1pJaHZoTkFRMEJBUVFRd2pEejlBT2dFdHpiVDFPTkQzTnF5VENDQVdNR0NpcUdTSWI0VFFFTkFRSXdnZ0ZUTUJBR0N5cUdTSWI0ClRRRU5BUUlCQWdFQ01CQUdDeXFHU0liNFRRRU5BUUlDQWdFQ01CQUdDeXFHU0liNFRRRU5BUUlEQWdFQU1CQUdDeXFHU0liNFRRRU4KQVFJRUFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJRkFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJR0FnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJSApBZ0VBTUJBR0N5cUdTSWI0VFFFTkFRSUlBZ0VBTUJBR0N5cUdTSWI0VFFFTkFRSUpBZ0VBTUJBR0N5cUdTSWI0VFFFTkFRSUtBZ0VBCk1CQUdDeXFHU0liNFRRRU5BUUlMQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlNQWdFQU1CQUdDeXFHU0liNFRRRU5BUUlOQWdFQU1CQUcKQ3lxR1NJYjRUUUVOQVFJT0FnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJUEFnRUFNQkFHQ3lxR1NJYjRUUUVOQVFJUUFnRUFNQkFHQ3lxRwpTSWI0VFFFTkFRSVJBZ0VLTUI4R0N5cUdTSWI0VFFFTkFRSVNCQkFDQWdBQUFBQUFBQUFBQUFBQUFBQUFNQkFHQ2lxR1NJYjRUUUVOCkFRTUVBZ0FBTUJRR0NpcUdTSWI0VFFFTkFRUUVCaUJnYWdBQUFEQVBCZ29xaGtpRytFMEJEUUVGQ2dFQk1CNEdDaXFHU0liNFRRRU4KQVFZRUVQaEU3Y0FqbHBJcEVRK2l5T2NEVGtVd1JBWUtLb1pJaHZoTkFRMEJCekEyTUJBR0N5cUdTSWI0VFFFTkFRY0JBUUgvTUJBRwpDeXFHU0liNFRRRU5BUWNDQVFIL01CQUdDeXFHU0liNFRRRU5BUWNEQVFIL01Bb0dDQ3FHU000OUJBTUNBMGtBTUVZQ0lRQ2ZOQlQzCmZ0aXc0eHlzbFllUkZ1Qml4NGdTbEptSTRBdy9JdjFWbmFPT1J3SWhBTUszTEhjbHV0MmluaUVFMkJQcEIvbmE4eW1QQ0IwbHNhVU8KcGcyclZISW8KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLS0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLQpNSUlDbXpDQ0FrQ2dBd0lCQWdJVVdTUFRwMHFvWTFRdU9YQ3Q0QThISzFja0tyY3dDZ1lJS29aSXpqMEVBd0l3CmFERWFNQmdHQTFVRUF3d1JTVzUwWld3Z1UwZFlJRkp2YjNRZ1EwRXhHakFZQmdOVkJBb01FVWx1ZEdWc0lFTnYKY25CdmNtRjBhVzl1TVJRd0VnWURWUVFIREF0VFlXNTBZU0JEYkdGeVlURUxNQWtHQTFVRUNBd0NRMEV4Q3pBSgpCZ05WQkFZVEFsVlRNQjRYRFRFNU1UQXpNVEV5TXpRek1Wb1hEVE0wTVRBek1URXlNelF6TVZvd2NERWlNQ0FHCkExVUVBd3daU1c1MFpXd2dVMGRZSUZCRFN5QlFiR0YwWm05eWJTQkRRVEVhTUJnR0ExVUVDZ3dSU1c1MFpXd2cKUTI5eWNHOXlZWFJwYjI0eEZEQVNCZ05WQkFjTUMxTmhiblJoSUVOc1lYSmhNUXN3Q1FZRFZRUUlEQUpEUVRFTApNQWtHQTFVRUJoTUNWVk13V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVF3cCtMYytUVUJ0ZzFICitVOEpJc01zYmpIakNrVHRYYjhqUE02cjJkaHU5eklibGhEWjdJTmZxdDNJeDhYY0ZLRDhrME5FWHJrWjY2cUoKWGExS3pMSUtvNEcvTUlHOE1COEdBMVVkSXdRWU1CYUFGT25vUkZKVE5seExHSm9SL0VNWUxLWGNJSUJJTUZZRwpBMVVkSHdSUE1FMHdTNkJKb0VlR1JXaDBkSEJ6T2k4dmMySjRMV05sY25ScFptbGpZWFJsY3k1MGNuVnpkR1ZrCmMyVnlkbWxqWlhNdWFXNTBaV3d1WTI5dEwwbHVkR1ZzVTBkWVVtOXZkRU5CTG1OeWJEQWRCZ05WSFE0RUZnUVUKV1NQVHAwcW9ZMVF1T1hDdDRBOEhLMWNrS3Jjd0RnWURWUjBQQVFIL0JBUURBZ0VHTUJJR0ExVWRFd0VCL3dRSQpNQVlCQWY4Q0FRQXdDZ1lJS29aSXpqMEVBd0lEU1FBd1JnSWhBSVJvWHUzWTQ1VkY5YUNpSzBaMks2RVFLQ3RDCnJ4VFRpWjRKWWJFeWZCR3NBaUVBaVZvWW14RjdLL1NvcUlqZmYxekcwL0xpdi9SSU9SL1FCSjUrZDg4SEFZST0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQotLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJQ2xEQ0NBam1nQXdJQkFnSVZBT25vUkZKVE5seExHSm9SL0VNWUxLWGNJSUJJTUFvR0NDcUdTTTQ5QkFNQwpNR2d4R2pBWUJnTlZCQU1NRVVsdWRHVnNJRk5IV0NCU2IyOTBJRU5CTVJvd0dBWURWUVFLREJGSmJuUmxiQ0JECmIzSndiM0poZEdsdmJqRVVNQklHQTFVRUJ3d0xVMkZ1ZEdFZ1EyeGhjbUV4Q3pBSkJnTlZCQWdNQWtOQk1Rc3cKQ1FZRFZRUUdFd0pWVXpBZUZ3MHhPVEV3TXpFd09UUTVNakZhRncwME9URXlNekV5TXpVNU5UbGFNR2d4R2pBWQpCZ05WQkFNTUVVbHVkR1ZzSUZOSFdDQlNiMjkwSUVOQk1Sb3dHQVlEVlFRS0RCRkpiblJsYkNCRGIzSndiM0poCmRHbHZiakVVTUJJR0ExVUVCd3dMVTJGdWRHRWdRMnhoY21FeEN6QUpCZ05WQkFnTUFrTkJNUXN3Q1FZRFZRUUcKRXdKVlV6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJFLzZELzFXSE5yV3dQbU5NSXlCS01XNQpKNkp6TXNqbzZ4UDJ2a0sxY2RaR2IxUEdSUC9DLzhFQ2dpRGtta2xtendMekxpKzAwMG03TExydEtKQTNvQzJqCmdiOHdnYnd3SHdZRFZSMGpCQmd3Rm9BVTZlaEVVbE0yWEVzWW1oSDhReGdzcGR3Z2dFZ3dWZ1lEVlIwZkJFOHcKVFRCTG9FbWdSNFpGYUhSMGNITTZMeTl6WW5ndFkyVnlkR2xtYVdOaGRHVnpMblJ5ZFhOMFpXUnpaWEoyYVdObApjeTVwYm5SbGJDNWpiMjB2U1c1MFpXeFRSMWhTYjI5MFEwRXVZM0pzTUIwR0ExVWREZ1FXQkJUcDZFUlNVelpjClN4aWFFZnhER0N5bDNDQ0FTREFPQmdOVkhROEJBZjhFQkFNQ0FRWXdFZ1lEVlIwVEFRSC9CQWd3QmdFQi93SUIKQVRBS0JnZ3Foa2pPUFFRREFnTkpBREJHQWlFQTBSV3JzR3JHbERwNzZsOUxRanQrek1xUVpQQi8yWXV1dWVGVQpnTjlBZGtNQ0lRRG85QU5VaGNTdEFCQ2hSNnJsVm9CbzZNUTZRdW1DbmsrcGRHQkV5OC9zUWc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{sqvs}}:{{sqvsPort}}/svs/v1/verifyQuote",
+									"protocol": "https",
+									"host": [
+										"{{sqvs}}"
+									],
+									"port": "{{sqvsPort}}",
+									"path": [
+										"svs",
+										"v1",
+										"verifyQuote"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 18:00:59 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1037"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Status\": \"Success\",\n    \"Message\": \"SGX ECDSA Quote Verification Successful\",\n    \"ChallengeKeyType\": \"RSA\",\n    \"ChallengeRsaPublicKey\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtlLCWbh0Nd/KPbPVXlbR\\nY47bTv4gHzZZTvDwjSU7iS61+sDSpS106UYnzPIyBtmxVlUV/h6L7F0EEXn4YhHw\\n1/B1zZTlE0HvTCb1H7LYGaEbmVcnKMr6Y92f+q+gyomazAOJ9YQefK7uyciYuIIb\\nW9Kz6yGGJr9T5S7/zNqk8iC20NYXirD8xo2MQvviUSLhwYN4dBhroou/0cB3k/4d\\nhi8FkCFQpBCQlECnFl6238xUfeskByc7xWZhvj67N4M3yvObFxUp5Sv61yHxfB6I\\n50OXbqsYHPJRc2eqEJWUkOJEKbVqPid5f+kZpwwDmDs8cS95CpgQShFJG+rbL0cX\\nwwIDAQAB\\n-----END PUBLIC KEY-----\\n\",\n    \"EnclaveIssuer\": \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\",\n    \"EnclaveIssuerProdID\": \"00\",\n    \"EnclaveIssuerExtProdID\": \"00000000000000000000000000000000\",\n    \"EnclaveMeasurement\": \"01c60b9617b2f96e53cb75ef01e0dccea3afc7b7992697eabb8f714b2ccd1953\",\n    \"ConfigSvn\": \"00\",\n    \"IsvSvn\": \"01\",\n    \"ConfigId\": \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n    \"TcbLevel\": \"UpToDate\"\n}"
+						}
+					]
+				}
+			],
+			"description": "1. Nginx will initiate a Key Transfer with the new Key id by calling Key Broker Service (KBS) REST endpoint (GET /v1/keys/:keyId/dhsm2-transfer) and will get a 401 HTTP response from KBS since the session is not established. \n2. Nginx will create a new session key by calling the KBS REST endpoint (POST /v1/session).\n3. SKC Client will send the SGX Quote to KBS, then KBS will verify the quote by calling SGX Quote Verification Service(SQVS) REST endpoint (POST /v1/verifyQuote).\n4. SQVS checks whether the quote signature and PCK Certificate are valid checks other parameters in the quote and returns the verification result. SQVS contacts SGX Caching service (SCS) to make sure that PCKCRL, TCBInfo, and QEIdentity in the quote are correct. \n5. Once the session is successfully established, Again Nginx will initiate a Key Transfer with the key id by calling KBS REST endpoint (GET /v1/keys/:keyId/dhsm2-transfer) and will get the response as key transfer successful.\n \nRemove the tokens if already present.\n\n```\nrm -rf /opt/intel/cryptoapitoolkit/tokens/*\n```\n\nTo restart the Nginx, use the below commands.\n\n```\npkill nginx\n```\n\n```\nnginx \n```\n\n```\nwget -k -v https://localhost:2443 --no-check-certificate\n```",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dadce5d8-b8ce-4c61-9b6e-7473c56bc5a4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fa07d3c5-cbf9-4fbc-881a-870811e3567a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "70ac1acd-914a-49e8-86a3-20ffe888392c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c150df5d-8b3a-4151-8a7c-681cb2f93f81",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

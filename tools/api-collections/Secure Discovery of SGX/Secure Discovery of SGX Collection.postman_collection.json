@@ -1,0 +1,1323 @@
+{
+	"info": {
+		"_postman_id": "f7517e2f-7191-4d3b-809e-477c2ecd43c5",
+		"name": "Secure Discovery of SGX Collection",
+		"description": "For the secrets to be provisioned securely to SGX compute node on public cloud, the owner of the secret would like to ensure that the node is secure and trustworthy.\r\n\r\nSGX attestation infrastructure involves providing Platform Certification Key (PCK) certificates as part of the attestation report. To fetch the PCK certificates for a platform, platform needs to provide the platform SGX values to the Intel PCS server hosted on the internet. In addition, PCS server also provides other platform collaterals like PCK CRL, TCB Information, QE Identity Information for a platform.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "createShvsToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5f733a4-053f-427d-bee7-0b7eac215965",
+								"exec": [
+									"pm.environment.set(\"bearerTokenShvs\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/jwt",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{shvsUser}}\",\n    \"password\": \"{{shvsUserPass}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API \nrequests. Bearer token Authorization is not required when requesting token for Authservice \nadmin user. Authservice admin user bearer token should be provided in Authorization header \nwhen requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/jwt",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{shvsUser}}\",\n    \"password\": \"{{shvsUserPass}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Sep 2020 08:23:38 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1290"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjY0OGNlZjM1Mzk4ZGVjMGEwNDUwODM5NzgzNWEzMGU4M2I2YmRkYWQiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U0hWUyBUTFMgQ2VydGlmaWNhdGU7U0FOPTEwLjgwLjIwNy4xNTtDRVJUVFlQRT1UTFMifSx7InNlcnZpY2UiOiJTR1hfQUdFTlQiLCJuYW1lIjoiSG9zdERhdGFSZWFkZXIifSx7InNlcnZpY2UiOiJTQ1MiLCJuYW1lIjoiSG9zdERhdGFVcGRhdGVyIn0seyJzZXJ2aWNlIjoiU0NTIiwibmFtZSI6Ikhvc3REYXRhUmVhZGVyIn0seyJzZXJ2aWNlIjoiU0hWUyIsIm5hbWUiOiJIb3N0TGlzdE1hbmFnZXIifSx7InNlcnZpY2UiOiJTSFZTIiwibmFtZSI6Ikhvc3RzTGlzdFJlYWRlciJ9LHsic2VydmljZSI6IlNIVlMiLCJuYW1lIjoiSG9zdERhdGFSZWFkZXIifSx7InNlcnZpY2UiOiJTSFZTIiwibmFtZSI6Ikhvc3RSZWdpc3RyYXRpb24ifV0sImV4cCI6MTYwMDUwMzgxOCwiaWF0IjoxNjAwMzMwOTg4LCJpc3MiOiJBQVMgSldUIElzc3VlciIsInN1YiI6InNodnN1c2VyQHNodnMifQ.J19qII5Tz6T3hZ1TBq_L-XGV8w9MBJOefOYKUAYvBxAtfKpgOWLkEyLCwP9wXFSK9Q31n1rd67xLbH8YUo0sT0YO6c9U_PpRI2COuG_eyuQl_FNmRaGP-uzFu-r_-af28KM-26a9H5cmtEL5K7WAnj6khS4133XjGDRv-bdUI7_OwpDXqARz2p13gzjdN7bXbaOZb3VvxGpWHsQNuuJgEPqN539u36JrI37HqXJBVOssrCsEZx414OePeVDguyDkK5vi0fZTL_Bi9xmObrNDD3BuKIdXSl5YlVyWeOs_iOdRBVK6mzvtmY_-Djx3BvFG8RZKdj56uy89gIS_1M0S-54zOAgPzzfVh0hw94bU0uQzZkAlDPcsys1jkZBDPZ-CNtZ_TQahMltFYHHQqp4MdKU88UU19W8blap-lKg-93tF_vkDfiHTxef3zTTthhWGGmqxdyAKq2HicSDxm1WHszvesGXunCuQDO0PrfAUk6I2_MygrPLUlmh0hDPVFzOS"
+						}
+					]
+				},
+				{
+					"name": "createSagentToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2104c454-1571-4409-a064-37cc2199d765",
+								"exec": [
+									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{sagentUser}}\",\n    \"password\": \"{{sagentUserPass}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API \nrequests. Bearer token Authorization is not required when requesting token for Authservice \nadmin user. Authservice admin user bearer token should be provided in Authorization header \nwhen requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/jwt"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{sagentUser}}\",\n    \"password\": \"{{sagentUserPass}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Sep 2020 08:24:39 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1004"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjY0OGNlZjM1Mzk4ZGVjMGEwNDUwODM5NzgzNWEzMGU4M2I2YmRkYWQiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U0dYX0FHRU5UIFRMUyBDZXJ0aWZpY2F0ZTtTQU49MTAuMjE5LjEzOC42MztDRVJUVFlQRT1UTFMifSx7InNlcnZpY2UiOiJTSFZTIiwibmFtZSI6Ikhvc3RSZWdpc3RyYXRpb24ifSx7InNlcnZpY2UiOiJTR1hfQUdFTlQiLCJuYW1lIjoiSG9zdERhdGFSZWFkZXIifV0sImV4cCI6MTYwMDUwMzg3OSwiaWF0IjoxNjAwMzMxMDQ5LCJpc3MiOiJBQVMgSldUIElzc3VlciIsInN1YiI6InNneF9hZ2VudCJ9.eH1DbpvmQSjnqrWgn91FlxJ_t2Aqn09yPOI8BLunADEJP2o4BeNQbQqnfawm0QMMH7RQOHosLaeKprtjMwGHuav2Mm__BQZ0VGzd9eEKfrNIffcvuPphR3OkDY3RAaOvFfxNczR_80WRCjO4odFsMnRS7EYGAt2JvoFVb2K2Pmk_J0UXbozmynsFkxUJwsNqmlSVkYAbo4knB87v5FsgOm73Z2UQFXONdQSLmrCNHyeOoDOgnCfzsyx1yORVbz5LfIGHxsIo495efQgYDP4NOMp9XWJnwfzcFXnOnxzgorhy0kdozqKfxDRPhXJppVCL27EKpnBrdnr6dvj7hdWPJ4ytoIZRo9HQwBEzi84g87RRa9jyrYWqTpqUC3MaNmvrHees0X-Or93dUgn2gQbzmvFsRbHa0bTTKrQeDR2Y6S6MJxVtS-DkOl88XoTm9I2ZoRDXpS-qAJmqSOtYTqLovnURrcBox_5fGTmC4oymxyW0a0DPmZ1eCFu1zpUHcE74"
+						}
+					]
+				},
+				{
+					"name": "createScsToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c602ddda-1500-443e-be4f-221c58a03f57",
+								"exec": [
+									"pm.environment.set(\"bearerTokenScs\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{scsUser}}\",\n    \"password\": \"{{scsUserPass}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API \nrequests. Bearer token Authorization is not required when requesting token for Authservice \nadmin user. Authservice admin user bearer token should be provided in Authorization header \nwhen requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/jwt"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{scsUser}}\",\n    \"password\": \"{{scsUserPass}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Sep 2020 08:25:10 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1040"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjY0OGNlZjM1Mzk4ZGVjMGEwNDUwODM5NzgzNWEzMGU4M2I2YmRkYWQiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U0NTIFRMUyBDZXJ0aWZpY2F0ZTtTQU49MTAuODAuMjA3LjE1O0NFUlRUWVBFPVRMUyJ9LHsic2VydmljZSI6IlNDUyIsIm5hbWUiOiJDYWNoZU1hbmFnZXIifSx7InNlcnZpY2UiOiJTQ1MiLCJuYW1lIjoiSG9zdERhdGFVcGRhdGVyIn0seyJzZXJ2aWNlIjoiU0NTIiwibmFtZSI6Ikhvc3REYXRhUmVhZGVyIn1dLCJleHAiOjE2MDA1MDM5MTAsImlhdCI6MTYwMDMzMTA4MCwiaXNzIjoiQUFTIEpXVCBJc3N1ZXIiLCJzdWIiOiJzY3N1c2VyQHNjcyJ9.x658JBY0fgZQLPaF8R1EtJCU9sk4qW_jvBpNF3NX2zu-hDNFl6oQgkbYM7BPcRWvsttdKlTEdmhgkw_YsotWzv7_NV51xY4Wfvuys-W7nREXVN9wX8Wz_yukz31G8trf9Lla5ZX8c-w2OeyXxMw2vmoYvjtTqRH7B1LqWTapc-Ie8Q7mdP5PR3tw3BlitDiTdOSaYA719yFokuFMpiKBCqfMCVLQYN1r06Ge1h5leX2pmvHS14Gms5rfU4Z1JIMmMrzmVsozrYITn0H9-kVBFt3ctf-Px7pWYzDJuZcbbZPbKhSVwg3QWq-h3cnvCqxyaWCnAazKIl-PyXxVlXoAg66yhz95xaBq_4oHzY33aEpt3raiFzcImqU3zxsg5BoE0H0Rf54Yl1CrwKZ7HidR9Rw2BzeSFrPotQsCpE4b4GFLUJozdvTTD6fLjyAMMNgbj4s8_6NaoBNnaqeJ6y3D00S3MWNmKxE0hj9s2aUeNQxM1jDlVgahG4pvqresBItm"
+						}
+					]
+				}
+			],
+			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify Services",
+			"item": [],
+			"description": "The command line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify SGX Agent:\n\n```\nsgx_agent status\n```\n\nVerify SGX Host Verification Service (SHVS):\n\n```\nshvs status\n```\n\nVerify SGX Caching Service (SCS):\n\n```\nscs status\n```\n\nVerify SGX Hub (SHUB):\n\n```\nshub status\n```\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3c892790-664f-415a-8c1a-c253e82cb796",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb23c7eb-c618-4dc5-a626-142daefaee14",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Host Registration with SGX Agent",
+			"item": [
+				{
+					"name": "registerHost",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenShvs}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"connection_string\": \"https://{{sagent}}:{{sagentPort}}/sgx_agent/v1/host\",\n    \"description\": \"RHEL Host\",\n    \"host_name\": \"{{sagent}}\",\n    \"overwrite\": true,\n    \"uuid\": \"{{hostHardwareUuid}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{shvs}}:{{shvsPort}}/sgx-hvs/v1/hosts",
+							"protocol": "https",
+							"host": [
+								"{{shvs}}"
+							],
+							"port": "{{shvsPort}}",
+							"path": [
+								"sgx-hvs",
+								"v1",
+								"hosts"
+							]
+						},
+						"description": "Registers a new host in the SHVS database. SGX Agent sends the registration request to SHVS along \nwith the overwritten flag (In this release the overwrite flag is set to true) and registers the SGX agent’s information to DB.\nIf the host is already registered, SHVS will re-register the host if the overwrite flag is true.\nA valid bearer token is required to authorize this REST call.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenShvs}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"connection_string\": \"https://{{sagent}}:{{sagentPort}}/sgx_agent/v1/host\",\n    \"description\": \"RHEL Host\",\n    \"host_name\": \"{{sagent}}\",\n    \"overwrite\": true,\n    \"uuid\": \"{{hostHardwareUuid}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{shvs}}:{{shvsPort}}/sgx-hvs/v1/hosts",
+									"protocol": "https",
+									"host": [
+										"{{shvs}}"
+									],
+									"port": "{{shvsPort}}",
+									"path": [
+										"sgx-hvs",
+										"v1",
+										"hosts"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Aug 2020 21:10:42 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "112"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Id\": \"aaae6e65-cfce-44d2-924a-8958db6f291b\",\n    \"Status\": \"Created\",\n    \"Message\": \"SGX Host Registered Successfully\"\n}"
+						}
+					]
+				}
+			],
+			"description": "The SGX Agent registers the host with an SGX Host Verification Service (SHVS) at the time of installation. \r\n\r\nHost Registration creates a host record with connectivity details and other host information in the\r\nSHVS database. This host record will be used by the SHVS to retrieve SGX information and platform values from the SGX Agent.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "379cae8c-cfe9-4200-86be-fae1c9e9a891",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "54d8df56-c92b-465e-a169-92a41eec5a76",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Request for Platform Specific Information",
+			"item": [
+				{
+					"name": "platformInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc8c6fe8-4a2b-4c47-afe7-a9105f5b5dd1",
+								"exec": [
+									"pm.environment.set(\"encppid\", pm.response.json()[\"sgx-platform-data\"][\"enc-ppid\"]);\r",
+									"pm.environment.set(\"pceid\", pm.response.json()[\"sgx-platform-data\"][\"pceid\"]);\r",
+									"pm.environment.set(\"cpusvn\", pm.response.json()[\"sgx-platform-data\"][\"cpusvn\"]);\r",
+									"pm.environment.set(\"pcesvn\", pm.response.json()[\"sgx-platform-data\"][\"pcesvn\"]);\r",
+									"pm.environment.set(\"qeid\", pm.response.json()[\"sgx-platform-data\"][\"qeid\"]);\r",
+									"pm.environment.set(\"manifest\", pm.response.json()[\"sgx-platform-data\"][\"Manifest\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenSagent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://{{sagent}}:{{sagentPort}}/sgx_agent/v1/host",
+							"protocol": "https",
+							"host": [
+								"{{sagent}}"
+							],
+							"port": "{{sagentPort}}",
+							"path": [
+								"sgx_agent",
+								"v1",
+								"host"
+							]
+						},
+						"description": "Retrieves the platform-specific information from the host. \nSGX-Agent interacts with the SGX Host Verification Serice (HVS) for registration. \nOnce it is registered, SGX HVS asks for platform specific details. \nA valid bearer token is required to authorize this REST call.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenSagent}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{sagent}}:{{sagentPort}}/sgx_agent/v1/host",
+									"protocol": "https",
+									"host": [
+										"{{sagent}}"
+									],
+									"port": "{{sagentPort}}",
+									"path": [
+										"sgx_agent",
+										"v1",
+										"host"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 27 Aug 2020 21:49:49 GMT"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"sgx-data\": {\n        \"sgx-supported\": true,\n        \"sgx-enabled\": true,\n        \"flc-enabled\": true,\n        \"epc-offset\": \"0x00c00000\",\n        \"epc-size\": \"2.0 GB\"\n    },\n    \"sgx-platform-data\": {\n        \"enc-ppid\": \"0308400e561231fea4272499052f274c22bb85441bcc6e1362b76a4a8e23aef5c505d2e6c7e4918d7fbd9670bf92265e5b3d5986b914878519a8eaa5700ee519fc94a8d8ca04b99bbee287ec5e8a9cbbeae3d1adaee92d9b30a523a06e14849b5775c381df8504ae2f1a0ec476a42254b605cb9b50bf92b785814a8f5fbc65280c022d9263e6d6bcaa4b6561554e13b7d033d7c99dbfea05947328d361e10c268553f4a0c146de1f0fe98bf7e0beebf504f875d1be3bb3454a6b6a8d6df73d62166a1647db465d202078fb76c85c62c95a9e843afa95005ca44a4d015de6e9e004f8f8304dd5f8af9703322c14328499254b223e41b4d376ea053ee55a8842eb4dc6aa533fc1c668677a35a08c5620e80d91b77c58d51701be2803e4a7e8dbcc3b6dd99e549fb0a65d01c4138e8f13c83503ce187e91af8e990fc46bb623cf90dfb2da9bd4d6b4e8f1b77c1b66fab5556cb5c63fd9bbcc74590e18eb94f2cb9bbd8ca1f84cc9899ac345d1c763e345c7e1ce640ad79cb1e65ba891ecb010fd81\",\n        \"pceid\": \"0000\",\n        \"cpusvn\": \"02020001010000000000000000000000\",\n        \"pcesvn\": \"0a00\",\n        \"qeid\": \"fbb768d07c80aa590584f1d1073f3495\",\n        \"Manifest\": \"178e874b49e44aa599bb3057170925b41d6e010000000000000000000000000084947ac684404189902a7e76cd658926bc010100000000000000000000000000005f691199901a0f1f43f4cb3075142871d542e3893c9f6f88ef999a7969eacc38e156d8233e6479997f6daa3553d902bb6a7fd6e6db21c43c13993c91c2eb95b6654b70d3e1602d5c236f9c5e8209a6a9923f49628eb7ba934913ccee4ae3df1c9ce11d0dac1c2e6ebbeb7b036e1288ad98d0aac44e5dbe3e01ea40eb7301c513c388d7e87b6630fcee23dccc28e5466a3669137e79021e386db75569606a481ac81bcd03fdc30a142bce8cca274dc044f2b40dc9abaef952bb4f0d01058d590d6950cd56bd036c7385272789e38de9b7302fafd5514248de83c18aedc9fb3c4a60754b41d8038be2c85d9e109742450b76989ff262cb0a7a979546018c7c76109ec6dd7965eead462bbd1edf6124e4a7da00de497408e44869496138cc1383f2caef7b6bf456c1f494c2b539e1741d904515414816a5096e96350b5decc84cdb9c29fe6ffa7a1982b55fe6fb258e18f03c1724b296aab446a9f4e10de1d49485f4360dfade7bc6abf70c0f1ed59c15ab30face19e3cfee43e1bee2f2800095576af52b46344ea4e7e08c2bc1d568dd01000100c6bc146a212ae2e9bf1ed8fa0214d55c80995541aa70a5532c4009e2c950a93e0000010001000000fd8f5c411b614b97a74796f08926757b390501000000000000000000000000002000000003000000028d083c0acd8d1f25cdb870b7e644b0c92792a868a5e2f0963196c98956fda12754a333ced43f08e649f9c8657046a55ee9987e92e5447197cce7962b4f61843700a7998125c8ffe0ab8b0cf7e17fd74a863187064840fccd3545faa6736db711c0c86f13319c378d8371d794b11748b3da6901bc000c903cc00acb8c277b0384e529f94cdf42d3d76d8e90a529a4ce5c36efd73bd646ef44412a61892f9560c39b09c9319e46e8a1de7e281ba7c89fee5cbd838a8fd5dd08df3005b33c72459f6d7b97516c81d29df8df75a297d216aa9fe37dab7ad489831cdca041e941702b789eb2bfaf4dc315a4792efcf55a56a49dbce25dc7027b9d64619ebbf271db8c7750f271be6f5fd3f88f56a2abdaaa9eea52a3daddb7997fdc2dca098f33a1018d6cc26a64d8511e03765d1667776873ca1cfb3cf98f2adb65c81d77f541f4b49a3e9c2fef7ef3e9d301504403b34626bb8200556f23da75a9314c4f73179f7cc44149da0580c44d5d16759f7289aadc675d8f9ea9184bf1644a701f59b3212bd9901edb0f2ae0bbbb494cc28e93eaf22c89819a0d4760040db912733a2a556f0a24ef532081e9b4aec937a4602e036878e19f89366f76d51fa6664a2d8bd0aa24600909b2a9d2a1755df979d2dad342869ae05e3a608ab7e59853af9a7074287f95f8c3cda4deb18d22045ae9dbd5d7d4a60816b56d2afbfc3687c71225de9ea4244e3a9afec0dc7a19652b09c67dc0dad7d2916ab8bac35d7701e2aa83c3dfdd6d6f06d87854a54f98148fcf65bb90dbf187096c0471b7fa1c993ef3f86f68aaf694e4c3c3614ad3e750914240faed793b4774cf5ac758df7eec416101bce2863d177e48a22323db7a4710d23cb74a8e3b74974c6ae0ada2d89351f85d4915edf48c3508d6ab20830c8f305a071ca6a7ba8087e01dfaa5d9350ec29a3a2f893fd94a5aaabbc2696ea96f8ef7830d0777659c83ef684a9c79294e94b40450e012301863be5f6f3cdc8dc1103f5fd425722e445541728095feb033a823cf8b1c0d7202742a5ff420c8b0aff0630f43a36c5fb33511fee695f8830f0167121f9f2c6f8aad1288b79c93383d7659e15de0bcfea0f1335c681e83f559481611460fc385718d4e4ab0a954d33ad7d720eb4f4adb8c8f13495a1d2c6e2bb01297068134757ac5f0c97e511452f36371f1185d7acdc2be6fa7752ed372ec622f0e9bec1f6f7548c8f0dfd6c7dcf6332b44a36f0f587160e3320cc4c932072fda5a5ea37047e5fa7fcd8fc763b6ede2e3011df6ca4acc5aad4179797200d94b5437b05408fc1036d1b83f0fe53b950d7bcd76fa74b179df645b4846e0cad5248b044718bacb74521df378f34c7d4d957bd5c9cfdea4be01f7bcc58b066a61d58a400da41aacae869a1533619afa178d59ead53f0241554a919769620e76b677c48cf04135e93a212ed358a8e67caa05ecf7606a3189a7871f8d445127eccd1a531efea2baa2d47cc6ec935b15c4a4efe350a439eb6837a2edf9dbcc53e3eba822902c398a44d335d9a5161cd6daecb712fd2c712669777e53a058aba9622d00bad2cb2bbeab4277ae2e32e2219fcdcf6e1932b5b56d261ad865ae0f7b2ea6d84998f217c888cf774b4e86965cc465aee1f6bbc42a528b40144a2d2ba01a93722586d541a1305f3bbd021222169797273b60f48809d2ad7a36984ee4373f9dde55f25245a0aab772a4626a13418bc205aa01ac0dad248d78f9ed19596540dce31b90e69136dbc41a53f3b995fc49560f7a2c0e0bf537321dced9a2ce6a1257b433a7780f104f3aea8cd7520126ad87ac5aab35b7452dac0b0be2058e74f25e032bce16aab55927910d20c5a0cc06b23b940e5b78b40bc4671ab54066b7f960b6504bc18bbd0c0100000000000000000000000000028d083c0acd8d1f25cdb870b7e644b0c92792a868a5e2f0963196c98956fda12754a333ced43f08e649f9c8657046a55e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b5b021f520bf1f3448242ec8b2687b41414995110e94d269e01040dc203088ea05a8a6b733cbc673506867fdc4dd21c18fafca4d92a56e3c6a0cdcb0c676fb34f1864f0a4a5d5ee15bef1c425770b5e68d69229afadef252de0837d53c6274b5751ee3c768a5ea93651d00a4e3bd25e6a6e6f1465cca580440e53bd310608b833538183b5150a38ff7cd79ea9d7ae72c3ad568a63a32552e5145fb1081bb56cbabf9e7c5a9a87cd8770ccd54f5ec8909ea57b6b98424bf8c8e9399cf1aa84cb8c0f3bce2b2f211c461f975950e6d4ec263ab9ff4b2ba89ad8b2ce7ab1bdf2366850adef9ba229e5a824fcb37d67f5b92582187ba7fff6f7471ae22327ab0d5cf2e5c50ef876aeed18f6ede2ba513b05b72357128a7c3743d373c617885250e6a9e90221f829d260c1026df4b782cb80188e13617c7faf8518fcfd77c1d798dc0bb1513d3003556f13ae1e244c8a3fd0bf547b726565080214281fac046701e4bb1dcf74e9b601dd5ae35356b1bdb99c0e977ddfb17de5d6f61cc6a21397c0720000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "SGX Host Verification Service (SHVS) contacts the SGX Agent using this REST endpoint and retrieve the platform values. \r\n\r\nSGX Agent provides detailed resource information specific to Intel Software Guard Extensions (SGX) security technology which includes SGX Discovery, SGX Enablement Information, Flexible Launch control support and SGX EPC Memory Availability with size information. SGX Agent also collects the SGX platform-specific values, explicitly SGX Platform Manifest, Encrypted PPID, CPU SVN, ISV SVN, PCE ID and QEID on the SGX enabled platform.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f3734bfe-1ea6-49b5-95d1-a3bc16813119",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ae9331ab-6c9f-457c-b9aa-da231252f49f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Push Platform Information to SGX CS",
+			"item": [
+				{
+					"name": "pushPlatformInfo",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenScs}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cpu_svn\": \"{{cpusvn}}\",\n    \"enc_ppid\": \"{{encppid}}\",\n    \"manifest\": \"{{manifest}}\",\n    \"pce_id\": \"{{pceid}}\",\n    \"pce_svn\": \"{{pcesvn}}\",\n    \"qe_id\": \"{{qeid}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/push",
+							"protocol": "https",
+							"host": [
+								"{{scs}}"
+							],
+							"port": "{{scsPort}}",
+							"path": [
+								"scs",
+								"sgx",
+								"platforminfo",
+								"push"
+							]
+						},
+						"description": "Pushes the SGX Platform values into the SGX Caching Service (SCS). The SGX Host Verification Service (HVS) retrieves the \nplatform values (such as enc_ppi, pceid, cpisvn, pcesvn, qeid and manifest) from the registered SGX Agent and uses this API \nto push the platform values to the SCS.\nA valid bearer token should be provided to authorize this REST call.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenScs}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cpu_svn\": \"{{cpusvn}}\",\n    \"enc_ppid\": \"{{encppid}}\",\n    \"manifest\": \"{{manifest}}\",\n    \"pce_id\": \"{{pceid}}\",\n    \"pce_svn\": \"{{pcesvn}}\",\n    \"qe_id\": \"{{qeid}}\"\n}"
+								},
+								"url": {
+									"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/push",
+									"protocol": "https",
+									"host": [
+										"{{scs}}"
+									],
+									"port": "{{scsPort}}",
+									"path": [
+										"scs",
+										"sgx",
+										"platforminfo",
+										"push"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Aug 2020 22:13:50 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "61"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Status\": \"Success\",\n    \"Message\": \"platform data pushed to scs\"\n}"
+						}
+					]
+				}
+			],
+			"description": "SGX Host Verification Service (SHVS) makes use of the following SGX Caching Service (SCS) REST endpoint, to push SGX platform values (encrypted_ppid, pcesvn, cpusvn, qeid, pceid and manifest).",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed7a4290-0284-4de9-b8ff-be9c9d69f7e1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "55febe0b-16f3-428f-ae1c-449b8213b780",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify TCB Info",
+			"item": [
+				{
+					"name": "tcbInfo",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/certification/v1/tcb?fmspc={{fmpsc}}",
+							"protocol": "https",
+							"host": [
+								"{{scs}}"
+							],
+							"port": "{{scsPort}}",
+							"path": [
+								"scs",
+								"sgx",
+								"certification",
+								"v1",
+								"tcb"
+							],
+							"query": [
+								{
+									"key": "fmspc",
+									"value": "{{fmpsc}}",
+									"description": "FMSPC value of the platform."
+								}
+							]
+						},
+						"description": "Retrieves the Trusted Computing Base (TCB) information for all TCB levels of the SGX enabled platform \nwith the provided FMPSC value.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/certification/v1/tcb?fmspc={{fmpsc}}",
+									"protocol": "https",
+									"host": [
+										"{{scs}}"
+									],
+									"port": "{{scsPort}}",
+									"path": [
+										"scs",
+										"sgx",
+										"certification",
+										"v1",
+										"tcb"
+									],
+									"query": [
+										{
+											"key": "fmspc",
+											"value": "{{fmpsc}}",
+											"description": "FMSPC value of the platform."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "SGX-TCB-Info-Issuer-Chain",
+									"value": "-----BEGIN%20CERTIFICATE-----%0AMIICkDCCAjagAwIBAgIUTh8n662T%2FsqPZK%2B7n3H67%2FKGwu0wCgYIKoZIzj0EAwIw%0AaDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv%0AcnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ%0ABgNVBAYTAlVTMB4XDTE5MTAzMTEyMzUwMloXDTI2MTAzMTEyMzUwMlowbDEeMBwG%0AA1UEAwwVSW50ZWwgU0dYIFRDQiBTaWduaW5nMRowGAYDVQQKDBFJbnRlbCBDb3Jw%0Ab3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQswCQYD%0AVQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABOnYw9LbN%2FJmyUttXa0M%0AiBEenjPbxbR4C8MuVYxDI%2BLe8lDBLp9X4wMzCAUF%2FfI%2F31giClXp%2Fy0erLbLZjdV%0A07%2BjgbkwgbYwHwYDVR0jBBgwFoAU6ehEUlM2XEsYmhH8QxgspdwggEgwVgYDVR0f%0ABE8wTTBLoEmgR4ZFaHR0cHM6Ly9zYngtY2VydGlmaWNhdGVzLnRydXN0ZWRzZXJ2%0AaWNlcy5pbnRlbC5jb20vSW50ZWxTR1hSb290Q0EuY3JsMB0GA1UdDgQWBBROHyfr%0ArZP%2Byo9kr7ufcfrv8obC7TAOBgNVHQ8BAf8EBAMCBsAwDAYDVR0TAQH%2FBAIwADAK%0ABggqhkjOPQQDAgNIADBFAiEAxhkJ8vcmucFrENPm9AZbfDHL1VBv2U%2Be6QkYmPyK%0Ahh0CIFMjBrlJNQYhSgU5hwinXHvgcFNZ%2Bn5%2BoHf6RNb7OlY7%0A-----END%20CERTIFICATE-----%0A-----BEGIN%20CERTIFICATE-----%0AMIIClDCCAjmgAwIBAgIVAOnoRFJTNlxLGJoR%2FEMYLKXcIIBIMAoGCCqGSM49BAMC%0AMGgxGjAYBgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBD%0Ab3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQsw%0ACQYDVQQGEwJVUzAeFw0xOTEwMzEwOTQ5MjFaFw00OTEyMzEyMzU5NTlaMGgxGjAY%0ABgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBDb3Jwb3Jh%0AdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQswCQYDVQQG%0AEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABE%2F6D%2F1WHNrWwPmNMIyBKMW5%0AJ6JzMsjo6xP2vkK1cdZGb1PGRP%2FC%2F8ECgiDkmklmzwLzLi%2B000m7LLrtKJA3oC2j%0Agb8wgbwwHwYDVR0jBBgwFoAU6ehEUlM2XEsYmhH8QxgspdwggEgwVgYDVR0fBE8w%0ATTBLoEmgR4ZFaHR0cHM6Ly9zYngtY2VydGlmaWNhdGVzLnRydXN0ZWRzZXJ2aWNl%0Acy5pbnRlbC5jb20vSW50ZWxTR1hSb290Q0EuY3JsMB0GA1UdDgQWBBTp6ERSUzZc%0ASxiaEfxDGCyl3CCASDAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH%2FBAgwBgEB%2FwIB%0AATAKBggqhkjOPQQDAgNJADBGAiEA0RWrsGrGlDp76l9LQjt%2BzMqQZPB%2F2YuuueFU%0AgN9AdkMCIQDo9ANUhcStABChR6rlVoBo6MQ6QumCnk%2BpdGBEy8%2FsQg%3D%3D%0A-----END%20CERTIFICATE-----%0A"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Aug 2020 22:20:07 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1525"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"tcbInfo\": {\n        \"version\": 2,\n        \"issueDate\": \"2020-08-31T14:00:05Z\",\n        \"nextUpdate\": \"2020-09-30T14:00:05Z\",\n        \"fmspc\": \"20606a000000\",\n        \"pceId\": \"0000\",\n        \"tcbType\": 0,\n        \"tcbEvaluationDataNumber\": 5,\n        \"tcbLevels\": [\n            {\n                \"tcb\": {\n                    \"sgxtcbcomp01svn\": 2,\n                    \"sgxtcbcomp02svn\": 2,\n                    \"sgxtcbcomp03svn\": 0,\n                    \"sgxtcbcomp04svn\": 0,\n                    \"sgxtcbcomp05svn\": 0,\n                    \"sgxtcbcomp06svn\": 0,\n                    \"sgxtcbcomp07svn\": 0,\n                    \"sgxtcbcomp08svn\": 0,\n                    \"sgxtcbcomp09svn\": 0,\n                    \"sgxtcbcomp10svn\": 0,\n                    \"sgxtcbcomp11svn\": 0,\n                    \"sgxtcbcomp12svn\": 0,\n                    \"sgxtcbcomp13svn\": 0,\n                    \"sgxtcbcomp14svn\": 0,\n                    \"sgxtcbcomp15svn\": 0,\n                    \"sgxtcbcomp16svn\": 0,\n                    \"pcesvn\": 10\n                },\n                \"tcbDate\": \"2020-05-28T00:00:00Z\",\n                \"tcbStatus\": \"UpToDate\"\n            },\n            {\n                \"tcb\": {\n                    \"sgxtcbcomp01svn\": 1,\n                    \"sgxtcbcomp02svn\": 1,\n                    \"sgxtcbcomp03svn\": 0,\n                    \"sgxtcbcomp04svn\": 0,\n                    \"sgxtcbcomp05svn\": 0,\n                    \"sgxtcbcomp06svn\": 0,\n                    \"sgxtcbcomp07svn\": 0,\n                    \"sgxtcbcomp08svn\": 0,\n                    \"sgxtcbcomp09svn\": 0,\n                    \"sgxtcbcomp10svn\": 0,\n                    \"sgxtcbcomp11svn\": 0,\n                    \"sgxtcbcomp12svn\": 0,\n                    \"sgxtcbcomp13svn\": 0,\n                    \"sgxtcbcomp14svn\": 0,\n                    \"sgxtcbcomp15svn\": 0,\n                    \"sgxtcbcomp16svn\": 0,\n                    \"pcesvn\": 9\n                },\n                \"tcbDate\": \"2020-03-22T00:00:00Z\",\n                \"tcbStatus\": \"OutOfDate\"\n            },\n            {\n                \"tcb\": {\n                    \"sgxtcbcomp01svn\": 1,\n                    \"sgxtcbcomp02svn\": 1,\n                    \"sgxtcbcomp03svn\": 0,\n                    \"sgxtcbcomp04svn\": 0,\n                    \"sgxtcbcomp05svn\": 0,\n                    \"sgxtcbcomp06svn\": 0,\n                    \"sgxtcbcomp07svn\": 0,\n                    \"sgxtcbcomp08svn\": 0,\n                    \"sgxtcbcomp09svn\": 0,\n                    \"sgxtcbcomp10svn\": 0,\n                    \"sgxtcbcomp11svn\": 0,\n                    \"sgxtcbcomp12svn\": 0,\n                    \"sgxtcbcomp13svn\": 0,\n                    \"sgxtcbcomp14svn\": 0,\n                    \"sgxtcbcomp15svn\": 0,\n                    \"sgxtcbcomp16svn\": 0,\n                    \"pcesvn\": 0\n                },\n                \"tcbDate\": \"2020-03-22T00:00:00Z\",\n                \"tcbStatus\": \"OutOfDate\"\n            }\n        ]\n    },\n    \"signature\": \"f6d3720de2bda91036db982552e816d341ce33f9966958e1bdc402eee9ccb7dbc21b980e35adf084d86be05d0170748e9e81a744f08b63a5b6eeb2df583ac731\"\n}"
+						}
+					]
+				}
+			],
+			"description": "SGX Caching Service (SCS) validates the input parameters and contacts Intel PCS Server to get all PCK certificates for this platform by providing enc_ppid and pceid as input parameters.\r\n\r\nIntel PCS Server returns a list of Platform Certification Key (PCK) Certificates for the platform along with certificate issuer chain. SCS picks any Certificate from the list of certificates and extracts the FMSPC value.\r\n\r\nUsing the FMSPC value, SCS gets the corresponding TCBInfo for the FMSPC in DB, if not found makes another API call to Intel PCS Server to get the TCBInfo structure for the platform.\r\n\r\nWith the TCBInfo structure, cpusvn, pcesvn, pceid and list of Platform Certification Key (PCK) certificates as input, SCS makes a call to PCK Certificate selection library (Part of SGX DCAP infrastructure) to get the best suited PCK certificate for the current raw TCB level.\r\n\r\nSCS updates the Platform table with the latest fmspc value along with platform values.\r\n\r\nSCS updates the PCKCert table with the new set of PCK certificates received along with corresponding tcbm value for each pck certificate.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d4269dd2-87cc-49e1-86d4-a05a4e400392",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fedd41e4-1f43-4486-aef9-fc63ff8e406f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify PCK Certificate",
+			"item": [
+				{
+					"name": "pckCertificate",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/x-pem-file",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/certification/v1/pckcert?encrypted_ppid={{encppid}}&cpusvn={{cpusvn}}&pcesvn={{pcesvn}}&pceid={{pceid}}&qeid={{qeid}}",
+							"protocol": "https",
+							"host": [
+								"{{scs}}"
+							],
+							"port": "{{scsPort}}",
+							"path": [
+								"scs",
+								"sgx",
+								"certification",
+								"v1",
+								"pckcert"
+							],
+							"query": [
+								{
+									"key": "encrypted_ppid",
+									"value": "{{encppid}}",
+									"description": "Encrypted Platform Provisioning ID."
+								},
+								{
+									"key": "cpusvn",
+									"value": "{{cpusvn}}",
+									"description": "CPU SVN of the platform."
+								},
+								{
+									"key": "pcesvn",
+									"value": "{{pcesvn}}",
+									"description": "PCE SVN of the platform."
+								},
+								{
+									"key": "pceid",
+									"value": "{{pceid}}",
+									"description": "PCE ID of the platform."
+								},
+								{
+									"key": "qeid",
+									"value": "{{qeid}}",
+									"description": "Quoting Enclave ID specific to a platform."
+								}
+							]
+						},
+						"description": "Retrieves the Platform Certification Key (PCK) Certificate for the current TCB level of SGX enabled platform \nwith the provided platform values.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/x-pem-file",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/certification/v1/pckcert?encrypted_ppid={{encppid}}&cpusvn={{cpusvn}}&pcesvn={{pcesvn}}&pceid={{pceid}}&qeid={{qeid}}",
+									"protocol": "https",
+									"host": [
+										"{{scs}}"
+									],
+									"port": "{{scsPort}}",
+									"path": [
+										"scs",
+										"sgx",
+										"certification",
+										"v1",
+										"pckcert"
+									],
+									"query": [
+										{
+											"key": "encrypted_ppid",
+											"value": "{{encppid}}",
+											"description": "Encrypted Platform Provisioning ID."
+										},
+										{
+											"key": "cpusvn",
+											"value": "{{cpusvn}}",
+											"description": "CPU SVN of the platform."
+										},
+										{
+											"key": "pcesvn",
+											"value": "{{pcesvn}}",
+											"description": "PCE SVN of the platform."
+										},
+										{
+											"key": "pceid",
+											"value": "{{pceid}}",
+											"description": "PCE ID of the platform."
+										},
+										{
+											"key": "qeid",
+											"value": "{{qeid}}",
+											"description": "Quoting Enclave ID specific to a platform."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "raw",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/x-pem-file"
+								},
+								{
+									"key": "sgx-pck-certificate-issuer-chain",
+									"value": "-----BEGIN%20CERTIFICATE-----%0AMIICmzCCAkCgAwIBAgIUWSPTp0qoY1QuOXCt4A8HK1ckKrcwCgYIKoZIzj0EAwIw%0AaDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv%0AcnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ%0ABgNVBAYTAlVTMB4XDTE5MTAzMTEyMzQzMVoXDTM0MTAzMTEyMzQzMVowcDEiMCAG%0AA1UEAwwZSW50ZWwgU0dYIFBDSyBQbGF0Zm9ybSBDQTEaMBgGA1UECgwRSW50ZWwg%0AQ29ycG9yYXRpb24xFDASBgNVBAcMC1NhbnRhIENsYXJhMQswCQYDVQQIDAJDQTEL%0AMAkGA1UEBhMCVVMwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQwp%2BLc%2BTUBtg1H%0A%2BU8JIsMsbjHjCkTtXb8jPM6r2dhu9zIblhDZ7INfqt3Ix8XcFKD8k0NEXrkZ66qJ%0AXa1KzLIKo4G%2FMIG8MB8GA1UdIwQYMBaAFOnoRFJTNlxLGJoR%2FEMYLKXcIIBIMFYG%0AA1UdHwRPME0wS6BJoEeGRWh0dHBzOi8vc2J4LWNlcnRpZmljYXRlcy50cnVzdGVk%0Ac2VydmljZXMuaW50ZWwuY29tL0ludGVsU0dYUm9vdENBLmNybDAdBgNVHQ4EFgQU%0AWSPTp0qoY1QuOXCt4A8HK1ckKrcwDgYDVR0PAQH%2FBAQDAgEGMBIGA1UdEwEB%2FwQI%0AMAYBAf8CAQAwCgYIKoZIzj0EAwIDSQAwRgIhAIRoXu3Y45VF9aCiK0Z2K6EQKCtC%0ArxTTiZ4JYbEyfBGsAiEAiVoYmxF7K%2FSoqIjff1zG0%2FLiv%2FRIOR%2FQBJ5%2Bd88HAYI%3D%0A-----END%20CERTIFICATE-----%0A-----BEGIN%20CERTIFICATE-----%0AMIIClDCCAjmgAwIBAgIVAOnoRFJTNlxLGJoR%2FEMYLKXcIIBIMAoGCCqGSM49BAMC%0AMGgxGjAYBgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBD%0Ab3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQsw%0ACQYDVQQGEwJVUzAeFw0xOTEwMzEwOTQ5MjFaFw00OTEyMzEyMzU5NTlaMGgxGjAY%0ABgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBDb3Jwb3Jh%0AdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQswCQYDVQQG%0AEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABE%2F6D%2F1WHNrWwPmNMIyBKMW5%0AJ6JzMsjo6xP2vkK1cdZGb1PGRP%2FC%2F8ECgiDkmklmzwLzLi%2B000m7LLrtKJA3oC2j%0Agb8wgbwwHwYDVR0jBBgwFoAU6ehEUlM2XEsYmhH8QxgspdwggEgwVgYDVR0fBE8w%0ATTBLoEmgR4ZFaHR0cHM6Ly9zYngtY2VydGlmaWNhdGVzLnRydXN0ZWRzZXJ2aWNl%0Acy5pbnRlbC5jb20vSW50ZWxTR1hSb290Q0EuY3JsMB0GA1UdDgQWBBTp6ERSUzZc%0ASxiaEfxDGCyl3CCASDAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH%2FBAgwBgEB%2FwIB%0AATAKBggqhkjOPQQDAgNJADBGAiEA0RWrsGrGlDp76l9LQjt%2BzMqQZPB%2F2YuuueFU%0AgN9AdkMCIQDo9ANUhcStABChR6rlVoBo6MQ6QumCnk%2BpdGBEy8%2FsQg%3D%3D%0A-----END%20CERTIFICATE-----%0A"
+								},
+								{
+									"key": "sgx-tcbm",
+									"value": "020200000000000000000000000000000A00"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Aug 2020 22:23:12 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1756"
+								}
+							],
+							"cookie": [],
+							"body": "-----BEGIN CERTIFICATE-----\nMIIE5jCCBI2gAwIBAgIUREp9Y6te5RUApptRo1iJYgqHIWwwCgYIKoZIzj0EAwIwcDEiMCAGA1UE\nAwwZSW50ZWwgU0dYIFBDSyBQbGF0Zm9ybSBDQTEaMBgGA1UECgwRSW50ZWwgQ29ycG9yYXRpb24x\nFDASBgNVBAcMC1NhbnRhIENsYXJhMQswCQYDVQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjAwODMx\nMTQwMDA0WhcNMjcwODMxMTQwMDA0WjBwMSIwIAYDVQQDDBlJbnRlbCBTR1ggUENLIENlcnRpZmlj\nYXRlMRowGAYDVQQKDBFJbnRlbCBDb3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJ\nBgNVBAgMAkNBMQswCQYDVQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABDnwRZCe/kjZ\ng8RqXcfa1b1VYGmMYb+iNIygZXONuG48cW90myE7bzRoc9iUfLfCzK0KwQtzkv/SDdZIWjCaz9aj\nggMDMIIC/zAfBgNVHSMEGDAWgBRZI9OnSqhjVC45cK3gDwcrVyQqtzBiBgNVHR8EWzBZMFegVaBT\nhlFodHRwczovL3NieC5hcGkudHJ1c3RlZHNlcnZpY2VzLmludGVsLmNvbS9zZ3gvY2VydGlmaWNh\ndGlvbi92My9wY2tjcmw/Y2E9cGxhdGZvcm0wHQYDVR0OBBYEFDukc1cCVg8XF9c6bbUN2gveuT1K\nMA4GA1UdDwEB/wQEAwIGwDAMBgNVHRMBAf8EAjAAMIICOQYJKoZIhvhNAQ0BBIICKjCCAiYwHgYK\nKoZIhvhNAQ0BAQQQOgs1S+PfrqacSaRqIbH+xzCCAWMGCiqGSIb4TQENAQIwggFTMBAGCyqGSIb4\nTQENAQIBAgECMBAGCyqGSIb4TQENAQICAgECMBAGCyqGSIb4TQENAQIDAgEAMBAGCyqGSIb4TQEN\nAQIEAgEAMBAGCyqGSIb4TQENAQIFAgEAMBAGCyqGSIb4TQENAQIGAgEAMBAGCyqGSIb4TQENAQIH\nAgEAMBAGCyqGSIb4TQENAQIIAgEAMBAGCyqGSIb4TQENAQIJAgEAMBAGCyqGSIb4TQENAQIKAgEA\nMBAGCyqGSIb4TQENAQILAgEAMBAGCyqGSIb4TQENAQIMAgEAMBAGCyqGSIb4TQENAQINAgEAMBAG\nCyqGSIb4TQENAQIOAgEAMBAGCyqGSIb4TQENAQIPAgEAMBAGCyqGSIb4TQENAQIQAgEAMBAGCyqG\nSIb4TQENAQIRAgEKMB8GCyqGSIb4TQENAQISBBACAgAAAAAAAAAAAAAAAAAAMBAGCiqGSIb4TQEN\nAQMEAgAAMBQGCiqGSIb4TQENAQQEBiBgagAAADAPBgoqhkiG+E0BDQEFCgEBMB4GCiqGSIb4TQEN\nAQYEEABfaRGZkBoPH0P0yzB1FCgwRAYKKoZIhvhNAQ0BBzA2MBAGCyqGSIb4TQENAQcBAQH/MBAG\nCyqGSIb4TQENAQcCAQEAMBAGCyqGSIb4TQENAQcDAQH/MAoGCCqGSM49BAMCA0cAMEQCIGJZIPqf\nVL5e2vCYD1DGYKjufru6iXKJoAdDyOQTXgdIAiBfHkTCZLMoVjLGnDLNKiZ5TSp6ceNYSksLfVcF\nQU6p7g==\n-----END CERTIFICATE-----"
+						}
+					]
+				}
+			],
+			"description": "We can now retrieve the Platform Certification Key (PCK) Certificate for the current raw TCB level of SGX enabled platform from the SGX Caching Service (SCS).",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "730912cc-ae47-448c-b809-126614a452a1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "98739850-955c-41a5-9b64-8df28bb65d8c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify TCB Status is UpToDate",
+			"item": [
+				{
+					"name": "tcbStatus",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenScs}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/tcbstatus?qeid={{qeid}}",
+							"protocol": "https",
+							"host": [
+								"{{scs}}"
+							],
+							"port": "{{scsPort}}",
+							"path": [
+								"scs",
+								"sgx",
+								"platforminfo",
+								"tcbstatus"
+							],
+							"query": [
+								{
+									"key": "qeid",
+									"value": "{{qeid}}",
+									"description": "Quoting Enclave ID specific to a platform."
+								}
+							]
+						},
+						"description": "This API is used by SGX Host Verification Service (HVS) to determine the TCB up-to-date status of a platform. \nA valid bearer token should be provided to authorize this REST call.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenScs}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/tcbstatus?qeid={{qeid}}",
+									"protocol": "https",
+									"host": [
+										"{{scs}}"
+									],
+									"port": "{{scsPort}}",
+									"path": [
+										"scs",
+										"sgx",
+										"platforminfo",
+										"tcbstatus"
+									],
+									"query": [
+										{
+											"key": "qeid",
+											"value": "{{qeid}}",
+											"description": "Quoting Enclave ID specific to a platform."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 14 Sep 2020 08:22:09 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "52"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Status\": \"true\",\n    \"Message\": \"TCB Status is UpToDate\"\n}"
+						}
+					]
+				}
+			],
+			"description": "SGX Caching Service (SCS) provides a REST Endpoint for determining TCB uptodate status. This API will be used by SGX Host Verification Service (SHVS) to make decision on the TCB level status of a platform before provisioning secrets.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "65a2b66c-6054-4faf-a985-0bc22350039f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "59171ec3-5884-40d5-90e5-3c0e3a5a7d23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Integration with Orchestrator",
+			"item": [
+				{
+					"name": "Configuring Pods to Require Matching Attributes",
+					"item": [],
+					"description": "Verify that the worker nodes have had their SGX platform data attributes populated: \n\n```kubectl get nodes --show-labels```\n\nThe output should show the SGX-Enabled and any other platform information applied to all of the registered Worker Nodes.\n\nNow create a pod_config.yaml (say for nginx container) containing the matchExpression policy\nrequirements in root directory on master node.\n\n```yaml\nkind: Pod   \n  metadata:     \n  name: nginx       \n  labels:         \n    name: nginx    \nspec:   \n  affinity:     \n    nodeAffinity:       \n      requiredDuringSchedulingIgnoredDuringExecution:         \n        nodeSelectorTerms:           \n          - matchExpressions:                \n\t         - key: SGX-Enabled                \n\t           operator: In                 \n\t\t       values:                    \n\t\t         - \"true\"\n  containers:       \n    - name: nginx         \n      image: nginx           \n\t  ports:    \n        - containerPort: 80\n```\n",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "165e3970-3fee-47bd-a98f-9f68426ae1c4",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "821f19f7-56da-48f1-9595-42eaf296446a",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Launching a Pod on a Compliant Worker Node",
+					"item": [],
+					"description": "Below is a sample command for the Kubernetes Master to launch a Pod:\r\n\r\n```kubectl create -f pod_config.yaml```\r\n\r\nWe can verify that the Master Node CRDs contain attributes successfully pushed from the Integration Hub:\r\n\r\n```kubectl get crds kubectl get -o json hostattributes.isecl.intel.com```\r\n\r\nWe can list the Worker Nodes and their labels:\r\n\r\n```kubectl get nodes --show-labels```\r\n\r\nFinally, we can list the running Pods to confirm that the Pod launched and is running on a compliant Worker Node:\r\n\r\n```kubectl get pods```",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a208b4f4-54cf-4b05-b6a8-ad97be3d3f5c",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "98fa8c6d-98a6-49d5-ab8c-0584f2004245",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"description": "The SGX Hub (SHUB) allows to support SGX in Kubernetes and Open stack. SHUB pulls the SGX compute nodes information from the SGX Host Verification Service (SHVS) and pushes it to Kubernetes or Open stack. SHUB performs these steps on a regular basis so that the most recent SGX information about nodes is reflected in Kubernetes and Open stack. This integration allows Kubernetes and Open stack to schedule VMs and containers that need to run SGX workloads on compute nodes that support SGX. The SGX data that SHUB pushes to Kubernetes and Open stack consists of SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status up to date/not up to date and platform-data expiry time.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fbe2c4a1-8452-4df1-95aa-0767ba19f406",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e901b7d1-f6ac-40a5-a441-db6a3abb8702",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "747b1cbc-04c4-4b6a-950d-34235ca8f36b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c04734d9-307c-47de-8151-b3f3fa1f7ee1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
