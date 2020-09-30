@@ -1,19 +1,19 @@
 #!/bin/bash
-SKC_BINARY_DIR=../../binaries
+SKC_BINARY_DIR=../../../../binaries
 
 KMS_HOSTNAME=$("hostname")
 
 # Copy env files to Home directory
 HOME_DIR=~/
-cp -pf ../../sgx-caching-service/dist/linux/scs.env $HOME_DIR
-cp -pf ../../sgx-verification-service/dist/linux/sqvs.env $HOME_DIR
+cp -pf ../../../../sgx-caching-service/dist/linux/scs.env $HOME_DIR
+cp -pf ../../../../sgx-verification-service/dist/linux/sqvs.env $HOME_DIR
 cp -pf env/kms.env $HOME_DIR
 cp -pf env/iseclpgdb.env $HOME_DIR
 cp -pf env/cms.env $HOME_DIR
 cp -pf env/authservice.env $HOME_DIR
 
 # Copy DB scripts to Home directory
-cp -pf ../../sgx-caching-service/dist/linux/install_pgscsdb.sh $HOME_DIR
+cp -pf ../../../../sgx-caching-service/dist/linux/install_pgscsdb.sh $HOME_DIR
 cp -pf env/install_pg.sh $HOME_DIR
 
 cp -pf env/trusted_rootca.pem /tmp

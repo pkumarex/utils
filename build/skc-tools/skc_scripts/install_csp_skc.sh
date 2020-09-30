@@ -1,18 +1,18 @@
 #!/bin/bash
-SKC_BINARY_DIR=../../binaries
+SKC_BINARY_DIR=../../../../binaries
 
 # Copy env files to Home directory
 HOME_DIR=~/
-cp -pf ../../sgx-caching-service/dist/linux/scs.env $HOME_DIR
-cp -pf ../../sgx-hvs/dist/linux/shvs.env $HOME_DIR
+cp -pf ../../../../sgx-caching-service/dist/linux/scs.env $HOME_DIR
+cp -pf ../../../../sgx-hvs/dist/linux/shvs.env $HOME_DIR
 cp -pf env/cms.env $HOME_DIR
 cp -pf env/authservice.env $HOME_DIR
 cp -pf env/ihub.env $HOME_DIR
 cp -pf env/iseclpgdb.env $HOME_DIR
 
 # Copy DB scripts to Home directory
-cp -pf ../../sgx-caching-service/dist/linux/install_pgscsdb.sh $HOME_DIR
-cp -pf ../../sgx-hvs/dist/linux/install_pgshvsdb.sh $HOME_DIR
+cp -pf ../../../../sgx-caching-service/dist/linux/install_pgscsdb.sh $HOME_DIR
+cp -pf ../../../../sgx-hvs/dist/linux/install_pgshvsdb.sh $HOME_DIR
 cp -pf env/install_pg.sh $HOME_DIR
 
 # read from environment variables file if it exists
