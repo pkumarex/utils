@@ -1,0 +1,51 @@
+Pre Requisites
+--------------
+- VM/Server running RHEL 8.2
+
+- RHEL package repositories are setup and dnf updates are completed
+
+- root account access. All SKC Components are installed with root user permissions
+
+- Configure http_proxy and https_proxy in case machines are accessed through proxy server
+
+- configure no_proxy and add loopback address of vm ip and sgx server ip
+
+
+Deploying all SKC Golang Components
+-----------------------------------
+# ./install_csp_skc.sh
+ This script will install all SKC golang services on Cloud Service Provider side along with databases, user accounts and roles asscoiated for each user
+
+To check if installation is successful, following command can be used
+# netstat -lntp (if netstat command is not available, run dnf install net-tools) 
+
+Alternatively each service status can be checked as follows
+# cms status
+# authservice status
+# scs status
+# shvs status
+# ihub status
+
+# ./install_enterprise_skc.sh
+ This script will install all SKC golang services on Enterprise side along with databases, user accounts and roles asscoiated for each user
+
+To check if installation is successful, following command can be used
+# netstat -lntp (if netstat command is not available, run dnf install net-tools)
+
+Alternatively each service status can be checked as follows
+# cms status
+# authservice status
+# scs status
+# sqvs status
+# kms status
+
+Turn off Firewall service or ensure that these services can be accessed from the machine where SGX Agent/SKC_Library is running
+# systemctl stop firewalld
+
+Configuration files for all SKC golang components can be found in /etc directory (for ex: /etc/cms/)
+
+Log files are accessible from /var/log directory (for ex: /var/log/cms/cms.log)
+
+For Key Broker service, installation is done at /opt/kms directory.
+	configuration files are found in /opt/kms/configuration
+	log file for KBS is at /opt/kms/logs/kms.log
