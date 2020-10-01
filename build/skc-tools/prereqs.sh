@@ -13,6 +13,7 @@ git
 zip
 java-1.8.0-openjdk-devel.x86_64
 make
+openssl-devel
 )
 
 #download pre-reqs
