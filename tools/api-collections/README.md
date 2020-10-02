@@ -53,17 +53,17 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
   > **Note:** This step is required only when not using Postman API Network and downloading from Github
 
-  ![importing-collection](C:/Users/raghave2/git/docs/quick-start-guides/images/importing_collection.gif)
+  ![importing-collection](./images/importing_collection.gif)
 
 * Update env as per the deployment details for specific use case
 
-  ![updating-env](C:/Users/raghave2/git/docs/quick-start-guides/images/updating_env.gif)
+  ![updating-env](./images/updating_env.gif)
 
 * View Documentation
 
-  ![view-docs](C:/Users/raghave2/git/docs/quick-start-guides/images/view_documentation.gif)
+  ![view-docs](./images/view_documentation.gif)
 
 * Run the workflow
 
-  ![running-collection](C:/Users/raghave2/git/docs/quick-start-guides/images/running_collection.gif)
+  ![running-collection](./images/running_collection.gif)
 
