@@ -1,6 +1,6 @@
 # Intel® Security Libraries for Data Center API Collections	
 
-One click Postman API Collections for Intel® SecL-DC supported use-cases.
+One click Postman API Collections for Intel® SecL-DC use-cases.
 
 
 ## Use Case Collections
@@ -12,11 +12,10 @@ One click Postman API Collections for Intel® SecL-DC supported use-cases.
 |                        | Trusted Workload Placement            | ✔️(Kubernetes Only) |
 |                        | Application Integrity                 | ✔️                  |
 | Launch Time Protection | VM Confidentiality                    | ❌                  |
-|                        | Container Confidentiality with Docker Runtime | ✔️           
-|                        | Container Confidentiality with CRIO Runtime | ✔️            |
-| Secure Key Caching     | Secure Key Caching                    | ✔️                  |
-|                        | Security Aware Orchestration          | ✔️(Kubernetes Only) |
-
+|  | Container Confidentiality with Docker Runtime | ✔️ |
+|  | Container Confidentiality with CRIO Runtime | ✔️ |
+| Secure Key Caching |  | ✔️ |
+| Security Aware Orchestration |  | ✔️(Kubernetes Only) |
 
 
 ## Requirements
@@ -28,12 +27,43 @@ One click Postman API Collections for Intel® SecL-DC supported use-cases.
 
 ## Using the API Collections
 
-1. Find Intel® SecL-DC API collections on [Postman API Network](https://explore.postman.com/) or download from github repo for specific version of API collection
+### Downloading API Collections
 
-   a. Postman API Network: <TODO: add the link here>
-   > **Note:** The API network by default will always have the latest published version of the API collection. All the older versions of the API collections
-     will be present on github for each release which can be downloaded as per the release tags for usage
-     
-   b. Github repository: <TODO: add the link here>
-   
-   
+* Postman API Network for latest release
+
+  <TODO: add image>
+
+  or 
+
+* Github repo for older releases
+
+  ```shell
+  #Clone the github repo for api-collections
+  git clone https://github.com/intel-secl/api-collections
+  
+  #Switch to specific release tag of choice
+  git checkout <release-tag of choice>
+  ```
+
+
+
+### Running API Collections
+
+* Import the collection into Postman API Client
+
+  > **Note:** This step is required only when not using Postman API Network and downloading from Github
+
+  ![importing-collection](C:/Users/raghave2/git/docs/quick-start-guides/images/importing_collection.gif)
+
+* Update env as per the deployment details for specific use case
+
+  ![updating-env](C:/Users/raghave2/git/docs/quick-start-guides/images/updating_env.gif)
+
+* View Documentation
+
+  ![view-docs](C:/Users/raghave2/git/docs/quick-start-guides/images/view_documentation.gif)
+
+* Run the workflow
+
+  ![running-collection](C:/Users/raghave2/git/docs/quick-start-guides/images/running_collection.gif)
+
