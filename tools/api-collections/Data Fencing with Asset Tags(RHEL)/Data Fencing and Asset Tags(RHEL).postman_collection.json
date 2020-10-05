@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "a56e08a7-8e82-469c-8c36-97119895486e",
+		"_postman_id": "b6ac08c5-9ba7-429f-aefc-8aeecaa252bf",
 		"name": "Data Fencing and Asset Tags(RHEL)",
-		"description": "Data Sovereignty builds on the Platform Integrity use case to allow physical\nTPMs to be written with Asset Tags containing any number of key/value pairs.\nThis use case is typically used to identify the geographic location of the\nphysical server, but can also be used to identify other attributes. For example,\nthe Asset Tags provided by the Data Sovereignty use case could be used to\nidentify hosts that meet specific compliance requirements and can run\ncontrolled workloads.\n\n> **Note:** Ensure to follow the Hardware requirements and installation required from the [Product Guide](https://01.org/intel-secl/documentation/intel%C2%AE-secl-dc-product-guide)",
+		"description": "Data Fencing and Asset Tags builds on the Platform Integrity use case to allow physical\nTPMs to be written with Asset Tags containing any number of key/value pairs.\nThis use case is typically used to identify the geographic location of the\nphysical server, but can also be used to identify other attributes. For example,\nthe Asset Tags provided by the Data Fencing and Asset Tags use case could be used to\nidentify hosts that meet specific compliance requirements and can run\ncontrolled workloads.\n\n> **Note:** Ensure to follow the Hardware requirements and installation required from the [Product Guide](https://01.org/intel-secl/documentation/intel%C2%AE-secl-dc-product-guide)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "23286d19-7707-4d66-a907-2cfd7675ae77",
+								"id": "2a3e24de-446e-419e-8156-a94f367c7164",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -135,7 +135,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1cc3f0cc-1729-4de8-837e-60162569c01b",
+								"id": "be2f1959-8b53-4e67-900b-d2a293f9c595",
 								"exec": [
 									"var report = pm.response.json();\r",
 									"pm.environment.set(\"hostHardwareUuid\",report.reports[0].host_info.hardware_uuid)\r",
@@ -147,7 +147,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9eed418a-c573-4be9-9d08-846d27a990ba",
+								"id": "bce4387e-cec1-4591-bb61-3c76c0e2ea5a",
 								"exec": [
 									""
 								],
@@ -363,7 +363,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "bb517bab-624f-48b6-81ef-c8750fa8eb80",
+						"id": "dfabdf8a-47e7-4f4a-a12c-bd760e721d6d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -373,7 +373,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0b850fe9-cb1d-4a63-add9-b8881085a905",
+						"id": "955b1153-1797-4c18-80f6-6b029fc2a886",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -392,7 +392,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "588ec5e2-81a2-486e-9b81-fb986b59daa0",
+								"id": "61426a73-e6aa-4016-9727-0e6700719bb7",
 								"exec": [
 									"var tagCertResponse = pm.response.json();\r",
 									"pm.environment.set(\"certificateId\",tagCertResponse.id)"
@@ -521,7 +521,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b4da59f2-fd4d-47cf-b5de-83157f1e5c75",
+						"id": "37b85c18-a6e0-431a-9d79-e3badc398b8e",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -531,7 +531,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8171c5f0-55c4-451d-a14a-3ad239e6bfc6",
+						"id": "35f6d6fb-3801-4bc3-9222-8333fc6eaee2",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -667,7 +667,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0d82b689-fc95-408d-99da-86c6d0c1d5e8",
+						"id": "7b898842-9ec6-4d60-b829-117071628099",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -677,7 +677,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "42884ef3-1bfa-4826-a0d4-04f12fcb5a52",
+						"id": "04d3c7d1-99fc-44dc-9580-8d3c1f630dd3",
 						"type": "text/javascript",
 						"exec": [
 							""
