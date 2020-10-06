@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f7517e2f-7191-4d3b-809e-477c2ecd43c5",
+		"_postman_id": "6deae3ad-71c4-47c1-a6c0-31663c0ce7bb",
 		"name": "Secure Discovery of SGX Collection",
 		"description": "For the secrets to be provisioned securely to SGX compute node on public cloud, the owner of the secret would like to ensure that the node is secure and trustworthy.\r\n\r\nSGX attestation infrastructure involves providing Platform Certification Key (PCK) certificates as part of the attestation report. To fetch the PCK certificates for a platform, platform needs to provide the platform SGX values to the Intel PCS server hosted on the internet. In addition, PCS server also provides other platform collaterals like PCK CRL, TCB Information, QE Identity Information for a platform.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e5f733a4-053f-427d-bee7-0b7eac215965",
+								"id": "bce339d5-e3e7-4658-94bd-345b2da137ac",
 								"exec": [
 									"pm.environment.set(\"bearerTokenShvs\", pm.response.text());"
 								],
@@ -125,7 +125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2104c454-1571-4409-a064-37cc2199d765",
+								"id": "0d49e052-19c0-4e86-ad60-4f32c4d094bb",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
 								],
@@ -235,7 +235,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c602ddda-1500-443e-be4f-221c58a03f57",
+								"id": "4ce3d7a1-6462-445c-a84f-63db359d4f61",
 								"exec": [
 									"pm.environment.set(\"bearerTokenScs\", pm.response.text());"
 								],
@@ -346,12 +346,12 @@
 		{
 			"name": "Verify Services",
 			"item": [],
-			"description": "The command line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify SGX Agent:\n\n```\nsgx_agent status\n```\n\nVerify SGX Host Verification Service (SHVS):\n\n```\nshvs status\n```\n\nVerify SGX Caching Service (SCS):\n\n```\nscs status\n```\n\nVerify SGX Hub (SHUB):\n\n```\nshub status\n```\n",
+			"description": "The command line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify SGX Agent:\n\n```\nsgx_agent status\n```\n\nVerify SGX Host Verification Service (SHVS):\n\n```\nshvs status\n```\n\nVerify SGX Caching Service (SCS):\n\n```\nscs status\n```\n\nVerify Integration Hub (IHUB):\n\n```\nihub status\n```\n",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "3c892790-664f-415a-8c1a-c253e82cb796",
+						"id": "154605d1-a58c-46cb-8e10-42303ddccfc6",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -361,7 +361,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fb23c7eb-c618-4dc5-a626-142daefaee14",
+						"id": "83ae7e65-bc10-48a7-b89f-5d38e7060d82",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -490,7 +490,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "379cae8c-cfe9-4200-86be-fae1c9e9a891",
+						"id": "83c1a766-eae8-4161-b32d-34a39ea34691",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -500,7 +500,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "54d8df56-c92b-465e-a169-92a41eec5a76",
+						"id": "be408ebd-155a-42a5-ae7d-4dcf31c400a8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -519,7 +519,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dc8c6fe8-4a2b-4c47-afe7-a9105f5b5dd1",
+								"id": "31526947-4f21-4a62-ad72-3201b303f749",
 								"exec": [
 									"pm.environment.set(\"encppid\", pm.response.json()[\"sgx-platform-data\"][\"enc-ppid\"]);\r",
 									"pm.environment.set(\"pceid\", pm.response.json()[\"sgx-platform-data\"][\"pceid\"]);\r",
@@ -623,7 +623,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f3734bfe-1ea6-49b5-95d1-a3bc16813119",
+						"id": "3f540415-c796-4601-b5f5-1749acfaac4d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -633,7 +633,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ae9331ab-6c9f-457c-b9aa-da231252f49f",
+						"id": "a156d31d-480c-48f3-9420-ba0743c4f6cc",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -757,7 +757,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ed7a4290-0284-4de9-b8ff-be9c9d69f7e1",
+						"id": "3cb6cef7-cef0-4230-832d-59a395ca72d3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -767,7 +767,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "55febe0b-16f3-428f-ae1c-449b8213b780",
+						"id": "e5d2c7f6-4b8b-44f8-b5e3-e5798e47887d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -885,7 +885,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "d4269dd2-87cc-49e1-86d4-a05a4e400392",
+						"id": "52cab5ea-4436-44aa-8481-031298030770",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -895,7 +895,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fedd41e4-1f43-4486-aef9-fc63ff8e406f",
+						"id": "93de6f94-3d57-485f-a4de-117cfc01c411",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1057,7 +1057,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "730912cc-ae47-448c-b809-126614a452a1",
+						"id": "58400156-0bc4-44ec-bc45-98c1f34a8ffe",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1067,7 +1067,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "98739850-955c-41a5-9b64-8df28bb65d8c",
+						"id": "9a14356c-4bd4-4140-bb11-7160547c2c61",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1189,7 +1189,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "65a2b66c-6054-4faf-a985-0bc22350039f",
+						"id": "83952773-67c8-406b-b58a-e45b196618a3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1199,7 +1199,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "59171ec3-5884-40d5-90e5-3c0e3a5a7d23",
+						"id": "1e098b57-8acb-4055-8579-f9df088114b7",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1220,7 +1220,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "165e3970-3fee-47bd-a98f-9f68426ae1c4",
+								"id": "f907a3fe-94d8-4bde-9152-7ed833a573bf",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1230,7 +1230,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "821f19f7-56da-48f1-9595-42eaf296446a",
+								"id": "04f254e4-284d-46b1-a3bf-3b8ebdcef56a",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1249,7 +1249,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a208b4f4-54cf-4b05-b6a8-ad97be3d3f5c",
+								"id": "085df9a2-fb69-4c72-98dc-cc95ef0ac966",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1259,7 +1259,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "98fa8c6d-98a6-49d5-ab8c-0584f2004245",
+								"id": "845fa753-4151-487f-9801-ed3f9755f270",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1271,12 +1271,12 @@
 					"_postman_isSubFolder": true
 				}
 			],
-			"description": "The SGX Hub (SHUB) allows to support SGX in Kubernetes and Open stack. SHUB pulls the SGX compute nodes information from the SGX Host Verification Service (SHVS) and pushes it to Kubernetes or Open stack. SHUB performs these steps on a regular basis so that the most recent SGX information about nodes is reflected in Kubernetes and Open stack. This integration allows Kubernetes and Open stack to schedule VMs and containers that need to run SGX workloads on compute nodes that support SGX. The SGX data that SHUB pushes to Kubernetes and Open stack consists of SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status up to date/not up to date and platform-data expiry time.",
+			"description": "The Integration Hub (IHUB) allows to support SGX in Kubernetes and Open stack. IHUB pulls the SGX compute nodes information from the SGX Host Verification Service (SHVS) and pushes it to Kubernetes or Open stack. IHUB performs these steps on a regular basis so that the most recent SGX information about nodes is reflected in Kubernetes and Open stack. This integration allows Kubernetes and Open stack to schedule VMs and containers that need to run SGX workloads on compute nodes that support SGX. The SGX data that IHUB pushes to Kubernetes and Open stack consists of SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status up to date/not up to date and platform-data expiry time.",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "fbe2c4a1-8452-4df1-95aa-0767ba19f406",
+						"id": "5dedd5c6-cbea-427b-b73c-b8c93b1a6900",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1286,7 +1286,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e901b7d1-f6ac-40a5-a441-db6a3abb8702",
+						"id": "6c3de7bf-354e-4de5-b327-691cf3c7b1a8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1301,7 +1301,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "747b1cbc-04c4-4b6a-950d-34235ca8f36b",
+				"id": "983df5f6-0910-4d3c-a05f-f633b98b05ce",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1311,7 +1311,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "c04734d9-307c-47de-8151-b3f3fa1f7ee1",
+				"id": "ac59be92-42fb-474f-8a61-987ca9da57f9",
 				"type": "text/javascript",
 				"exec": [
 					""

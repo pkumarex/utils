@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3f7c8d91-a2c9-40fc-8141-fe06060f6642",
+		"_postman_id": "c36b1278-0d5d-40f0-a178-484c38d73e6d",
 		"name": "Secure Key Caching API Collection",
 		"description": "Key Protection is implemented by the SKC Client -- a set of libraries - which must be linked with a\ntenant workload, like Nginx, deployed in a CSP environment and the Key Broker Service (KBS)\ndeployed in the tenant's enterprise environment. The SKC Client retrieves the keys needed by the\nworkload from KBS after proving that the key can be protected in an SGX enclave.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f55b5f9e-656c-4c86-9507-67fd6e84ee5e",
+								"id": "03c617c3-a132-4321-84ff-047c578d0312",
 								"exec": [
 									"pm.environment.set(\"bearerTokenKms\", pm.response.text());"
 								],
@@ -127,7 +127,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "003777cc-77f2-4d6e-bbc8-1bdbfbccb4e6",
+								"id": "4009b61c-714b-495e-b7c8-1b390ff16f35",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSqvs\", pm.response.text());"
 								],
@@ -239,7 +239,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b2450adf-5b19-4110-9839-138dd510cc4b",
+						"id": "1bcb3d6a-e5e5-4e7d-a4aa-cf2b3ac4db80",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -249,7 +249,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "eb22ea41-118d-4096-8296-4bf24c093e4f",
+						"id": "b126b5a1-329d-471b-b7d4-06f5eed27e3c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -267,7 +267,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0b04473f-a4ef-4e37-9ada-fc9b4352a303",
+						"id": "48a6a04f-b342-44be-a81b-ec3757dab4d5",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -277,7 +277,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2fee559e-d38d-4af9-a575-1f95c79068cc",
+						"id": "b57e7a5a-782f-4d75-b876-ce2acf1888ed",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -673,12 +673,12 @@
 					]
 				}
 			],
-			"description": "To create a asymmetric (RSA) key, execute the \"run.sh\" script present in /root/workspace/skc_automation/kbs_script/. KMS_IP and BEARER_TOKEN should be configured in this script manually.\n\nUpdate transfer_policy_request.json with modified sgx_* values in the file with corresponding values obtained by running the below command on the host machine.\n\n```\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \n```\n\nThe \"run.sh\" script will create the Key Transfer Policy, Key Usage Policy, and Asymmetric (RSA) Key by calling the following Key Broker Service (KBS) REST endpoints.\n\nThen we have to copy the created certificate to the SGX Compute Node /root directory.\n\n```\ncp output/server.cert output/<keyId>.crt\n```\n\n```\nscp output/<keyId>.crt root@<SGX Compute Node>:/root/\n```",
+			"description": "To create a asymmetric (RSA) key, execute the \"run.sh\" script present in /root/workspace/utils/build/skc-tools/kbs_script/. KMS_IP and AAS_IP should be configured in this script manually.\n\nUpdate transfer_policy_request.json with modified sgx_* values in the file with corresponding values obtained by running the below command on the host machine.\n\n```\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \n```\n\n```\n./run.sh reg\n```\n\nThe \"run.sh\" script will create the Key Transfer Policy, Key Usage Policy, and Asymmetric (RSA) Key by calling the following Key Broker Service (KBS) REST endpoints.\n\nThen we have to copy the created certificate to the SGX Compute Node /root directory.\n\n```\ncp output/server.cert output/<keyId>.crt\n```\n\n```\nscp output/<keyId>.crt root@<SGX Compute Node>:/root/\n```",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b7ea5996-f231-48a5-abc7-235cf69fd5ce",
+						"id": "2fdfaeed-9bd7-4ef8-a985-66cdd0371170",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -688,7 +688,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "223632d1-4fbb-435f-9429-1b2c3e49bb71",
+						"id": "26eadb7f-f819-44ee-8b37-acd644f564db",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -701,12 +701,12 @@
 		{
 			"name": "Configure Ngnix on SGX Compute Node",
 			"item": [],
-			"description": "We should configure Ngnix on SGX Compute Node by following the below steps:\n\n1. Update the SSL certificate path and Key ID in the nginx configuration file \"/etc/nginx/nginx.conf\". \n2. Add a new attribute \"preload_keys\" with its value \"keys.txt\" file path in the core section of \"pkcs11-apimodule.ini\" file.\n3. Update the \"keys.txt\" file with the Key ID and object as per the nginx configuration file.",
+			"description": "We should configure Ngnix on SGX Compute Node by following the below steps:\n\n1. Copy /root/workspace/skc_library/container/resources/openssl.cnf to /etc/pki/tls/ path. \n2. Copy /root/workspace/skc_library/container/resources/nginx.conf to /etc/nginx/ path. \n3. Update the SSL certificate path and Key ID in the \"nginx.conf\".\n4. Add a new attribute \"preload_keys\" with its value \"keys.txt\" file path in \n   the core section of the /opt/skc/etc/pkcs11-apimodule.ini file.\n5. Create or edit the \"keys.txt\" file with the Key ID and object as per the \n   Nginx configuration file.\n\nNOTE: Check the hostname in the /etc/hosts file.",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "08acf839-6512-45e3-bf1f-60a132858993",
+						"id": "fe7d215c-bcf7-4f0d-897e-f0df48ee5a96",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -716,7 +716,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1683898d-1e78-4305-aee7-15717dbb9aee",
+						"id": "fb37eee2-0deb-4f08-9fff-7eab81adb84c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -848,7 +848,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "dadce5d8-b8ce-4c61-9b6e-7473c56bc5a4",
+						"id": "f0121efb-3cdd-403d-b65c-35edcd4846e9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -858,7 +858,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fa07d3c5-cbf9-4fbc-881a-870811e3567a",
+						"id": "03c71342-2601-4848-814f-c6d5baaa8c5f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -873,7 +873,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "70ac1acd-914a-49e8-86a3-20ffe888392c",
+				"id": "85806237-1ddb-43d9-8d39-9853ae3208dd",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -883,7 +883,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "c150df5d-8b3a-4151-8a7c-681cb2f93f81",
+				"id": "1cd41ad4-8743-4ce5-b900-95675e0c7c1f",
 				"type": "text/javascript",
 				"exec": [
 					""
