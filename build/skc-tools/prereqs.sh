@@ -1,6 +1,6 @@
 declare -a PRE_REQ_URLS
 PRE_REQ_URLS=(
-https://dl.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/m/makeself-2.4.0-3.fc30.noarch.rpm
+https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/makeself-2.4.0-5.fc32.noarch.rpm
 )
 
 declare -a PRE_REQ_PACKAGES
