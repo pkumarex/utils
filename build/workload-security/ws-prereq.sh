@@ -73,7 +73,7 @@ install_prereqs() {
 
 # functions handling i/o on command line
 print_help() {
-        echo "Usage: $0 [-his]"
+        echo "Usage: $0 [-hs]"
     echo "    -h    print help and exit"
     echo "    -s    pre-req setup"
 }

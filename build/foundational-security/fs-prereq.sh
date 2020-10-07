@@ -10,9 +10,6 @@ PRE_REQ_PACKAGES=(
 makeself-2.4.2-1.el8.noarch.rpm
 tpm2-abrmd-devel-2.1.1-3.el8.x86_64.rpm
 trousers-devel-0.3.14-4.el8.x86_64.rpm
-containerd.io-1.2.10-3.2.el7.x86_64.rpm
-docker-ce-cli-19.03.5-3.el7.x86_64.rpm
-docker-ce-19.03.5-3.el7.x86_64.rpm
 java-1.8.0-openjdk.x86_64 
 wget 
 gcc 
@@ -70,7 +67,7 @@ install_prereqs() {
 
 # functions handling i/o on command line
 print_help() {
-        echo "Usage: $0 [-his]"
+        echo "Usage: $0 [-hs]"
     echo "    -h    print help and exit"
     echo "    -s    pre-req setup"
 }
