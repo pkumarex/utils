@@ -20,7 +20,7 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
 ## Requirements
 
-* Intel® SecL-DC services installed and running as per chosen use case and deployment model supported as per [Product Guide]([https://01.org/intel-secl/documentation/intel%C2%AE-secl-dc-product-guide](https://01.org/intel-secl/documentation/intel®-secl-dc-product-guide)). Intel® SecL-DC also provides [Ansible playbooks]() to deploy services.
+* Intel® SecL-DC services installed and running as per chosen use case and deployment model supported as per Product Guide. Intel® SecL-DC also provides [Ansible playbooks](https://github.com/intel-secl/ansible-role) to deploy services.
 * Postman client [downloaded](https://www.postman.com/downloads/) and Installed or accessible via web
 
 
@@ -35,15 +35,20 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
   or 
 
-* Github repo for older releases
+* Github repo for all releases
 
   ```shell
   #Clone the github repo for api-collections
-  git clone https://github.com/intel-secl/api-collections
+  git clone https://github.com/intel-secl/utils/
   
   #Switch to specific release tag of choice
+  cd utils/
   git checkout <release-tag of choice>
+  
+  #Import Collections from
+  cd tools/api-collections
   ```
+  > **Note:**  The postman-collections are also available when cloning the repos via build manifest under `utils/tools/api-collections`
 
 
 
@@ -51,7 +56,7 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
 * Import the collection into Postman API Client
 
-  > **Note:** This step is required only when not using Postman API Network and downloading from Github
+  > **Note:** This step is required only when not using Postman API Network and downloading from Github
 
   ![importing-collection](./images/importing_collection.gif)
 
