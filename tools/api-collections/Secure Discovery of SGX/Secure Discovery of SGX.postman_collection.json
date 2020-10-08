@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "6deae3ad-71c4-47c1-a6c0-31663c0ce7bb",
-		"name": "Secure Discovery of SGX Collection",
+		"_postman_id": "819f87bf-c273-4b7b-bdac-4e6dc58508d2",
+		"name": "Secure Discovery of SGX",
 		"description": "For the secrets to be provisioned securely to SGX compute node on public cloud, the owner of the secret would like to ensure that the node is secure and trustworthy.\r\n\r\nSGX attestation infrastructure involves providing Platform Certification Key (PCK) certificates as part of the attestation report. To fetch the PCK certificates for a platform, platform needs to provide the platform SGX values to the Intel PCS server hosted on the internet. In addition, PCS server also provides other platform collaterals like PCK CRL, TCB Information, QE Identity Information for a platform.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bce339d5-e3e7-4658-94bd-345b2da137ac",
+								"id": "78025603-55ee-4539-82cd-17759f77fb45",
 								"exec": [
 									"pm.environment.set(\"bearerTokenShvs\", pm.response.text());"
 								],
@@ -125,7 +125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0d49e052-19c0-4e86-ad60-4f32c4d094bb",
+								"id": "663176ed-3b0f-4184-b3c3-aa321429285c",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
 								],
@@ -235,7 +235,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4ce3d7a1-6462-445c-a84f-63db359d4f61",
+								"id": "0885c3dd-2580-4259-9f69-0c237ea63253",
 								"exec": [
 									"pm.environment.set(\"bearerTokenScs\", pm.response.text());"
 								],
@@ -351,7 +351,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "154605d1-a58c-46cb-8e10-42303ddccfc6",
+						"id": "b40fb5d6-55f0-4e8e-966c-f8af54fb0f43",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -361,7 +361,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "83ae7e65-bc10-48a7-b89f-5d38e7060d82",
+						"id": "d06524fc-745a-4e16-8c6b-9024e02c0a0a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -490,7 +490,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "83c1a766-eae8-4161-b32d-34a39ea34691",
+						"id": "6d407fce-195f-4ddc-a63a-7a8e8a133289",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -500,7 +500,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "be408ebd-155a-42a5-ae7d-4dcf31c400a8",
+						"id": "3e94dbf6-98e4-4f15-b581-50decd8fd645",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -519,7 +519,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "31526947-4f21-4a62-ad72-3201b303f749",
+								"id": "07a413cf-746a-433b-b461-633f0534f872",
 								"exec": [
 									"pm.environment.set(\"encppid\", pm.response.json()[\"sgx-platform-data\"][\"enc-ppid\"]);\r",
 									"pm.environment.set(\"pceid\", pm.response.json()[\"sgx-platform-data\"][\"pceid\"]);\r",
@@ -623,7 +623,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "3f540415-c796-4601-b5f5-1749acfaac4d",
+						"id": "bed103d2-b111-4fe3-a9ed-a944c1c978b0",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -633,7 +633,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a156d31d-480c-48f3-9420-ba0743c4f6cc",
+						"id": "367a2bac-2d92-4ef6-bcc2-6302e8e4ee13",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -757,7 +757,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "3cb6cef7-cef0-4230-832d-59a395ca72d3",
+						"id": "ecc24267-03fd-4db6-a89c-53b4a243c7a0",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -767,7 +767,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e5d2c7f6-4b8b-44f8-b5e3-e5798e47887d",
+						"id": "4e1e9064-5386-449b-9d67-a871e8a84e15",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -885,7 +885,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "52cab5ea-4436-44aa-8481-031298030770",
+						"id": "1fc0b1c6-a3a1-4c69-b0eb-93011b108cd1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -895,7 +895,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "93de6f94-3d57-485f-a4de-117cfc01c411",
+						"id": "50153056-2ff4-4fad-a9aa-5ea010917b56",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1057,7 +1057,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "58400156-0bc4-44ec-bc45-98c1f34a8ffe",
+						"id": "8882adf3-6131-42ee-b644-0b3e9c22e70a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1067,7 +1067,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9a14356c-4bd4-4140-bb11-7160547c2c61",
+						"id": "a310919f-185d-4e44-b1a5-a9731f52aabe",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1189,7 +1189,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "83952773-67c8-406b-b58a-e45b196618a3",
+						"id": "7bc771f1-0e0e-45da-9404-169f2c6a3795",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1199,7 +1199,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1e098b57-8acb-4055-8579-f9df088114b7",
+						"id": "95cfbb54-a913-40fb-b309-c8b26a4dc1cf",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1220,7 +1220,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "f907a3fe-94d8-4bde-9152-7ed833a573bf",
+								"id": "3d5bf6b3-df3c-40a8-9b0c-db2d23e533a4",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1230,7 +1230,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "04f254e4-284d-46b1-a3bf-3b8ebdcef56a",
+								"id": "eb1d9b26-7e58-457c-b849-85ffb616a63a",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1249,7 +1249,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "085df9a2-fb69-4c72-98dc-cc95ef0ac966",
+								"id": "1b6f53e0-eb2e-48af-b8ac-4aba96fa445e",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1259,7 +1259,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "845fa753-4151-487f-9801-ed3f9755f270",
+								"id": "0c23e2a2-c917-4a90-991c-818d2bd97976",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1276,7 +1276,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5dedd5c6-cbea-427b-b73c-b8c93b1a6900",
+						"id": "f479ae8b-354f-406b-a73a-129bfe0b0958",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1286,7 +1286,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6c3de7bf-354e-4de5-b327-691cf3c7b1a8",
+						"id": "fdbc6fe4-fac5-464e-a6a3-951aa3fb2397",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1301,7 +1301,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "983df5f6-0910-4d3c-a05f-f633b98b05ce",
+				"id": "458098e1-dc72-42fc-b147-62ba2d9eda53",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1311,7 +1311,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "ac59be92-42fb-474f-8a61-987ca9da57f9",
+				"id": "3e084955-3534-4a3d-a875-2ffdaa9f985e",
 				"type": "text/javascript",
 				"exec": [
 					""
