@@ -29,9 +29,7 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
 ### Downloading API Collections
 
-* Postman API Network for latest release
-
-  <TODO: add image>
+* Postman API Network for latest released collections: https://explore.postman.com/intelsecldc
 
   or 
 
