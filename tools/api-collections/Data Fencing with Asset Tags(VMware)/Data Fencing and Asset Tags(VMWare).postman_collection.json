@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9bccf58a-91ff-47b1-a707-2d0008b2f902",
+		"_postman_id": "de4055c2-199e-4194-bcbc-53b01d08dbce",
 		"name": "Data Fencing and Asset Tags(VMWare)",
 		"description": "Data Fencing and Asset Tags builds on the Host Attestation use case to allow physical\r\nTPMs to be written with Asset Tags containing any number of key/value pairs.\r\nThis use case is typically used to identify the geographic location of the\r\nphysical server, but can also be used to identify other attributes. For example,\r\nthe Asset Tags provided by the Data Sovereignty use case could be used to\r\nidentify hosts that meet specific compliance requirements and can run\r\ncontrolled workloads.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f66c3b1d-e831-413b-acde-c485fb689ba9",
+								"id": "ccbfcbbf-4299-441f-9b8c-16d6140b9e98",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -232,7 +232,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "26cec8db-b38e-464a-b184-6250162433af",
+						"id": "1d98d887-cc1e-4961-bc84-d3ec4cca17fc",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -242,7 +242,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "063595ce-be47-4d8b-93f9-799999a537df",
+						"id": "e98e22b9-c824-460d-92db-b6689c1bf744",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -309,7 +309,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "37bc6b8a-4e29-4f2b-a247-7bedc3cb5485",
+						"id": "9ed569ee-213a-4d93-b030-d74dd4ee26c2",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -319,7 +319,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bb9b646c-4c1a-43d8-9957-fd77b650fc90",
+						"id": "cf2d28ec-7add-4266-944e-a764cd094f01",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -334,99 +334,13 @@
 			"item": [
 				{
 					"name": "Calculate the Certificate Hash Value",
-					"item": [
-						{
-							"name": "searchTagCertificates",
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{bearerToken}}",
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"description": "{Required}"
-									}
-								],
-								"url": {
-									"raw": "https://{{hvs}}:{{hvsPort}}/hvs/v2/tag-certificates?subjectContains={{hostHardwareId}}",
-									"protocol": "https",
-									"host": [
-										"{{hvs}}"
-									],
-									"port": "{{hvsPort}}",
-									"path": [
-										"hvs",
-										"v2",
-										"tag-certificates"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "<uuid>",
-											"description": "TagCertificate ID",
-											"disabled": true
-										},
-										{
-											"key": "subjectContains",
-											"value": "{{hostHardwareId}}",
-											"description": "Substring of TagCertificate subject."
-										},
-										{
-											"key": "issuerEqualTo",
-											"value": "<string>",
-											"description": "TagCertificate issuer strict match.",
-											"disabled": true
-										},
-										{
-											"key": "issuerContains",
-											"value": "<string>",
-											"description": "Substring of TagCertificate issuer.",
-											"disabled": true
-										},
-										{
-											"key": "validOn",
-											"value": "<dateTime>",
-											"description": "Filters TagCertificates that are valid on this date.",
-											"disabled": true
-										},
-										{
-											"key": "validBefore",
-											"value": "<dateTime>",
-											"description": "Filters TagCertificates that are valid before this date.",
-											"disabled": true
-										},
-										{
-											"key": "validAfter",
-											"value": "<dateTime>",
-											"description": "Filters TagCertificates that are valid after this date.",
-											"disabled": true
-										},
-										{
-											"key": "hardwareUuid",
-											"value": "<uuid>",
-											"description": "Hardware UUID of the Tag Certificate",
-											"disabled": true
-										}
-									]
-								},
-								"description": "Searches for Tag Certificates.\n\nReturns - The serialized TagCertificateCollection Go struct object that was retrieved, which is a collection of serialized TagCertificate Go struct objects.\n\nNote<br>\nOnly one identifying parameter can be specified. The parameters listed here are in the order of priority that will be evaluated.\n"
-							},
-							"response": []
-						}
-					],
+					"item": [],
 					"description": "Only the hash value of the Asset Tag Certificate can be provisioned to the TPM, due to the low size of the NVRAM.\n\n1. Retrieve the Asset Tag Certificate. The Asset Tag Certificate can be retrieved either from the response when the Asset Tag certificate is created or by using a GET API request to retrieve the certificate.\n\n2. Copy only the “certificate” value (this will be the certificate in encoded format) and write the data to a file on a Linux system. Remove any line breaks and save the file. Assuming the filename used is “tag-cert”, use the following string to generate the correct hash:  \n \n   ```cat tag-cert | base64 --decode | openssl dgst -sha1 | awk -F\" \" '{print $2}' ``` \n\nThis hash value will be what is actually written to the TPM NVRAM. ",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "39889aa1-55cd-4978-9f1b-8c03c82074cb",
+								"id": "08ddf19b-92d7-4e37-b2e6-af0a0eb15d50",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -436,7 +350,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0e3e1953-fb8a-4bcf-91c0-0510cee65d2e",
+								"id": "75d01672-e1d1-49f2-b697-22a21b345d61",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -459,7 +373,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "df537112-c6d2-4062-b758-f67a1fcae2f6",
+						"id": "60b859cc-2c5e-4828-9ba6-c5e9ed3c1c4a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -469,7 +383,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "efb54e18-09ca-4651-8a81-9cb537a6c81d",
+						"id": "d0b4accd-6d3d-4464-bedf-006f9e53b6b3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -510,7 +424,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"connection_string\": \"vmware:https://{{vCenter}}:{{vCenterPort}}/sdk;h={{esxiHost}};u={{vCenterUsername}}@vSphere.local;p={{vCenterPassword}}\",\n    \"partial_flavor_types\": [\n        \"ASSET_TAG\"\n    ],\n    \"flavorgroup_name\": \"\"\n}",
+							"raw": "{\n    \"connection_string\": \"vmware:https://{{vCenter}}:{{vCenterPort}}/sdk;h={{esxiHost}};u={{vCenterUsername}};p={{vCenterPassword}}\",\n    \"partial_flavor_types\": [\n        \"ASSET_TAG\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -595,7 +509,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "8f3bdd88-53f1-4371-a585-9ac5d825adf7",
+						"id": "b22ce522-cfb9-41e3-8154-9b53fe16fddd",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -605,7 +519,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3818b1fa-fe31-4f1a-92e9-e56b5f380b18",
+						"id": "09d62a36-8793-4eaf-a8c8-afb08ad25475",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -620,7 +534,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "82873e61-6b73-4351-971f-a45e3a2cff86",
+				"id": "67fc95e5-60a4-422c-bdd3-4d7e8bd0a728",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -630,7 +544,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "709f1da1-ef2a-4561-8463-43d70f4236be",
+				"id": "26cef30c-dac4-4b07-8a30-6901576eb679",
 				"type": "text/javascript",
 				"exec": [
 					""
