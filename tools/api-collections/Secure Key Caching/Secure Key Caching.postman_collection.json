@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "c36b1278-0d5d-40f0-a178-484c38d73e6d",
-		"name": "Secure Key Caching API Collection",
+		"_postman_id": "bfb4c161-7403-4e51-850a-826b5a42fee2",
+		"name": "Secure Key Caching",
 		"description": "Key Protection is implemented by the SKC Client -- a set of libraries - which must be linked with a\ntenant workload, like Nginx, deployed in a CSP environment and the Key Broker Service (KBS)\ndeployed in the tenant's enterprise environment. The SKC Client retrieves the keys needed by the\nworkload from KBS after proving that the key can be protected in an SGX enclave.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "03c617c3-a132-4321-84ff-047c578d0312",
+								"id": "e634af5e-053e-4757-96e2-ed3313df4092",
 								"exec": [
 									"pm.environment.set(\"bearerTokenKms\", pm.response.text());"
 								],
@@ -127,7 +127,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4009b61c-714b-495e-b7c8-1b390ff16f35",
+								"id": "757167ec-b680-41f3-a1d4-414acd8083e0",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSqvs\", pm.response.text());"
 								],
@@ -239,7 +239,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "1bcb3d6a-e5e5-4e7d-a4aa-cf2b3ac4db80",
+						"id": "ab4a018a-f7ff-4197-9d85-9496af36dfde",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -249,7 +249,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b126b5a1-329d-471b-b7d4-06f5eed27e3c",
+						"id": "fd8bfa0c-0872-47cf-a32f-0406a16e409a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -267,7 +267,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "48a6a04f-b342-44be-a81b-ec3757dab4d5",
+						"id": "0dd54522-264b-4dd5-9555-5832a8041af1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -277,7 +277,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b57e7a5a-782f-4d75-b876-ce2acf1888ed",
+						"id": "2b0d29b0-9471-4b99-9966-45607f1b6457",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -678,7 +678,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2fdfaeed-9bd7-4ef8-a985-66cdd0371170",
+						"id": "c3ab0c8f-b067-46a5-a588-cb5c15b8b728",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -688,7 +688,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "26eadb7f-f819-44ee-8b37-acd644f564db",
+						"id": "6c1081c7-2192-482d-904e-147b972594ab",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -706,7 +706,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "fe7d215c-bcf7-4f0d-897e-f0df48ee5a96",
+						"id": "7ef9a6b5-851a-4f4a-8191-5e36743b47a3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -716,7 +716,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fb37eee2-0deb-4f08-9fff-7eab81adb84c",
+						"id": "b0689029-4178-4fe7-b5f5-5717e20404eb",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -848,7 +848,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f0121efb-3cdd-403d-b65c-35edcd4846e9",
+						"id": "5af8ff9c-4fb6-45c5-9e20-0ef500f56abb",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -858,7 +858,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "03c71342-2601-4848-814f-c6d5baaa8c5f",
+						"id": "1f60e991-5496-4d90-a7ac-e229d5469a38",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -873,7 +873,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "85806237-1ddb-43d9-8d39-9853ae3208dd",
+				"id": "8bba635d-0709-46f4-bc3c-9144e25849d0",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -883,7 +883,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "1cd41ad4-8743-4ce5-b900-95675e0c7c1f",
+				"id": "fc958721-02b5-4b95-9a1a-74d6a367d570",
 				"type": "text/javascript",
 				"exec": [
 					""
