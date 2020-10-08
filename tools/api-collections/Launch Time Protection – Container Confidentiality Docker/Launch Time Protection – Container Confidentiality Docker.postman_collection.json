@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "616f25a4-6f68-4857-a93a-406fcbd2c7c5",
-		"name": "Launch Time Protection – Container Confidentiality with Docker Runtime",
+		"_postman_id": "0a927c2f-4b67-4421-aacc-da14d34be9f9",
+		"name": "Launch Time Protection – Container Confidentiality Docker",
 		"description": "Launch Time Protection - Container Confidentiality allows Docker container images to be encrypted at rest, with key access tied to platform integrity attestation.  Because security attributes contained in the platform integrity attestation report are used to control access to the decryption keys, this feature provides both protection for at-rest data, IP, code, etc in Docker container or virtual machine images, and also enforcement of image-owner-controlled placement policies.  When decryption keys are released, they are sealed to the physical TPM of the host that was attested, meaning that only a server that has successfully met the policy requirements for the image can actually gain access. \n\nWorkload Confidentiality begins with the Workload Policy Manager (WPM) Docker image that needs to be protected.  The WPM is a lightweight application that will request a new key from the Key Broker, use that key to encrypt the image, and generate an Image Flavor.  The image owner will then upload the encrypted image to their desired image storage service (example - Docker Registry), and the image ID from the image storage will be uploaded along with the Image Flavor to the Intel® SecL Workload Service.  When that image is used to launch a new VM or container, the Workload Agent will intercept the VM or container start and request the decryption key for that image from the Workload Service.  The Workload Service will use the image ID and the Image Flavor to find the key transfer URL for the appropriate Key Broker, and will query the Host Verification Service for the latest Platform Integrity trust attestation report for the host.  The Key Broker will use the attestation report to determine whether the host meets the policy requirements for the key transfer, and to verify that the report is signed by a Host Verification Service known to the Broker.  If the report is genuine and meets the policy requirements, the image decryption key is sealed using an asymmetric key from that host’s TPM and sent back to the Workload Service.  The Workload Service then caches the key for 5 minutes (to avoid performance issues for multiple rapid launch requests; note that these keys are still wrapped using a sealing key unique to the hosts TPM, so multiple hosts would require multiple keys even for an identical image) and return the wrapped key to the Workload Agent on the host, which then uses the host TPM to unseal the image decryption key.  The key is then used to create a new LUKS volume, and the image is decrypted into this volume. \n\nThis functionality means that a physical host must pass policy requirements to gain access to the image key, and the image will be encrypted at rest both in image storage and on the compute host. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "33b702fb-6f48-4c20-a7c4-17265f2461b7",
+								"id": "13ef7af8-6cf6-4495-b96c-f4b2715d8b7e",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -130,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bf62ba30-a898-4b80-86f3-27c0b7fa01cf",
+								"id": "4568fac1-6bf6-4446-afb1-8daf576d0287",
 								"exec": [
 									"var report=pm.response.json()\r",
 									"pm.environment.set(\"hostId\", report.reports[0].host_id)"
@@ -141,7 +141,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "5b5958e0-759f-4b6b-8404-8ad38b6561e0",
+								"id": "b294acb7-71ce-45b2-9019-6b44f0cd295d",
 								"exec": [
 									""
 								],
@@ -357,7 +357,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "97861e0a-b368-4c28-8bff-6724efcb2153",
+						"id": "5ee459b8-bc62-44ab-a152-4bca4579ba53",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -367,7 +367,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "64acabe2-fedf-4f55-b424-590e554a1837",
+						"id": "c8597dba-57bd-4741-a806-1f96b59eea58",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -632,7 +632,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b4d4272d-16fe-45f2-a126-5fcdcd4a2946",
+						"id": "82d708ba-af3b-45ce-bad9-3296d14eb291",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -642,7 +642,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b219ce18-b75e-4b2e-b441-d8bec9a83d3e",
+						"id": "fdffffa5-63ca-4ef7-8d91-403b5d356453",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -661,7 +661,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bac614a1-6c9b-46db-9066-831739cbff7f",
+								"id": "ab229c4f-1150-4ec8-8455-78624977ae48",
 								"exec": [
 									"pm.environment.set(\"flavorId\", pm.response.json().flavor.meta.id);"
 								],
@@ -778,7 +778,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2f036854-97cb-4902-953e-46e4f9debb00",
+						"id": "266506fe-0ab3-4e3b-ac17-c7b211592afb",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -788,7 +788,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "02eb6010-ac77-469a-91be-0485cbe46801",
+						"id": "4ee909c2-5d90-4ce8-9e39-276023ed5277",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -919,7 +919,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "d0117ef7-5534-42ab-b0a7-505834a6e569",
+						"id": "7553f319-6f45-4f13-b03d-72b7dd8da3e4",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -929,7 +929,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d9ac5f7a-ca40-43e5-be00-c35e5d7eb332",
+						"id": "f92c3356-aef3-4195-876f-43bdba01da61",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -947,7 +947,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "6c6b4b55-6b8e-4715-8f5a-17c6f5fc5199",
+						"id": "57665ee9-36cc-44f6-8f0c-a7ef59697dad",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -957,7 +957,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a9eb98cc-6ca4-489d-9b3a-4eaa8ac5e9b9",
+						"id": "1264e5d5-67d1-40f0-b02a-1d0461d6e79a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -972,7 +972,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "62e036bf-092e-4d44-91e7-69abe75adddb",
+				"id": "35941c68-a3bc-419e-b259-09cf1bea1d43",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -982,7 +982,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "61d51671-6ae4-4931-88a9-53a04b89eeb0",
+				"id": "725e520e-4510-4f9d-87b7-937d2a4e3721",
 				"type": "text/javascript",
 				"exec": [
 					""
