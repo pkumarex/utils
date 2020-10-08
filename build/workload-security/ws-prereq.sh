@@ -6,6 +6,7 @@ http://mirror.centos.org/centos/8/PowerTools/x86_64/os/Packages/trousers-devel-0
 https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm \
 https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-19.03.5-3.el7.x86_64.rpm \
 https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.5-3.el7.x86_64.rpm 
+
 )
 
 declare -a PRE_REQ_PACKAGES
@@ -16,7 +17,11 @@ trousers-devel-0.3.14-4.el8.x86_64.rpm
 containerd.io-1.2.10-3.2.el7.x86_64.rpm
 docker-ce-cli-19.03.5-3.el7.x86_64.rpm
 docker-ce-19.03.5-3.el7.x86_64.rpm
-java-1.8.0-openjdk.x86_64 
+java-1.8.0-openjdk.x86_64
+containers-common 
+glib2-devel 
+glibc-devel 
+runc
 wget 
 gcc 
 gcc-c++ 
