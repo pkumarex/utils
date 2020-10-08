@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "7f06d3cf-d8f5-479d-85e6-b1fb85bc2c2b",
-		"name": "Launch Time Protection – Container Confidentiality with CRIO Runtime",
-		"description": "<TODO: Add content here from product guide>",
+		"_postman_id": "d496a70f-e70a-4585-833b-d6652608d43f",
+		"name": "Launch Time Protection - Container Confidentiality CRIO",
+		"description": "Launch Time Protection - Container Confidentiality with CRIO Runtime allows container images to be encrypted at rest, with key access tied to platform integrity attestation.  Because security attributes contained in the platform integrity attestation report are used to control access to the decryption keys, this feature provides both protection for at-rest data, IP, code, etc in container image, and also enforcement of image-owner-controlled placement policies.  When decryption keys are released, they are sealed to the physical TPM of the host that was attested, meaning that only a server that has successfully met the policy requirements for the image can actually gain access. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d89165ca-7e8a-40f8-a072-933975cf4b1f",
+								"id": "9962097a-5ca4-4721-b643-80166729173e",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -130,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e6fddb87-524c-45a5-a08d-a59a712ceeda",
+								"id": "70323df7-afdb-4caf-9b70-ba419c0fbac6",
 								"exec": [
 									"var report=pm.response.json()\r",
 									"pm.environment.set(\"hostId\", report.reports[0].host_id)"
@@ -141,7 +141,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "0ea03276-47c1-493c-9abe-8e3043980a4b",
+								"id": "285a97f9-d36c-4315-813a-ee3a64c86c39",
 								"exec": [
 									""
 								],
@@ -357,7 +357,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "9ed9e76b-1706-4458-84a6-923e8209fabb",
+						"id": "f7124e17-f96a-42aa-81fc-f4c659f0670e",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -367,7 +367,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7d684699-9ea1-4609-b802-2f7bfd251247",
+						"id": "39e9c280-544f-4eb6-b8f9-226d305b02a8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -627,12 +627,12 @@
 		{
 			"name": "Encrypting an Image",
 			"item": [],
-			"description": "<TODO: Add content here from product guide and update the steps below as per guide>\n\n* Build and tag the docker image\n```shell\ndocker build <Dockerfile_path> -t <image_name>:<image_tag>\n```\n\n* Convert image to OCI format\n```shell\nskopeo copy docker-daemon:<image_name>:<image_tag> oci:<image_name>:<image_tag>\n```\n\n* Encrypt image using skopeo\n```shell\nskopeo copy --encryption-key secl:any oci:<image_name>:<image_tag> oci:<image_name>:<image_tag>\n```\n",
+			"description": "* Build and tag the docker image\n```shell\ndocker build <Dockerfile_path> -t <image_name>:<image_tag>\n```\n\n* Convert image to OCI format\n```shell\nskopeo copy docker-daemon:<image_name>:<image_tag> oci:<image_name>:<image_tag>\n```\n\n* Encrypt an image (this will allow the image to run only on Trusted platforms):\n```shell\nskopeo copy --encryption-key secl:any oci:<image_name>:<image_tag> oci:<encrypted_image_name>:<encrypted_image_tag>\n```\n\n* Encrypt an image with an Asset Tag (this will allow the image to run only on Trusted platforms with the specified Asset tag):\n```shell\nskopeo copy --encryption-key secl:asset_tag_key:asset_tag_value oci:<image_name>:<image_tag> oci:<encrypted_image_name>:<encrypted_image_tag>\n```\n",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "bad2bd07-6e65-4cd6-a0e5-0ae6b79728ea",
+						"id": "c4d0cb3a-d654-435a-9433-5a2e695ef312",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -642,7 +642,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1f0dd5e8-e622-4f5b-b3b7-74a02cafe063",
+						"id": "5ef49e43-c99e-46f9-9482-9d257d0b38bc",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -655,12 +655,12 @@
 		{
 			"name": "Push image to registry",
 			"item": [],
-			"description": "<TODO: add content here from product guide>\r\n\r\n```shell\r\nskopeo copy oci:<image_name>:<image_tag_name> <registry_type>://<image_registry>:<image_registry_port>/<image_name>:<image_tag_name>\r\n```",
+			"description": "```shell\r\nskopeo copy oci:<image_name>:<image_tag_name> <registry_type>://<image_registry>:<image_registry_port>/<image_name>:<image_tag_name>\r\n```",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "4c5c982e-1b14-4e06-a642-f828b674a0fd",
+						"id": "4c71c223-c889-4a39-9378-ab0e2ee5fee9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -670,7 +670,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f11b26c0-805b-4d17-b13d-ba36fc69a5cc",
+						"id": "cbcbfba2-7693-4e2c-be12-467842755e51",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -681,14 +681,14 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Launching Encrypted Docker Containers",
+			"name": "Launching Encrypted Containers",
 			"item": [],
-			"description": "Containers of the protected images can now be launched as normal using Kubernetes pods and deployments. Encrypted images will only be accessible on hosts with a Platform Integrity Attestation report showing the host is trusted.\r\n\r\nIf the Docker Container is launched on a host that is not trusted, the launch will fail, as the decryption key will not be provided.",
+			"description": "Cri-o allows for pulling and decryption of an encrypted container image from a container registry. When trying to pull and decrypt a container image, Cri-o has a hook that calls into the Workload Agent (WLA). The WLA will call into the Workload Service (WLS) and pass it the key URL associated with the encrypted image as well as the host's hardware UUID. These two serve as input to /keys endpoint of the WLS. The WLS initializes a HVS client in order to retrieve the host SAML report and then validates the report. If the host is trusted, the WLS will attempt to get the key. First, it will check if it's been cached alredy. If not, it will initialize a KBS client. The WLS uses this client to retrieve the key from the KBS. If the key is retrieved, it will be cached in the WLS temporarily so that the WLS will not need to requery the KBS if attempting to decrypt with the same key. The key is then passed back to the WLA as the return of the WLS's keys API. Finally, the key is returned to Cri-o, which uses the key to decrypt the container image layer by layer.\r\n\r\nContainers of the protected images can now also be launched as normal using Kubernetes pods and deployments. Encrypted images will only be accessible on hosts with a Platform Integrity Attestation report showing the host is trusted. If the Crio Container is launched on a host that is not trusted, the launch will fail, as the decryption key will not be provided.",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0fb25342-1428-48fb-a02f-4f884b64b6e7",
+						"id": "6e23601b-0bc4-4506-848c-8a6eb84dc8b9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -698,7 +698,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e219e051-76df-46bf-84ca-b65dda8752b4",
+						"id": "db97677a-6d1f-4e10-aebc-d25e389bceb5",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -713,7 +713,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "9e2230e9-cf94-4861-b026-345110e1a977",
+				"id": "769632e3-df51-4b50-a258-913be7f252d6",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -723,7 +723,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "e77ec9ee-2099-420f-a6c1-720c2271852a",
+				"id": "999947a0-77dc-42b2-8245-005f0809e122",
 				"type": "text/javascript",
 				"exec": [
 					""
