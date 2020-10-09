@@ -44,7 +44,6 @@ download_prereqs() {
 #install pre-reqs
 install_prereqs() {
   local error_code=0
-
   for package in ${!PRE_REQ_PACKAGES[@]}; do
     local package_name=${PRE_REQ_PACKAGES[${package}]}
     dnf install -y ${package_name}
