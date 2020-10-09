@@ -28,8 +28,6 @@ openssl-devel
 #download pre-reqs
 download_prereqs() {
   local error_code=0
-  dnf install -y yum-utils
-  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   for url in ${!PRE_REQ_URLS[@]}; do
     local package_url=${PRE_REQ_URLS[${url}]}
     wget --no-check-certificate ${package_url}
@@ -57,10 +55,6 @@ install_prereqs() {
     fi
   done
    
-  systemctl daemon-reload         
-  systemctl enable docker.service 
-  systemctl restart docker.service
-
   return ${error_code}
 }
 
