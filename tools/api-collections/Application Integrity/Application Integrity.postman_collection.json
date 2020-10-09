@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "0e606928-93d3-41c3-a2ac-bb01062a5b3d",
+		"_postman_id": "4fad45b7-59ac-414c-ac7d-6a33041a2b65",
 		"name": "Application Integrity",
-		"description": "Application Integrity allows any files and folders on a Linux host system to be included in the Chain of Trust integrity measurements.  These measurements are attested by the Verification Service along with the other platform measurements, and are included in determining the host’s overall Trust status.  The measurements are performed by a measurement agent called tbootXM, which is built into initrd during Trust Agent installation.  Because initrd is included in other Trusted Computing measurements, this allows Intel® SecL-DC to carry the Chain of Trust all the way to the Linux filesystem.\n\n> **Note:** Ensure to follow the Hardware requirements and installation required from the [Product Guide](https://01.org/intel-secl/documentation/intel%C2%AE-secl-dc-product-guide)",
+		"description": "Application Integrity allows any files and folders on a Linux host system to be included in the Chain of Trust integrity measurements.  These measurements are attested by the Verification Service along with the other platform measurements, and are included in determining the host’s overall Trust status.  The measurements are performed by a measurement agent called tbootXM, which is built into initrd during Trust Agent installation.  Because initrd is included in other Trusted Computing measurements, this allows Intel® SecL-DC to carry the Chain of Trust all the way to the Linux filesystem.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "deef05af-3787-493e-815c-631c19cfb2c5",
+								"id": "47c11851-bc5a-4e6e-ab9f-fc18fb6bcd1a",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -132,7 +132,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "67416e8f-b40a-4f4e-b9d6-71a598a06d95",
+								"id": "16625e3a-7312-4713-b593-943307de617e",
 								"exec": [
 									"var report=pm.response.json()\r",
 									"pm.environment.set(\"hostId\", report.reports[0].host_id)"
@@ -143,7 +143,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "2ee5453c-fa87-47df-86d2-a7fa0437c796",
+								"id": "98be432a-241f-4b3f-a2f2-8b33a28ff6f7",
 								"exec": [
 									""
 								],
@@ -359,7 +359,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ae0ca5fc-d5da-411d-9897-a1c4da288ce8",
+						"id": "6bf63c39-540a-40f2-bdda-40993752ddb9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -369,7 +369,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "abad33ae-2063-4147-bfcf-4fe38412e73e",
+						"id": "8a3adf74-10e5-4786-a506-9b54411e99ee",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -388,7 +388,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1b107482-fc52-43a4-92ca-1338dff9baf9",
+								"id": "c15dd0bf-296d-47d8-80ab-54a17295eb64",
 								"exec": [
 									"var flavorResponseBody=pm.response.json()\r",
 									"pm.environment.set(\"flavorId\",flavorResponseBody.meta.id)"
@@ -630,7 +630,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "765ad53e-ea2c-4584-a31d-cbd165a538f9",
+						"id": "38ad3dde-5797-4bc2-b031-aed28d33196c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -640,7 +640,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8149d4a9-11e7-4b50-89aa-d4288a9bd776",
+						"id": "e3765ca2-1083-4b7b-af4b-4b1bdb503c2c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -897,7 +897,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0232e7d9-a32e-44b7-bb2d-be10d979ec77",
+						"id": "da41ace5-7868-4362-9feb-380f947b2146",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -907,7 +907,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2404d53f-51d1-48cb-8ed7-c8bcaa02271f",
+						"id": "3d2fca27-bd31-480c-b681-1734cd4e110d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -922,7 +922,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "8ebc3612-691a-4cfd-a18d-98634f6f1e2c",
+				"id": "5ebe5359-1136-4d93-92d6-c22ae55fcd98",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -932,7 +932,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "9e60ef1a-22de-45ef-9f23-42f1a2552fa9",
+				"id": "73777185-c516-438a-bb9c-31bf20b5fefe",
 				"type": "text/javascript",
 				"exec": [
 					""
