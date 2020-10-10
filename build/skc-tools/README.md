@@ -33,7 +33,7 @@
 
 **Hardware**
 
-​	SGX Enabled ICX Whitley System
+​	SGX Enabled System
 
 **Operating System**
 
@@ -44,26 +44,30 @@
 ​	systemctl stop firewalld
 
 
-## Building & Deployment of Services
+## Deployment of Services
 
-**Build SKC Services**
+**Deploy SKC Service on CSP VM**
 
-- cd into skc_scripts
-- run build_skc.sh
-  - It will copy following component binaries to a common location
-- Authentication and Authorization Service (AAS)
-- Certificate Management Service (CMS)
-- SGX Caching Service (SCS)
-- SGX Quote Verification Service (SQVS)
-- SGX Host Verification Service (SHVS)
-- SGX Hub Service (SHUB)
-- Key Broker Service (KBS)
+- Update the csp_skc.conf with the IP address of the CSP VM
+- run install_csp_skc.sh
+  - It will update all the required configuration files and install following services
+- Check Service Status
+  - netstat -nltp
+  - Using services command line
+    - cms status
+    - authservice status
+    - scs status
+    - shvs status
+    - ihub status
+- Turn off Firewall service or ensure that these services can be accessed from the machine where SGX Agent/SKC_Library is running
+   # systemctl stop firewalld
 
-**Deploy SKC Service**
 
-- Update the skc.conf with the IP address of the VM, where services will be deployed
-- run install_skc.sh
-  - It will update all the required configuration files and install all the services
+**Deploy SKC Service on Enterprise VM**
+
+- Update the enterprise_skc.conf with the IP address of the Enterprise VM
+- run install_enterprise_skc.sh
+  - It will update all the required configuration files and install following services
 - Check Service Status
   - netstat -nltp
   - Using services command line
@@ -71,12 +75,11 @@
     - authservice status
     - scs status
     - sqvs status
-    - shvs status
-    - shub status
     - kms status
 - Turn off Firewall service or ensure that these services can be accessed from the machine where SGX Agent/SKC_Library is running
    # systemctl stop firewalld
 
+#
 ## Build & Deployment of SGX Agent & SKC Library
 
 **Build SGX_Agent**
@@ -198,8 +201,4 @@ ssl_certificate_key "engine:pkcs11:pkcs11:token=KMS;id=164b41ae-be61-4c7c-a027-4
 
 **Product Guide**
 
-https://github.com/intel-secl/skc-tools/blob/v3.0.0/SKC_Product_Guide.md
-
-**Release Notes**
-
-https://github.com/intel-secl/skc-tools/blob/v3.0.0/ReleaseNotes
+https://github.com/intel-secl/docs/blob/v3.0.0/develop/product-guides/Product%20Guide%20-%20Intel%C2%AE%20Security%20Libraries%20-%20Secure%20Key%20Caching.md

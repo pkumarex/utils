@@ -1,6 +1,6 @@
 Pre-requisite for the SKC Library Deployment
 ==========================================
- - Icelake Server with SGX Enabled in BIOS
+ - SGX Enabled in BIOS
  - RHEL 8.2 OS
 
 RHEL8 package Requirements
@@ -14,9 +14,7 @@ Following RHEL 8 repositories should be setup and available (/etc/yum.repos.d) t
 - If there are kernel updates updates avaiable, please install them and reboot the machine, so that SGX driver can build against proper kernel
 
 - Ensure CMS/AAS/KBS server/VM IP addresses are added to the no_proxy environment variable.
-	Also ensure the KBS VM hostname(kbshostname) is added to the no_proxy list
-	Also kbshostname domain to KBS VM IP mapping should be added in SGX Server /etc/hosts file, where SKC_Library is being deployed
-	for ex: <VM IP> kbshostname
+	Also ensure the KBS VM hostname is added to the no_proxy list
 
 - Ensure that the system date is properly setup to same date/time(PDT time) on all machines/VMs where SKC components are being installed
 	This is important, else certificate verifications will fail
@@ -27,21 +25,19 @@ How to Deploy
   refer to sgx_agent/deploy_scripts/README.install
 
 - To verify the checksum of the SKC Library tar file and extract
-# ./untar.sh
+# ./skclib_untar.sh
 
 # cd  skc_library
 - Update the IP Address for CMS/AAS/KBS in skc_library.conf. Default values for Ports are pre-filled
 
 - To deploy SKC Library on a SGX Enabled Server,
 # ./deploy_skc_library.sh
-- As part of the deployment, script takes a backup of /etc/nginx/nginx.conf as /etc/nginx/nginx.conf.orig and copies skc version of nginx.conf
-similarly backup of /etc/pki/tls/openssl.cnf is taken as /etc/pki/tls/openssl.cnf.orig and skc version of openssl.cnf is copied
 
 To test Secure key transfer of a key from KBS to the nginx, please follow the below mentioned steps.
 1. On the KBS VM:
 	edit skc-tools/kbs_scripts/run.sh, change the KMS_IP and AAS_IP with the ip address where these services are running, save and close
 2. ./run.sh reg
-3. copy the crt file generated to the SGX server /root/ directory where skc_library is installed
+3. copy the crt file generated to the SGX server /root/ directory where skc_library is deployed
 4. On the SGX Server :
 	a. create a file /tmp/keys.txt and add PKCS11 url as below:
 		 pkcs11:token=KMS;id=4fa20b5a-ef7e-4cba-ab51-f778656d65a3;object=RSAKEY;type=private;pin-value=1234
@@ -66,5 +62,5 @@ deploy_skc_library.sh		Main script for Deploying SKC Library on SGX enabled serv
 deployment_prerequisites.sh	Install RHEL 8 packages dependencies required for SKC Library Deployment
 skc_library_create_roles.sh	Script to create SKC Library user and roles with AAS and fetching TLS Client Cert from CMS
 skc_library.conf		Pre-filled config file with CMS/AAS/KBS IP Address and port numbers
-openssl.cnf 			Engine section added for libp11
-nginx.conf 			SSL block enabled
+openssl.patch 			openssl.cnf patch file to add pkcs11 engine support to openssl
+nginx.patch 			nginx.conf patch file to add HTTPS PKCS11 block

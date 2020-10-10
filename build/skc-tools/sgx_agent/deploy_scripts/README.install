@@ -1,6 +1,6 @@
 Pre-requisite for the SGX Agent Deployment
 ==========================================
- - Icelake Server with SGX Enabled in BIOS
+ - SGX Enabled in BIOS
  - RHEL 8.2 OS
 
 RHEL8 package Requirements
@@ -21,7 +21,7 @@ Following RHEL 8 repositories should be setup and available (/etc/yum.repos.d) t
 How to Deploy
 ==============
 - To verify the checksum of the SGX Agent Deployment tar file and extract it
-# ./untar.sh
+# ./agent_untar.sh
 
 # cd sgx_agent
 - Update the IP Addresses for the SKC Components and CMS_TLS_SHA value in agent.conf. Default values for Ports are pre-filled
