@@ -1,16 +1,10 @@
 declare -a PRE_REQ_URLS
 PRE_REQ_URLS=(
 https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/makeself-2.4.0-5.fc32.noarch.rpm
-https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm \
-https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-19.03.5-3.el7.x86_64.rpm \
-https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.5-3.el7.x86_64.rpm
 )
 
 declare -a PRE_REQ_PACKAGES
 PRE_REQ_PACKAGES=(
-containerd.io-1.2.10-3.2.el7.x86_64.rpm
-docker-ce-cli-19.03.5-3.el7.x86_64.rpm
-docker-ce-19.03.5-3.el7.x86_64.rpm
 wget
 gcc
 gcc-c++
