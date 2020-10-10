@@ -16,7 +16,7 @@ cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
 cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
 cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
 
-cp -pf env/trusted_rootca.pem /tmp
+cp -pf $SKC_BINARY_DIR/trusted_rootca.pem /tmp
 # read from environment variables file if it exists
 if [ -f ./enterprise_skc.conf ]; then
     echo "Reading Installation variables from $(pwd)/enterprise_skc.conf"
