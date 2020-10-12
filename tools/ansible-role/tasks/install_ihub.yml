@@ -1,0 +1,13 @@
+---
+- name: ISECL - INTEGRATION HUB | Generate ihub.env file
+  template:
+    src: ihub.env.j2
+    dest: /root/ihub.env
+    
+
+- name: ISECL - INTEGRATION HUB | COPYING IHUB binary installer
+  copy:
+    src: "{{ ihub_installer_file_src }}"
+    dest: "/root/{{ ihub_installer_file_name }}"
+    mode: "u+x"
+

@@ -1,0 +1,87 @@
+---
+- name: ISECL - BOOTSTRAP DB | Download postgresql RPM file
+  get_url:
+    url: "{{ postgres_db_rpm }}"
+    dest: /root/
+
+
+- name: ISECL - BOOTSTRAP DB | Install postgresql RPM file
+  dnf:
+    name: "{{ postgres_rpm_name }}"
+    state: present
+    disable_gpg_check: true
+
+
+- name: ISECL - BOOTSTRAP DB | Disable postgresql module
+  shell: dnf module disable -y postgresql
+  args:
+    chdir: /root
+    executable: /bin/bash
+
+
+- name: ISECL - BOOTSTRAP DB | Copy postgresdb installer script
+  copy:
+    src: "{{ isecl_pgdb_installer_file_src }}"
+    dest: /root/install_pgdb.sh
+    mode: "u+x"
+
+
+- name: ISECL - BOOTSTRAP DB | Copy create database script
+  copy:
+    src: "{{ isecl_pgdb_create_db_file_src }}"
+    dest: /root/create_db.sh
+    mode: "u+x"
+
+
+- name: ISECL - BOOTSTRAP DB | Generate postgresdb installer env file
+  template:
+    src: iseclpgdb.env.j2
+    dest: /root/iseclpgdb.env
+
+
+- name: ISECL - BOOTSTRAP DB | Install Postgres DB
+  shell: "./install_pgdb.sh"
+  args:
+    chdir: /root
+    executable: /bin/bash
+  ignore_errors: true
+
+
+- name: ISECL - BOOTSTRAP DB | Create DB for Authentication & Authorization Service
+  shell: ./create_db.sh {{ aas_db_name }} {{ aas_db_user }} {{ aas_db_password }}
+  args:
+    chdir: /root
+    executable: /bin/bash
+  register: createdb_aas
+
+
+- name: ISECL - BOOTSTRAP DB | Create DB for Host Verfication Service
+  shell: ./create_db.sh {{ hvs_db_name }} {{ hvs_db_user }} {{ hvs_db_password }}
+  args:
+    chdir: /root
+    executable: /bin/bash
+
+
+- name: ISECL - BOOTSTRAP DB | Create DB for Workload Service
+  shell: ./create_db.sh {{ wls_db_name }} {{ wls_db_user }} {{ wls_db_password }}
+  args:
+    chdir: /root
+    executable: /bin/bash
+  when: setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio'
+
+
+- name: ISECL - BOOTSTRAP DB | Create DB for SGX Caching Service
+  shell: ./create_db.sh {{ scs_db_name }} {{ scs_db_user }} {{ scs_db_password }}
+  args: 
+     chdir: /root
+     executable: /bin/bash
+  when: setup == 'secure-key-caching' or setup == 'security-aware-orchestration'
+
+
+- name: ISECL - BOOTSTRAP DB | Create DB for SGX Host Verification Service
+  shell: ./create_db.sh {{ shvs_db_name }} {{ shvs_db_user }} {{ shvs_db_password }}
+  args:
+     chdir: /root
+     executable: /bin/bash
+  when: setup == 'secure-key-caching' or setup == 'security-aware-orchestration'
+

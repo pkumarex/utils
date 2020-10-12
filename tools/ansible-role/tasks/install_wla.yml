@@ -1,0 +1,40 @@
+---
+- name: ISECL - WORKLOAD AGENT | Copy WLA binary installer
+  copy:
+    src: "{{ wla_installer_file_src }}"
+    dest: "/root/{{ wla_installer_file_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - WORKLOAD AGENT | Install Workload Agent
+  shell: "set -o pipefail && ./{{wla_installer_file_name}} 2>&1 | tee workload_agent-install.log"
+  args:
+   chdir: /root
+   executable: /bin/bash
+   creates: /opt/workload-agent/bin/wlagent
+  notify: start wla
+
+
+- meta: flush_handlers
+
+
+- name: ISECL - WORKLOAD AGENT | Reboot for workload SOFTWARE manifest to be measured and extended to TPM
+  shell: sleep 2 && shutdown -r now "Ansible reboot"
+  async: 1
+  poll: 0
+
+
+- name: ISECL - WORKLOAD AGENT | Wait for active SSH connection
+  local_action: wait_for
+  args:
+   host: "{{ inventory_hostname }}"
+   port: 22
+   state: started
+   delay: 30
+   timeout: 300
+
+
+- name: ISECL - WORKLOAD AGENT | Verify successful installation of WLA
+  shell: "grep 'Installation completed.' /root/workload_agent-install.log"
+  register: successful_install
+  failed_when: "'Installation completed.' not in successful_install.stdout"

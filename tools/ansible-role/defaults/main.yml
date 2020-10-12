@@ -1,0 +1,418 @@
+---
+# The below default variables are documented in Readme.md under Role Variables along with the requirements specific to each usecase
+
+# --------------------------- CERTIFICATE MANAGEMENT SERVICE (CMS) ----------------------------------- #
+
+# The name of the binary installer as per the release tag for Certificate Management Service
+cms_installer_name: cms-v3.1.0.bin
+
+# The binary installer file src for Certificate Management Service
+cms_installer_file_src: "{{binaries_path}}/{{cms_installer_name}}"
+
+# The port to be used by Certificate Management Service
+cms_port: 8445
+
+# The port to be used by Authentication & Authorization Service
+authservice_port: 8444
+
+
+# ----------------------------- BOOTSTRAP DB -------------------------------------- #
+
+# The shell script file src for installing postgres DB
+isecl_pgdb_installer_file_src: "{{binaries_path}}/install_pgdb.sh"
+
+# The shell script file src for creating DB tables for services
+isecl_pgdb_create_db_file_src: "{{binaries_path}}/create_db.sh"
+
+# The port to be used by postgres DB
+isecl_pgdb_port: 5432
+
+# Save postgres DB install logs [true/false]
+isecl_pgdb_save_db_install_log: true
+
+# The user password for postgres DB
+isecl_pgdb_user_password: dbpassword
+
+# The db name for Authentication and Authorization Service
+aas_db_name: aasdb
+
+# The db user for Authentication and Authorization Service
+aas_db_user: aasdbuser
+
+# The db password for Authentication and Authorization Service
+aas_db_password: aasdbpassword
+
+# The db name for Verification Service
+hvs_db_name: vsdb
+
+# The db user for Verification Service
+hvs_db_user: vsdbuser
+
+# The db password for Verification Service
+hvs_db_password: vsdbpassword
+
+# The db name for Workload Service
+wls_db_name: wlsdb
+
+# The db user for Workload Service
+wls_db_user: wlsdbuser
+
+# The db password for Workload Service
+wls_db_password: wlsdbpassword
+
+# The db hostname for SGX Caching Service
+scs_db_hostname: localhost
+
+# The db name for SGX Caching Service
+scs_db_name: pgscsdb
+
+# The db user for SGX Caching Service
+scs_db_user: dbuser
+
+# The db password for SGX Caching Service
+scs_db_password: dbpassword
+
+# The db hostname for SGX Host Verification Service
+shvs_db_hostname: localhost
+
+# The db name for SGX Host Verification Service
+shvs_db_name: pgshvsdb
+
+# The db user for SGX Host Verification Service
+shvs_db_user: dbuser
+
+# The db password for SGX Host Verification Service
+shvs_db_password: dbpassword
+
+
+# ---------------------------------- AUTHENTICATION AND AUTHORIZATION SERVICE -------------------------------------- #
+
+# The name of the binary installer as per the release tag for Authentication and Authorization Service
+aas_installer_name: authservice-v3.1.0.bin
+
+# The binary installer file src for Authentication and Authorization Service
+aas_installer_file_src: "{{binaries_path}}/{{aas_installer_name}}"
+
+# The port to be used by Authentication and Authorization Service
+aas_port: 8444
+
+# The service account username for Authentication and Authorization Service
+aas_admin_username: admin@aas
+
+# The service password for Authentication and Authorization Service
+aas_admin_password: aasAdminPass
+
+
+# --------------------------------------- POPULATE USERS SCRIPT ------------------------------------------ #
+
+# The shell script file source for populating users in Auth Service DB
+populate_users_script_file_src: "{{binaries_path}}/populate-users.sh"
+
+# The admin username for accessing all endpoints in each service
+global_admin_username: global_admin_user
+
+# The admin password for accessing all endpoints in each service
+global_admin_password: globalAdminPass
+
+# The installer admin username for installing services based on usecases
+install_admin_username: superadmin
+
+# The installer admin password for installing services based on usecases
+install_admin_password: superAdminPass
+
+
+# ------------------------------------------ HOST VERIFICATION SERVICE ------------------------------------------- #
+
+# The name of the binary installer as per release tag for Host Verification Service
+hvs_installer_name: hvs-v3.1.0.bin
+
+# The binary installer file src for Host Verification Service
+hvs_installer_file_src: "{{binaries_path}}/{{hvs_installer_name}}"
+
+# The port to be used by Host Verification Service
+hvs_port: 8443
+
+# The service account username for Host Verification Service
+hvs_service_username: admin@vs
+
+# The service account password for Host Verification Service
+hvs_service_password: vsAdminPass
+
+
+# ----------------------------------------- INTEGRATION HUB ----------------------------------------- #
+
+# The name of the binary installer as per release tag  for Integration Hub
+ihub_installer_file_name: ihub-v3.1.0.bin
+
+# The binary installer file source for Integration Hub
+ihub_installer_file_src: "{{binaries_path}}/{{ihub_installer_file_name}}"
+
+# The http port for running the Integration hub
+ihub_http_port: 19082
+
+# The https port for running the Integration hub
+ihub_https_port: 19445
+
+# The service account username name for Integration hub
+ihub_service_username: admin@hub
+
+# The service account password for Integration hub
+ihub_service_password: hubAdminPass
+
+
+# ---------------------------------------- WORKLOAD SERVICE ----------------------------------------- #
+
+# The name of the binary installer as per release tag for Workload Service
+wls_installer_file_name: wls-v3.1.0.bin
+
+# The binary installer file source for Workload Service
+wls_installer_file_src: "{{binaries_path}}/{{wls_installer_file_name}}"
+
+# The port for running the Workload Service
+wls_port: 5000
+
+# The service account username name for Workload Service
+wls_service_username: admin@wls
+
+# The service account password for Workload Service
+wls_service_password: wlsAdminPass
+
+
+# ----------------------------------------- KEY BROKER SERVICE -------------------------------------- #
+
+# The name of the binary installer as per release tag for Key Broker Service
+kbs_installer_file_name: kms-6.1-SNAPSHOT.bin
+
+# The binary installer file source for Key Broker Service
+kbs_installer_file_src: "{{binaries_path}}/{{kbs_installer_file_name}}"
+
+# The port for running the Key Broker Service
+kbs_port: 9443
+
+
+# ---------------------------------------- SKOPEO -----------------------------------------------------#
+
+# The binary installer file source for Skopeo
+skopeo_installer_file_src: "{{binaries_path}}/{{skopeo_installer_file_name}}"
+
+# The binary installer file source for Skopeo
+skopeo_installer_file_name: skopeo
+
+# ----------------------------------------- DOCKER ----------------------------------------------------#
+
+# The docker version supported by Intel® SecL-DC for Launch Time Protection - Container Confidentiality with Docker
+docker_version: "19.03.5"
+
+
+# ---------------------------------------- WORKLOAD POLICY MANAGER ------------------------------------ #
+
+# The name of the binary installer as per release tag for Workload Policy Manager
+wpm_installer_file_name: wpm-v3.1.0.bin
+
+# The binary installer file source for Workload Policy Manager
+wpm_installer_file_src: "{{binaries_path}}/{{wpm_installer_file_name}}"
+
+# The service account username name for Workload Policy Manager
+wpm_admin_username: admin@wpm
+
+# The service account password for Workload Policy Manager
+wpm_admin_password: wpmAdminPass
+
+# Enable/disable Workload Policy Manager Installation with container security 
+# [ yes - Container Confidentiality with Docker Containers, no - others]
+wpm_container_security: 'yes'
+
+
+# ---------------------------------------- TRUST AGENT ------------------------------------------- #
+
+# The name of the binary installer as per release tag for  Trust Agent
+ta_installer_file_name: trustagent-v3.1.0.bin
+
+# The binary installer file source for Trust Agent
+ta_installer_file_src: "{{binaries_path}}/{{ta_installer_file_name}}"
+
+# The TPM Storage Root Key(SRK) Password to be used if TPM is already owned
+tpm_owner_secret: "{{tpm_secret | default('')}}"
+
+# The grub file path for legacy mode
+grub_file_path: /boot/grub2/grub.cfg
+
+# TRUST AGENT - Below is Only for Launch Time Protection - Container Confidentiality 
+# with Docker Containers and Launch Time Protection - Container Confidentiality with Docker Containers
+
+# Enable/disable container security for Docker runtime or CRIO runtime
+# [yes - Launch Time Protection with Docker Containers, NA - others]
+wa_with_container_security: 'yes'
+
+# Enable/disable container security for CRIO runtime
+# [yes - Launch Time Protection with CRIO Containers, NA - others]
+skip_secure_docker_daemon: "{{skip_sdd | default('no')}}"
+
+# [TRUE/FALSE based on registry configured with http/https respectively]
+# Required for Workload Integrity with containers
+insecure_skip_verify: "{{insecure_verify | default('')}}"
+
+# The registry IP for the Docker registry from where container images are pulled
+# Required for Workload Integrity with containers
+registry_ip: "{{registry_ipaddr | default('')}}"
+
+# Proxy details if running behind a proxy
+# Required for Workload Integrity with containers
+https_proxy: "{{https_proxy | default('')}}"
+
+# The registry protocol for talking to the remote registry [http/https]
+# Required for Workload Integrity with containers
+registry_scheme_type: "{{registry_scheme | default('')}}"
+
+
+# ---------------------------------------- CRIO -----------------------------------------------------#
+
+# The crio version supported with Intel® SecL-DC
+crio_version: "1.17"
+
+# The crictl version for the corresponding crio version
+crictl_version: "v1.17.0"
+
+# The name of the binary installer for CRIO
+crio_installer_file_name: crio
+
+# The binary installer file source for CRIO
+crio_file_src: "{{binaries_path}}/{{crio_installer_file_name}}"
+
+
+# --------------------------------------- WORKLOAD AGENT -------------------------------------------- #
+
+# The name of the binary installer as per release tag for Workload Agent
+wla_installer_file_name: workload-agent-v3.1.0.bin
+
+# The binary installer file source for Workload Agent
+wla_installer_file_src: "{{binaries_path}}/{{wla_installer_file_name}}"
+
+# The service account username name for Workload Agent
+wla_service_username: wlauser@wls
+
+# The service account password for Workload Agent
+wla_service_password: wlaUserPass
+
+
+# --------------------------------------- SGX CACHING SERVICE --------------------------------------- #
+
+# The port for running the SGX Caching Service
+scs_port: 9000
+
+# The service account username for SGX Caching Service
+scs_admin_username: scsuser@scs
+
+# The service account password for SGX Caching Service
+scs_admin_password: scspassword
+
+# The name of the binary installer as per the release tag for SGX Caching Service
+scs_installer_name: scs-v3.1.0.bin
+
+# The binary installer file source for SGX Caching Service
+scs_installer_file_src: "{{binaries_path}}/{{scs_installer_name}}"
+
+# The URL for Intel Provisioning Server
+intel_provisioning_server_sandbox: https://sbx.api.trustedservices.intel.com/sgx/certification/v3
+
+# The API for Intel Provisioning Server
+intel_provisioning_server_api_key_sandbox: "{{ intel_provisioning_server_api_key | default('')}}"
+
+
+# --------------------------------------- SGX Host Verification Service ----------------------------- #
+
+# The port for running the SGX Host Verification Service
+shvs_port: 13000
+
+# The service account username for SGX Host Verification Service
+shvs_admin_username: shvsuser@shvs
+
+# The service account password for SGX Host Verification Service
+shvs_admin_password: shvspassword
+
+# The name of the binary installer as per the release tag for SGX Host Verification Service
+shvs_installer_name: shvs-v3.1.0.bin
+
+# The binary installer file source for SGX Host Verification Service
+shvs_installer_file_src: "{{binaries_path}}/{{shvs_installer_name}}"
+
+
+# --------------------------------------- SGX Quote verification service ---------------------------- #
+
+# The port for running the SGX Quote verification service
+sqvs_port: 12000
+
+# The service account username for SGX Quote Verification Service
+sqvs_admin_username: sqvsuser@sqvs
+
+# The service account password for SGX Quote Verification Service
+sqvs_admin_password: sqvspassword
+
+# The name of the binary installer as per the release tag for SGX Quote Verification Service
+sqvs_installer_name: sqvs-v3.1.0.bin
+
+# The binary installer file source for SGX Quote Verification Service
+sqvs_installer_file_src:  "{{binaries_path}}/{{sqvs_installer_name}}"
+
+# The name of the trusted root ca file for SGX Quote Verification Service
+sqvs_trusted_rootca_filename: trusted_rootca.pem
+
+# The trusted root ca file source for SGX Quote Verification Service
+sqvs_trusted_rootca_file_src: "{{binaries_path}}/{{sqvs_trusted_rootca_filename}}"
+
+
+# --------------------------------------- SKC Key Broker Service ------------------------------------ #
+
+# The service account username for SKC Key Broker Service
+skbs_admin_username: admin@kms
+
+# The service account password for SKC Key Broker Service
+skbs_admin_password: kmsAdminPass
+
+# The name of the binary installer as per release tag for SKC Key Broker Service
+skbs_installer_name: kms-6.1-SNAPSHOT.bin
+
+# The binary installer file source for SKC Key Broker Service
+skbs_installer_file_src: "{{binaries_path}}/{{skbs_installer_name}}"
+
+# The port for running the SKC Key Broker Service
+skbs_port: 9443
+
+
+# --------------------------------------- SGX Agent ------------------------------------------------- #
+
+# The name of the binary installer as per release tag for SGX Agent
+sgxagent_installer_name: sgx_agent
+
+# The binary installer file source for SGX Agent
+sgxagent_installer_file_src: "{{binaries_path}}"
+
+
+# --------------------------------------- SKC Library ----------------------------------------------- #
+
+# The name of the binary installer as per release tag for SKC Library
+skclib_installer_name: skc_lib
+
+# The binary installer file source for SKC Library
+skclib_installer_file_src: "{{binaries_path}}"
+
+# The service account username for SKC Library
+skclib_admin_username: skcuser
+
+# The service account password for SKC Library
+skclib_admin_password: password
+
+# ----------------------------------------- SKC INTEGRATION HUB ------------------------------------ #
+
+# The name of the binary installer as per release tag for SKC Integration Hub
+shub_installer_file_name: ihub-v3.1.0.bin
+
+# The binary installer file source for SKC Integration Hub
+shub_installer_file_src: "{{binaries_path}}/{{shub_installer_file_name}}"
+
+# The http port for running the SKC Integration Hub
+shub_http_port: 19082
+
+# The https port for running the SKC Integration Hub
+shub_htts_port: 19445
+

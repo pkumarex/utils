@@ -1,0 +1,115 @@
+---
+- name: ISECL - TRUST AGENT | Install tboot
+  dnf:
+    name: tboot
+    state: present
+
+
+- name: ISECL - TRUST AGENT | Verify if already in measured launch state
+  shell: "txt-stat | grep 'TXT measured launch: TRUE'"
+  register: pre_mle_state
+  failed_when: pre_mle_state.rc != 1 and pre_mle_state.rc != 0
+  
+
+- name: ISECL - TRUST AGENT | Creating backup of grub.cfg 
+  copy:
+    src: /boot/grub2/grub.cfg
+    dest: /boot/grub2/grub.bak
+  delegate_to: "{{ inventory_hostname }}"
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Generate grub.cfg with tboot option
+  shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Verify and update /etc/default/grub to use GRUB_DEFAULT=saved
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_DEFAULT='
+    line: GRUB_DEFAULT=saved
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Set the default grub option to Tboot and rebuild grub config
+  shell: | 
+          grub2-set-default 2
+          grub2-mkconfig -o /boot/grub2/grub.cfg
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Reboot to enter tboot
+  shell: sleep 2 && shutdown -r now "Ansible reboot"
+  async: 1
+  poll: 0
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Wait for active SSH connection
+  local_action: wait_for
+  args:
+   host: "{{ inventory_hostname }}"
+   port: 22
+   state: started
+   delay: 30
+   timeout: 300
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+
+
+- name: ISECL - TRUST AGENT | Verify a successful launch into tboot
+  shell: "txt-stat | grep 'TXT measured launch: TRUE'"
+  register: post_mle_state
+  failed_when: "'TXT measured launch: TRUE' not in post_mle_state.stdout"
+  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  
+
+- name: ISECL - TRUST AGENT | Generate trustagent.env
+  template:
+    src: trustagent.env.j2
+    dest: /root/trustagent.env
+
+
+- name: ISECL - TRUST AGENT | Copy TA binary installer
+  copy:
+    src: "{{ta_installer_file_src}}"
+    dest: "/root/{{ ta_installer_file_name }}"
+    mode: "u+x"
+
+    
+- name: ISECL - TRUST AGENT| Install TrustAgent
+  shell: "set -o pipefail && ./{{ ta_installer_file_name }} 2>&1 | tee trust_agent-install.log"
+  args:
+   chdir: /root
+   executable: /bin/bash
+   creates: /opt/trustagent/bin/tagent
+
+
+- name: ISECL - TRUST AGENT | Update the grub boot loader
+  shell: "grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg"
+  
+   
+- name: ISECL - TRUST AGENT | Reboot for default SOFTWARE manifest to be measured and extended to TPM
+  shell: sleep 2 && shutdown -r now "Ansible reboot"
+  async: 1
+  poll: 0
+
+
+- name: ISECL - TRUST AGENT | Wait for active SSH connection
+  local_action: wait_for
+  args:
+   host: "{{ inventory_hostname }}"
+   port: 22
+   state: started
+   delay: 30
+   timeout: 300
+
+
+- name: ISECL - TRUST AGENT | Verify successful installation of TA
+  shell: grep 'Installation succeeded' /root/trust_agent-install.log
+  register: successful_install
+  failed_when: "'Installation succeeded' not in successful_install.stdout"
+  notify: start ta
+
+
+- meta: flush_handlers

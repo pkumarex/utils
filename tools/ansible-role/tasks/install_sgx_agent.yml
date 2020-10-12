@@ -1,0 +1,40 @@
+---
+- name: ISECL - SGX AGENT | Create tmp directory
+  file:
+    path: "/tmp/{{sgxagent_installer_name}}"
+    state: directory     
+            
+- name: ISECL - SGX AGENT | Copy tar bundle  and other files
+  copy: 
+    src: "{{sgxagent_installer_file_src}}/"
+    dest: "/tmp/{{sgxagent_installer_name}}"
+    mode: "u+x"
+
+- name: ISECL - SGX AGENT | Untar the tar bundle
+  shell: bash -x agent_untar.sh
+  args:
+    chdir: /tmp/{{sgxagent_installer_name}}
+
+- name: ISECL - SGX AGENT | Copy configuration file
+  template:
+    src: "agent.conf.j2"
+    dest: "/tmp/{{sgxagent_installer_name}}/agent.conf"
+
+- name: ISECL - SGX AGENT | Update aas_admin_username
+  lineinfile:
+    dest: "/tmp/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
+    regexp: '"username": "admin",'
+    line: '"username": "{{ aas_admin_username }}",'
+    backrefs: yes
+
+- name: ISECL - SGX AGENT | Update aas_admin_password
+  lineinfile:
+    dest: "/tmp/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
+    regexp: '"password": "password"'
+    line: '"password": "{{ aas_admin_password }}"'
+    backrefs: yes
+
+- name: ISECL - SGX AGENT | Deploy SGX Agent
+  shell: "set -o pipefail && ./deploy_sgx_agent.sh 2>&1 | tee /root/sgx-agent-installer.log"
+  args:
+    chdir: /tmp/{{sgxagent_installer_name}}
