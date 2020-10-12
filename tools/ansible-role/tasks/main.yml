@@ -1,0 +1,465 @@
+---
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+# setup: host-attestation/application-integrity and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for host-attestation/application-integrity usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    hvs: "{{ ansible_default_ipv4.address }}"
+    hvs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['all'] }}"
+  when:
+      - '"CSP" in groups'
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - isecl_role == 'csp'
+      - (setup == 'host-attestation' or setup == 'application-integrity')
+
+
+# os: Redhat and setup: host-attestation/application-integrity and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for host-attestation/application-integrity usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - populate_users.yml
+      - install_hvs.yml
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'csp'
+      - (setup == 'host-attestation' or setup == 'application-integrity')
+
+
+# os: Redhat and setup: data-fencing & asset tags and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for data-fencing & asset tags usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    hvs: "{{ ansible_default_ipv4.address }}"
+    hvs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['all'] }}"
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - isecl_role == 'csp'
+      - setup == 'data-fencing'
+
+
+# os: Redhat and setup: data-fencing and asset tags and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for data-fencing usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - populate_users.yml
+      - install_hvs.yml
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'csp'
+      - setup == 'data-fencing'
+
+
+# os: Redhat and setup: trusted-workload-placement-containers and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for trusted-workload-placement-containers usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    hvs: "{{ ansible_default_ipv4.address }}"
+    hvs_hostname: "{{ ansible_fqdn }}"
+    ihub: "{{ ansible_default_ipv4.address }}"
+    ihub_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['all'] }}"
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - isecl_role == 'csp'
+      - setup == 'trusted-workload-placement-containers'
+
+
+# os: Redhat and setup: trusted-workload-placement-containers and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for trusted-workload-placement-containers usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - populate_users.yml
+      - install_hvs.yml
+      - install_ihub.yml
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'csp'
+      - setup == 'trusted-workload-placement-containers'
+
+
+# os: Redhat and setup: workload-conf-vm/workload-conf-containers-docker and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for workload-conf-vm/workload-conf-containers-docker/all usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    hvs: "{{ ansible_default_ipv4.address }}"
+    hvs_hostname: "{{ ansible_fqdn }}"
+    ihub: "{{ ansible_default_ipv4.address }}"
+    ihub_hostname: "{{ ansible_fqdn }}"
+    wls: "{{ ansible_default_ipv4.address }}"
+    wls_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['all'] }}"
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - isecl_role == 'csp'
+      - (setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio')
+
+
+# os: Redhat and setup: workload-conf-vm/workload-conf-containers-docker and isecl_role: enterprise
+- name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for workload-confidentiality-vm/workload-confidentiality-containers/all usecase
+  set_fact:
+    kbs: "{{ ansible_default_ipv4.address }}"
+    kbs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['all'] }}"
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - isecl_role == 'enterprise'
+      - (setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio')
+
+      
+# os: Redhat and setup: workload-conf-vm/workload-conf-containers-docker and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for workload-confidentiality-vm/workload-confidentiality-containers/all usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - populate_users.yml
+      - install_hvs.yml
+      - install_wls.yml
+      - install_ihub.yml
+  when:
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'csp'
+      - (setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio')
+
+
+# os: Redhat and setup: workload-conf-containers-docker and isecl_role: enterprise
+- name: ISECL - SETUP | Install Enterprise services for workload-conf-containers-docker usecase
+  include: "{{ item }}"
+  loop:
+      - install_kbs.yml
+      - install_docker.yml
+      - install_wpm.yml
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'enterprise'
+      - setup == 'workload-conf-containers-docker'
+      - wpm_container_security == 'yes'
+
+
+# os: Redhat and setup: workload-conf-containers-crio and isecl_role: enterprise
+- name: ISECL - SETUP | Install Enterprise services for workload-conf-containers-crio usecase
+  include: "{{ item }}"
+  loop:
+      - install_kbs.yml
+      - install_docker.yml
+      - install_skopeo.yml
+      - install_wpm.yml
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'enterprise'
+      - setup == 'workload-conf-containers-crio'
+      - wpm_container_security == 'yes'
+
+
+# os: Redhat and setup: workload-conf-vm and isecl_role: enterprise
+- name: ISECL - SETUP | Install Enterprise services for workload-conf-vm usecase
+  include: "{{ item }}"
+  loop:
+      - install_kbs.yml
+      - install_wpm.yml
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - isecl_role == 'enterprise'
+      - setup == 'workload-conf-vm'
+
+
+# os: Redhat and isecl_role: node
+- include: "{{ item }}"
+  loop:
+      - install_ta.yml
+  when: 
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node']) 
+      - ansible_os_family == 'RedHat' 
+      - isecl_role == 'node'
+      - (setup == 'host-attestation' or setup == 'application-integrity' or setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio' or setup == 'trusted-workload-placement-containers' or setup == 'data-fencing') 
+
+
+# os: Redhat and setup: workload-conf-containers-docker and isecl_role: node
+- include: "{{ item }}"
+  loop:
+      - install_docker.yml
+      - install_wla.yml
+  when: 
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+      - ansible_os_family == 'RedHat' 
+      - isecl_role == 'node'
+      - setup == 'workload-conf-containers-docker'
+      - wa_with_container_security == 'yes'
+
+
+# os: Redhat and setup: workload-conf-containers-crio and isecl_role: node
+- include: "{{ item }}"
+  loop:
+      - install_crio.yml
+      - install_wla.yml
+  when: 
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+      - ansible_os_family == 'RedHat' 
+      - isecl_role == 'node'
+      - setup == 'workload-conf-containers-crio'
+      - wa_with_container_security == 'yes'
+
+
+# os: Redhat and setup: workload-conf-vm and isecl_role: node
+- include: "{{ item }}"
+  loop:
+      - install_wla.yml
+  when: 
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+      - ansible_os_family == 'RedHat' 
+      - isecl_role == 'node'
+      - setup == 'workload-conf-vm'
+      
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for secure-key-caching/security-aware-orchestration usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    scs: "{{ ansible_default_ipv4.address }}"
+    scs_hostname: "{{ ansible_fqdn }}"
+    shvs: "{{ ansible_default_ipv4.address }}"
+    shvs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: 
+      -  "{{ groups['CSP'] }}"
+      -  "{{ groups['Node'] }}"
+  loop_control:
+    loop_var: host  
+  when: 
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'csp')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: security-aware-orchestration and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for security-aware-orchestration usecase
+  set_fact:
+    ihub: "{{ ansible_default_ipv4.address }}"
+    ihub_hostname: "{{ ansible_fqdn }}"    
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: 
+      -  "{{ groups['CSP'] }}"
+  loop_control:
+    loop_var: host
+  when: 
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'csp')
+      - (setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for secure-key-caching/security-aware-orchestration usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - install_scs.yml
+      - install_shvs.yml
+  when: 
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'csp')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: security-aware-orchestration and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for security-aware-orchestration usecase
+  include: "{{ item }}"  
+  loop:
+      - install_shub.yml
+  when: 
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'csp')
+      - (setup == 'security-aware-orchestration') 
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: csp
+- name: ISECL - SETUP | Set fact for CMS TLS certificate
+  set_fact:
+    cmstlscertsha384_csp: "{{ cms_tlscertsha384 }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: "{{ groups['all'] }}"
+  loop_control:
+    loop_var: host  
+  when: 
+      - "'CSP' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'csp')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: enterprise
+- name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for secure-key-caching/security-aware-orchestration usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    scs: "{{ ansible_default_ipv4.address }}"
+    scs_hostname: "{{ ansible_fqdn }}"
+    sqvs: "{{ ansible_default_ipv4.address }}"
+    sqvs_hostname: "{{ ansible_fqdn }}"
+    skbs: "{{ ansible_default_ipv4.address }}"
+    skbs_hostname: "{{ ansible_fqdn }}"       
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: 
+      -  "{{ groups['Enterprise'] }}"
+  loop_control:
+    loop_var: host
+  when: 
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: enterprise
+- name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for secure-key-caching/security-aware-orchestration usecase
+  set_fact:
+    cms_enterprise: "{{ ansible_default_ipv4.address }}"
+    cms_enterprise_hostname: "{{ ansible_fqdn }}"
+    aas_enterprise: "{{ ansible_default_ipv4.address }}"
+    aas_enterprise_hostname: "{{ ansible_fqdn }}"
+    sqvs: "{{ ansible_default_ipv4.address }}"
+    sqvs_hostname: "{{ ansible_fqdn }}"
+    skbs: "{{ ansible_default_ipv4.address }}"
+    skbs_hostname: "{{ ansible_fqdn }}"       
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: 
+      -  "{{ groups['Node'] }}"
+  loop_control:
+    loop_var: host
+  when: 
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: enterprise
+- name: ISECL - SETUP | Install Enterprise services for secure-key-caching/security-aware-orchestration usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - install_scs.yml
+      - install_sqvs.yml
+      - install_skbs.yml
+  when: 
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: node
+- name: ISECL - SETUP PREREQUISITES | Set required Node facts for secure-key-caching/security-aware-orchestration usecase
+  set_fact:
+    sgx_agent: "{{ ansible_default_ipv4.address }}"
+    sgx_agent_hostname: "{{ ansible_fqdn }}"    
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: 
+      -  "{{ groups['Node'] }}"
+  loop_control:
+    loop_var: host
+  when: 
+     - "'Node' in groups"
+     - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+     - ansible_os_family == 'RedHat'
+     - (isecl_role == 'node')
+     - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+
+
+# os: Redhat and setup: secure-key-caching/security-aware-orchestration and isecl_role: node
+- name: ISECL - SETUP | Install Node services for secure-key-caching/security-aware-orchestration usecase
+  include: "{{ item }}"
+  loop:
+      - install_sgx_agent.yml
+      - install_skc_lib.yml
+  when: 
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'node')
+      - (setup == 'secure-key-caching' or setup == 'security-aware-orchestration')
+

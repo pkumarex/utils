@@ -1,0 +1,30 @@
+---
+- name: ISECL - KEY BROKER SERVICE | Generate kbs.env file
+  template:
+    src: kms.env.j2
+    dest: /root/kms.env
+
+
+- name: ISECL - KEY BROKER SERVICE | Copy KBS binary installler
+  copy:
+    src: "{{ kbs_installer_file_src }}"
+    dest: "/root/{{ kbs_installer_file_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - KEY BROKER SERVICE | Install Key Broker Service
+  shell: "set -o pipefail && ./{{ kbs_installer_file_name }} 2>&1 | tee key_broker_service-install.log"
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/kms/bin/kms
+  notify: start kbs
+
+
+- meta: flush_handlers
+
+
+- name: ISECL - KEY BROKER SERVICE | Verify successful installation of KBS
+  shell: grep 'Error' /root/key_broker_service-install.log
+  register: successful_install
+  failed_when: "'Error' in successful_install.stdout"

@@ -1,0 +1,30 @@
+---
+- name: ISECL - HOST VERIFICATION SERVICE | Generate hvs.env file
+  template:
+    src: hvs.env.j2
+    dest: /root/hvs.env
+  
+
+- name: ISECL - HOST VERIFICATION SERVICE | Copy HVS binary installer
+  copy:
+    src: "{{ hvs_installer_file_src }}"
+    dest: "/root/{{ hvs_installer_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - HOST VERIFICATION SERVICE | Install Host Verification Service
+  shell:  "set -o pipefail && ./{{hvs_installer_name}} 2>&1 | tee host_verification_service-install.log"
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/hvs/bin/hvs
+  notify: start hvs
+
+
+- meta: flush_handlers
+
+
+- name: ISECL - HOST VERIFICATION SERVICE | Verify successful installation of HVS
+  shell: grep 'Installation completed successfully!' /root/host_verification_service-install.log
+  register: successful_install
+  failed_when: "'Installation completed successfully!' not in successful_install.stdout"

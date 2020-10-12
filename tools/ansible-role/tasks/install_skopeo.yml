@@ -1,0 +1,12 @@
+---
+- name: ISECL - SKOPEO | Install skopeo from repository
+  dnf:
+    name: skopeo
+    state: present
+
+
+- name: ISECL - SKOPEO |  Copy skopeo binary TO usr/bin directory
+  copy:
+    src: "{{ skopeo_installer_file_src }}"
+    dest: "/usr/bin/skopeo"
+    mode: "u+x"

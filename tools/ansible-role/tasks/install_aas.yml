@@ -1,0 +1,30 @@
+---
+- name: ISECL - AUTHENTICATION AND AUTHORIZATION SERVICE | Generate authservice.env file
+  template:
+    src: authservice.env.j2
+    dest: /root/authservice.env
+
+
+- name: ISECL - AUTHENTICATION AND AUTHORIZATION SERVICE | Copy AAS binary installer
+  copy:
+    src: "{{ aas_installer_file_src }}"
+    dest: "/root/{{ aas_installer_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - AUTHENTICATION AND AUTHORIZATION SERVICE | Install Authentication & Authorization Service
+  shell: "set -o pipefail && ./{{ aas_installer_name }} 2>&1 | tee authentication_authorization_service-install.log"
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/authservice/bin/authservice
+  notify: start aas
+
+
+- meta: flush_handlers
+
+
+- name: ISECL - AUTHENTICATION AND AUTHORIZATION SERVICE | Verify successful installation of AAS
+  shell: grep 'Installation completed successfully!' /root/authentication_authorization_service-install.log
+  register: successful_install
+  failed_when: "'Installation completed successfully!' not in successful_install.stdout"
