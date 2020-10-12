@@ -20,7 +20,10 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
 ## Requirements
 
-* Intel® SecL-DC services installed and running as per chosen use case and deployment model supported as per Product Guide. Intel® SecL-DC also provides [Ansible playbooks](https://github.com/intel-secl/ansible-role) to deploy services.
+* Intel® SecL-DC services installed and running as per chosen use case and deployment model supported as per Product Guide.
+* Quick Start Guide - Foundational & Workload Security: https://github.com/intel-secl/docs/blob/master/quick-start-guides/Quick%20Start%20Guide%20-%20Intel%C2%AE%20Security%20Libraries%20-%20Foundational%20%26%20Workload%20Security.md
+* Quick Start Guide - Secure Key Caching: 
+https://github.com/intel-secl/docs/blob/master/quick-start-guides/Quick%20Start%20Guide%20-%20Intel%C2%AE%20Security%20Libraries%20-%20Secure%20Key%20Caching.md
 * Postman client [downloaded](https://www.postman.com/downloads/) and Installed or accessible via web
 
 
@@ -37,11 +40,11 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
   ```shell
   #Clone the github repo for api-collections
-  git clone https://github.com/intel-secl/utils/
+  git clone https://github.com/intel-secl/utils.git
   
-  #Switch to specific release tag of choice
+  #Switch to specific release-version of choice
   cd utils/
-  git checkout <release-tag of choice>
+  git checkout <release-version of choice>
   
   #Import Collections from
   cd tools/api-collections
