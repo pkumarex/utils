@@ -382,7 +382,7 @@ skbs_port: 9443
 # --------------------------------------- SGX Agent ------------------------------------------------- #
 
 # The name of the binary installer as per release tag for SGX Agent
-sgxagent_installer_name: sgx_agent
+sgxagent_installer_name: sgx_agent.tar
 
 # The binary installer file source for SGX Agent
 sgxagent_installer_file_src: "{{binaries_path}}"
@@ -391,7 +391,7 @@ sgxagent_installer_file_src: "{{binaries_path}}"
 # --------------------------------------- SKC Library ----------------------------------------------- #
 
 # The name of the binary installer as per release tag for SKC Library
-skclib_installer_name: skc_lib
+skclib_installer_name: skc_library.tar
 
 # The binary installer file source for SKC Library
 skclib_installer_file_src: "{{binaries_path}}"
