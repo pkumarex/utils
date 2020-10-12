@@ -1,0 +1,19 @@
+---
+# The below additional vars are documented in Readme.md under Role Variables
+
+# The RPM download URL for postgresql
+postgres_db_rpm: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+# The postgresql RPM  file name
+postgres_rpm_name: pgdg-redhat-repo-latest.noarch.rpm
+
+#Below variables are required to be modified by user if running behind proxy
+
+# The http_proxy for setting up Intel® SecL-DC libraries
+http_proxy: 
+
+# The http_proxy for setting up Intel® SecL-DC libraries
+https_proxy: 
+
+# The no_proxy (comma separated) for setting up Intel® SecL-DC libraries
+no_proxy: 

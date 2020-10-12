@@ -1,0 +1,60 @@
+---
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Generate cms.env file
+  template:
+    src: cms.env.j2
+    dest: /root/cms.env
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Copy CMS installer binary
+  copy:
+    src: "{{ cms_installer_file_src }}"
+    dest: "/root/{{ cms_installer_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Install Certificate Management Service
+  shell: "set -o pipefail && ./{{ cms_installer_name }} 2>&1 | tee certificate_management_service-install.log"
+  register: cms_install_log
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/cms/bin/cms
+  notify: start cms
+
+
+- meta: flush_handlers
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Verify successful installation of CMS
+  shell: grep 'Installation completed successfully!' /root/certificate_management_service-install.log
+  register: successful_install
+  failed_when: "'Installation completed successfully!' not in successful_install.stdout"
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Fetch AAS bootstrap token
+  shell: "set -o pipefail && cms setup cms_auth_token --force | grep \"JWT Token: \" | awk '{print $3}'"
+  environment:
+    AAS_TLS_SAN: "{{ aas }},{{ aas_hostname }}"
+  args:
+    chdir: /root
+    executable: /bin/bash
+  register: aas_bootstrap_token
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Fetch CMS TLS Certificate SHA384 value
+  shell: cms tlscertsha384
+  args:
+    chdir: /root
+    executable: /bin/bash
+  register: cmstlscertsha384
+
+
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Set required facts
+  set_fact:
+    aas_token: "{{ aas_bootstrap_token.stdout }}"
+    cms_tlscertsha384: "{{ cmstlscertsha384.stdout }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items: "{{ groups['all'] }}"
+  loop_control:
+    loop_var: host

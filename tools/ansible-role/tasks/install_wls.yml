@@ -1,0 +1,29 @@
+---
+- name: ISECL - WORKLOAD SERVICE | Generate workload-service.env file
+  template:
+    src: workload-service.env.j2
+    dest: /root/workload-service.env
+
+
+- name: ISECL - WORKLOAD SERVICE | Copy WLS binary installer
+  copy:
+    src: "{{ wls_installer_file_src }}"
+    dest: "/root/{{ wls_installer_file_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - WORKLOAD SERVICE | INSTALLATION IN PROGRESS
+  shell: "set -o pipefail && ./{{ wls_installer_file_name }} 2>&1 | tee workload_service-install.log"
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/workload-service/bin/workload-service
+  notify: start wls
+
+- meta: flush_handlers
+
+
+- name: ISECL - WORKLOAD SERVICE | Verify successful installation of WLS
+  shell: grep 'Setup finished successfully!' /root/workload_service-install.log
+  register: successful_install
+  failed_when: "'Setup finished successfully!' not in successful_install.stdout"

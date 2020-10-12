@@ -1,0 +1,32 @@
+---
+- name: ISECL - WORKLOAD POLICY MANAGER | Generate wpm.env file
+  template:
+    src: wpm.env.j2
+    dest: /root/wpm.env
+
+
+- name: ISECL - WORKLOAD POLICY MANAGER | Copy WPM binary installer
+  copy:
+    src: "{{ wpm_installer_file_src }}"
+    dest: "/root/{{ wpm_installer_file_name }}"
+    mode: "u+x"
+
+
+- name: ISECL - WORKLOAD POLICY MANAGER | Install Workload Policy Manager
+  shell: "set -o pipefail && ./{{ wpm_installer_file_name }} 2>&1 | tee workload_policy_manager-install.log"
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/workload-policy-manager/bin/wpm
+
+
+- name: ISECL - WORKLOAD POLICY MANAGER | Verify successful installation of WPM_1
+  shell: grep 'Setup finished successfully!' /root/workload_policy_manager-install.log
+  register: successful_install
+  failed_when: "'Setup finished successfully!' not in successful_install.stdout"
+  
+
+- name: ISECL - WORKLOAD POLICY MANAGER | Verify successful installation of WPM_2
+  shell: grep 'Installation completed.' /root/workload_policy_manager-install.log
+  register: successful_install
+  failed_when: "'Installation completed.' not in successful_install.stdout"

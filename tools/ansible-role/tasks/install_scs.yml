@@ -1,0 +1,62 @@
+---
+ 
+- name: ISECL - SGX CACHING SERVICE | Copy SCS installer binary
+  copy:
+    src: "{{scs_installer_file_src}}"
+    dest: "/root/{{scs_installer_name}}"
+    mode: "u+x"
+
+- name: ISECL - SGX CACHING SERVICE | Copy aas-util_user-role.sh file
+  copy:
+    src: "{{binaries_path}}/aas-util_user-role.sh"
+    dest: "/root/aas-util_user-role.sh"
+    mode: "u+x"
+
+- name: ISECL - SGX CACHING SERVICE | Copy scs_users_roles.conf file
+  template:
+    src: "scs_users_roles_installation.conf.j2"
+    dest: "/root/scs_users_roles.conf"
+    mode: "u+x"
+
+- name: ISECL - SGX CACHING SERVICE | Execute aas-util_user-role.sh
+  shell: "bash -x aas-util_user-role.sh -ru -c scs_users_roles.conf"
+  args:
+    chdir: /root
+    executable: /bin/bash
+
+- name: ISECL - SGX CACHING SERVICE | Create token for SCS user
+  uri:
+    url: "https://{{aas}}:{{aas_port}}/aas/token"
+    body_format: json
+    body:
+       {
+       "username": "{{scs_admin_username}}",
+       "password": "{{scs_admin_password}}"
+       }
+    method: POST
+    use_proxy: no
+    validate_certs: no
+    return_content: yes
+  register: scs_bootstrap_token
+
+- name: ISECL - SGX CACHING SERVICE | Generate scs.env file
+  template:
+    src: "scs.env.j2"
+    dest: "/root/scs.env"
+    mode: "u+x"
+
+- name: ISECL - SGX CACHING SERVICE | Install SGX Caching Service
+  shell: "set -o pipefail && ./{{ scs_installer_name }} 2>&1 | tee sgx_caching_service-install.log"  
+  register: scs_install_log  
+  args:
+    chdir: /root
+    executable: /bin/bash
+    creates: /opt/scs/bin/scs
+  notify: start scs    
+
+- meta: flush_handlers
+
+- name: ISECL - SGX CACHING SERVICE | Verify successful installation of SCS
+  shell: grep 'Installation completed successfully!' /root/sgx_caching_service-install.log
+  register: successful_install
+  failed_when: "'Installation completed successfully!' not in successful_install.stdout"

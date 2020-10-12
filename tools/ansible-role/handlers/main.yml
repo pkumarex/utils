@@ -1,0 +1,98 @@
+---
+- name: ISECL - CERTIFICATE MANAGEMENT SERVICE | Start CMS
+  systemd:
+    name: cms
+    state: started
+  listen: start cms
+
+
+- name: ISECL - AUTHENTICATION AND AUTHORIZATION SERVICE | Start AAS
+  systemd:
+    name: authservice
+    state: started
+  listen: start aas
+
+
+- name: ISECL - HOST VERIFICATION SERVICE | Start HVS
+  systemd:
+    name: hvs
+    state: started
+  listen: start hvs
+
+
+- name: ISECL - INTEGRATION HUB | Start IHUB
+  systemd:
+    name: ihub
+    state: started
+  listen: start ihub
+
+
+- name: ISECL - WORKLOAD SERVICE | Start WLS
+  systemd:
+    name: workload-service
+    state: started
+  listen: start wls
+
+
+- name: INSTALL DOCKER | Start DOCKER
+  systemd:
+    name: docker
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  listen: start docker
+
+
+- name: ISECL - KEY BROKER SERVICE | Start KBS
+  systemd:
+    name: kms
+    state: started
+  listen: start kbs
+
+
+- name: ISECL - TRUST AGENT SERVICE | Start TA
+  systemd:
+    name: tagent
+    state: started
+  listen: start ta
+
+
+- name: ISECL - CRIO | Start CRIO
+  systemd:
+    name: crio
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  listen: start crio
+
+
+- name: ISECL - WORKLOAD AGENT SERVICE | Start WLA
+  systemd:
+    name: wlagent
+    state: started
+  listen: start wla
+  
+
+- name: ISECL - SGX CACHING SERVICE | Start SCS
+  service:
+    name: scs
+    state: started
+  listen: start scs
+  
+- name: ISECL - SGX HOST VERIFICATION SERVICE | Start SHVS
+  service:
+    name: shvs
+    state: started
+  listen: start shvs  
+  
+- name: ISECL - SGX QUOTE VERIFICATION SERVICE | Start SQVS
+  service:
+    name: sqvs
+    state: started
+  listen: start sqvs   
+  
+- name: ISECL - SGX KEY BROKER SERVICE | Start SKMS
+  service:
+    name: kms
+    state: started
+  listen: start skms  

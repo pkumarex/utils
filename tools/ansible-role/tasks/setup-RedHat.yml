@@ -1,0 +1,10 @@
+---
+- name: ISECL - SETUP PREREQUISITES | Install Pre-requisite packages
+  dnf:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - tar
+    - dnf-plugins-core
+
+
