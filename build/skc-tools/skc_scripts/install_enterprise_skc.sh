@@ -2,14 +2,14 @@
 HOME_DIR=~/
 SKC_BINARY_DIR=$HOME_DIR/binaries
 
-KMS_HOSTNAME=$("hostname")
+KBS_HOSTNAME=$("hostname")
 
 # Copy env files to Home directory
 cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
 cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
 cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
 cp -pf $SKC_BINARY_DIR/env/sqvs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/kms.env $HOME_DIR
+cp -pf $SKC_BINARY_DIR/env/kbs.env $HOME_DIR
 cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
 
 # Copy DB scripts to Home directory
@@ -46,7 +46,7 @@ sudo -u postgres dropdb pgscsdb
 echo "################ Uninstalling SQVS....  #################"
 sqvs uninstall --purge
 echo "################ Uninstalling KBS....  #################"
-kms uninstall --purge
+kbs uninstall --purge
 popd
 
 export PGPASSWORD=dbpassword
@@ -160,21 +160,21 @@ echo "SQVS Token $SQVS_TOKEN"
 
 # KBS User and Roles
 
-KMS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kmsuser@kms","password": "kmspassword"}'`
-KMS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=kmsuser@kms -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
-echo "Created KMS User with user ID $KMS_USER_ID"
-KMS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KMS TLS Certificate;SAN='$KMS_IP','$KMS_HOSTNAME';certType=TLS"}' | jq -r ".role_id"`
-echo "Created KMS TLS cert role with ID $KMS_ROLE_ID1"
-KMS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
-echo "Retrieved KMS Administrator role with ID $KMS_ROLE_ID2"
-KMS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
+KBS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kbsuser@kbs","password": "kbspassword"}'`
+KBS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=kbsuser@kbs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+echo "Created KBS User with user ID $KBS_USER_ID"
+KBS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KBS TLS Certificate;SAN='$KBS_IP';certType=TLS"}' | jq -r ".role_id"`
+echo "Created KBS TLS cert role with ID $KBS_ROLE_ID1"
+KBS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
+echo "Retrieved KBS Administrator role with ID $KBS_ROLE_ID2"
+KBS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$KMS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KMS_ROLE_ID1"'", "'"$KMS_ROLE_ID2"'", "'"$KMS_ROLE_ID3"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$KBS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KBS_ROLE_ID1"'", "'"$KBS_ROLE_ID2"'", "'"$KBS_ROLE_ID3"'"]}'
 fi
 
-KMS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kmsuser@kms","password": "kmspassword"}'`
-echo "KMS Token $KMS_TOKEN"
+KBS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kbsuser@kbs","password": "kbspassword"}'`
+echo "KBS Token $KBS_TOKEN"
 
 echo "################ Update SCS env....  #################"
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SCS_IP/"  ~/scs.env
@@ -211,16 +211,15 @@ fi
 echo "################ Installed SQVS....  #################"
 
 echo "################ Update KBS env....  #################"
-sed -i "s/^\(JETTY_TLS_CERT_IP\s*=\s*\).*\$/\1$KMS_IP/" ~/kms.env
-sed -i "s/^\(JETTY_TLS_CERT_DNS\s*=\s*\).*\$/\1$KMS_HOSTNAME/" ~/kms.env
-sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KMS_TOKEN/" ~/kms.env
-sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kms.env
-sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kms.env
-sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kms.env
+sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_IP/" ~/kbs.env
+sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KBS_TOKEN/" ~/kbs.env
+sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kbs.env
+sed -i "s@^\(AAS_BASE_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
+sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kbs.env
 SQVS_URL=https://$SQVS_IP:12000/svs/v1
-sed -i "s@^\(SVS_BASE_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kms.env
+sed -i "s@^\(SQVS_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kbs.env
 echo "################ Installing KBS....  #################"
-./kms-*.bin || exit 1
+./kbs-*.bin || exit 1
 if [ $? -ne 0 ]; then
   echo "############ KBS Installation Failed"
   exit 1

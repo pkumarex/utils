@@ -90,7 +90,7 @@ EOF
 create_roles()
 {
 	local cms_role_id=$(create_user_roles "CMS" "CertApprover" "CN=$SKC_USER;CERTTYPE=TLS-Client" ) #get roleid
-	local kms_role_id=$(create_user_roles "KMS" "KeyTransfer" "permissions=nginx,USA")
+	local kms_role_id=$(create_user_roles "KBS" "KeyTransfer" "permissions=nginx,USA")
 	ROLE_ID_TO_MAP=`echo \"$cms_role_id\",\"$kms_role_id\"`
 }
 
