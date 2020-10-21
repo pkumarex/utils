@@ -38,3 +38,4 @@
   shell: "set -o pipefail && ./deploy_sgx_agent.sh 2>&1 | tee /root/sgx-agent-installer.log"
   args:
     chdir: /tmp/{{sgxagent_installer_name}}
+    stdin: yes
