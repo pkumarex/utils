@@ -1,29 +1,12 @@
 #!/bin/bash
-clean_flag=0
 
-if [ "$1" = "clean" ]; then
-	clean_flag=1
-fi
-
-rm -f *.log
-rm -f *response.json
-rm -f *.status
-rm -rf .srl
-
-if [ $clean_flag -eq 1 ]; then
-	exit 0
-fi
-
-if dnf list installed "jq" >/dev/null 2>&1; then
-    	echo "jq package already installed"
-else
-	dnf install jq -y
-fi
-
-KMS_IP=kms.server.com
-KMS_PORT=9443
+# change this to the KBS VM IP
+KBS_IP=kbs.server.com
+KBS_PORT=9443
+# change this to the AAS VM IP
 AAS_IP=aas.server.com
 AAS_PORT=8444
+
 AAS_USERNAME=admin
 AAS_PASSWORD=password
 EnterPriseAdmin=EAdmin
@@ -32,6 +15,9 @@ CACERT_PATH=cms-ca.cert
 
 CONTENT_TYPE="Content-Type: application/json"
 ACCEPT="Accept: application/json"
+
+dnf install jq -y
+
 aas_token=`curl -k -H "$CONTENT_TYPE" -H "$ACCEPT" --data \{\"username\":\"$AAS_USERNAME\",\"password\":\"$AAS_PASSWORD\"\} https://$AAS_IP:$AAS_PORT/aas/token`
 
 #Create EnterPriseAdmin User and assign the roles.
@@ -54,43 +40,46 @@ curl -s -k -H "$CONTENT_TYPE" -H "Authorization: Bearer ${aas_token}" --data \{\
 BEARER_TOKEN=`curl -k -H "$CONTENT_TYPE" -H "$ACCEPT" -H "Authorization: Bearer $aas_token" --data \{\"username\":\"$EnterPriseAdmin\",\"password\":\"$EnterPrisePassword\"\} https://$AAS_IP:$AAS_PORT/aas/token`
 echo $BEARER_TOKEN
 
-curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "Content-Type: application/json" --cacert $CACERT_PATH \
-	-H "Accept: application/json" --data @transfer_policy_request.json  -o transfer_policy_response.json -w "%{http_code}" \
-	https://$KMS_IP:$KMS_PORT/v1/key-transfer-policies >transfer_policy_response.status 2>transfer_policy_debug.log
+curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "CONTENT_TYPE" --cacert $CACERT_PATH \
+	-H "$ACCEPT" --data @transfer_policy_request.json  -o transfer_policy_response.json -w "%{http_code}" \
+	https://$KBS_IP:$KBS_PORT/v1/key-transfer-policies >transfer_policy_response.status 2>transfer_policy_debug.log
 
 transfer_policy_id=$(cat transfer_policy_response.json | jq '.id');
 
+#create a RSA key
 if [ "$1" = "reg" ]; then
 	source gen_cert_key.sh
 printf "{
    \"key_information\":{
       \"algorithm\":\"RSA\",
       \"key_length\":2048,
-\"key_string\":\"$(cat ${SERVER_PKCS8_KEY} | tr '\r\n' '@')\"
+      \"key_string\":\"$(cat ${SERVER_PKCS8_KEY} | tr '\r\n' '@')\"
    },
     \"transfer_policy_ID\": ${transfer_policy_id}
 }" > key_request.json
 
 sed -i "s/@/\\\n/g" key_request.json
+
+#create a AES key
 else
 printf "{
    \"key_information\":{
-      \"algorithm\":\"AES\",
-      \"key_length\":128
+   \"algorithm\":\"AES\",
+   \"key_length\":128
    },
-\"transfer_policy_ID\":${transfer_policy_id}
+   \"transfer_policy_ID\":${transfer_policy_id}
 }" > key_request.json
 fi
 
-curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "Content-Type: application/json" --cacert $CACERT_PATH \
-    -H "Accept: application/json" --data @key_request.json -o key_response.json -w "%{http_code}" \
-    https://$KMS_IP:$KMS_PORT/v1/keys > key_response.status \
- 2>key_debug.log
+curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "$CONTENT_TYPE" --cacert $CACERT_PATH \
+    -H "$ACCEPT" --data @key_request.json -o key_response.json -w "%{http_code}" \
+    https://$KBS_IP:$KBS_PORT/v1/keys > key_response.status 2>key_debug.log
 
 key_id=$(cat key_response.json | jq '.key_information.id');
+
 if [ "$1" = "reg" ]; then
     file_name=$(echo $key_id | sed -e "s|\"||g")
-    cp output/server.cert output/$file_name.crt
+    mv output/server.cert output/$file_name.crt
     echo "cert path:$(realpath output/$file_name.crt)"
 fi
 
