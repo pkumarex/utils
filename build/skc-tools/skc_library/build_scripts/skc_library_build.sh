@@ -75,7 +75,6 @@ install_prerequisites
 download_dcap_driver
 install_sgxsdk
 install_sgxrpm
-install_sgxssl
 install_ctk
 build_skc_library
 create_skc_library_tar

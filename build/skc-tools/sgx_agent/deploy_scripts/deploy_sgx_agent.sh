@@ -2,7 +2,6 @@
 SGX_DRIVER_VERSION=1.36
 KDIR=/lib/modules/$(uname -r)/build
 SGX_INSTALL_DIR=/opt/intel
-SGX_AGENT_BIN_NAME=sgx_agent-v3.1.0.bin
 MP_RPM_VER=1.8.100.2-1
 SGX_AGENT_BIN=bin
 
@@ -91,7 +90,7 @@ install_sgx_agent() {
 	fi
 
 	sgx_agent uninstall --purge
-	$SGX_AGENT_BIN/$SGX_AGENT_BIN_NAME
+	$SGX_AGENT_BIN/sgx_agent-v*.bin
 }
 
 install_prerequisites

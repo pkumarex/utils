@@ -2,7 +2,6 @@
 SKCLIB_BIN=bin
 SGX_DRIVER_VERSION=1.36
 SGX_INSTALL_DIR=/opt/intel
-SKC_LIBRARY_BIN_NAME=skc_library_v3.1.bin
 
 source skc_library.conf
 
@@ -63,7 +62,7 @@ install_cryptoapitoolkit()
 
 install_skc_library_bin()
 {
-	$SKCLIB_BIN/$SKC_LIBRARY_BIN_NAME
+	$SKCLIB_BIN/skc_library_v*.bin
 	if [ $? -ne 0 ]
 	then
 		echo "SKC Library installation failed with $?"
