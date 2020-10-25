@@ -15,9 +15,22 @@ install_prerequisites()
         source deployment_prerequisites.sh
         if [[ $? -ne 0 ]]
         then
-                echo "Exiting. Pre-install script failed"
+                echo "sgx agent pre-requisite package installation failed. exiting"
                 exit 1
         fi
+}
+
+install_dcap_driver()
+{
+	chmod u+x $SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin
+	echo "$INKERNEL_SGX"
+	echo "$SGX_DRIVER_INSTALLED"
+	if [[ "$INKERNEL_SGX" -ne 0 && "$SGX_DRIVER_INSTALLED" -ne 0 ]]; then
+		sh $SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin -prefix=$SGX_INSTALL_DIR || exit 1
+		echo "sgx dcap driver installed"
+	else
+		echo "found inbuilt sgx driver, skipping dcap driver installation"
+	fi
 }
 
 install_psw_qgl()
@@ -29,49 +42,20 @@ install_psw_qgl()
 	rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
 }
 	
-install_pckretrieval_tool()
-{
-	if [ ! -f /usr/sbin/rdmsr ]; then
-		dnf localinstall -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
-	else
-		echo "rdmsr present. Continuing...."
-	fi
-
-	cp -pf $SGX_AGENT_BIN/libdcap_quoteprov.so.1 $SGX_AGENT_BIN/pck_id_retrieval_tool_enclave.signed.so /usr/sbin/
-	cp -pf $SGX_AGENT_BIN/PCKIDRetrievalTool /usr/sbin/
-}
-
-install_dcap_driver()
-{
-	chmod u+x $SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin
-	echo "$INKERNEL_SGX"
-	echo "$SGX_DRIVER_INSTALLED"
-	if [[ "$INKERNEL_SGX" -ne 0 && "$SGX_DRIVER_INSTALLED" -ne 0 ]]; then
-		echo "SGX DCAP Driver is not present in your system."
-		echo "Do you like to install it(Y/N):"
-		read answer
-		if [ "$answer" != "${answer#[Yy]}" ] ;then
-			echo "Installing SGX DCAP Driver"
-			sh $SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin -prefix=$SGX_INSTALL_DIR || exit 1
-		else
-			echo "Skipping installation of SGX DCAP DRIVER"
-			return
-		fi
-	else
-		echo "Found inbuilt sgx driver, skipping dcap driver installation"
-	fi
-}
-
 install_multipackage_agent_rpm()
 {
 	rpm -ivh $SGX_AGENT_BIN/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm
 }
-		
+
+install_pckretrieval_tool()
+{
+	dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
+	\cp -pf $SGX_AGENT_BIN/libdcap_quoteprov.so.1 $SGX_AGENT_BIN/pck_id_retrieval_tool_enclave.signed.so /usr/sbin/
+	\cp -pf $SGX_AGENT_BIN/PCKIDRetrievalTool /usr/sbin/
+}
+
 install_sgx_agent() { 
-	if [ ! -f ~/sgx_agent.env ]
-	then
-		cp -pf sgx_agent.env ~/sgx_agent.env
-	fi
+	\cp -pf sgx_agent.env ~/sgx_agent.env
 
 	source agent.conf
 	CMS_URL=https://$CMS_IP:$CMS_PORT/cms/v1
@@ -85,7 +69,7 @@ install_sgx_agent() {
 	
 	./sgx_agent_create_roles.sh
 	if [ $? -ne 0 ];then
-		echo "Retrieve of Bearer token failed. Exiting"
+		echo "sgx_agent user/role creation failed. exiting"
 		exit 1
 	fi
 

@@ -1,15 +1,10 @@
 #!/bin/bash
-#set -x
-#Steps:
-#Get token from AAS
-#to customize, export the correct values before running the script
 
 echo "Setting up SGX_AGENT Related roles and user in AAS Database"
 
 AGENT_env="/root/sgx_agent.env";
 source $AGENT_env
 
-#Get the value of AAS IP address and port. Default vlue is also provided.
 aas_hostname=$AAS_API_URL
 CURL_OPTS="-s -k"
 CN="SGX_AGENT TLS Certificate"
@@ -33,8 +28,8 @@ response_status=`echo "${output: -3}"`
 create_sgx_agent_user() {
 cat > $tmpdir/user.json << EOF
 {
-	"username":"sgx_agent",
-	"password":"password"
+	"username":"$AGENT_USER",
+	"password":"$AGENT_PASSWORD"
 }
 EOF
 

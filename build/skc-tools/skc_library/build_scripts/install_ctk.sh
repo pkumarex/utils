@@ -3,8 +3,8 @@ SKCLIB_DIR=$PWD/skc_library
 SGX_INSTALL_DIR=/opt/intel
 GIT_CLONE_PATH=/tmp/sgx
 GIT_CLONE_SGX_CTK=$GIT_CLONE_PATH/crypto-api-toolkit
-CTK_REPO="https://github.com/intel-secl/crypto-api-toolkit.git"
-CTK_BRANCH="v3.1.0"
+CTK_REPO="ssh://git@gitlab.devtools.intel.com:29418/sst/isecl/crypto-api-toolkit.git"
+CTK_BRANCH="v3.2/develop"
 CTK_INSTALL=$SGX_INSTALL_DIR/cryptoapitoolkit
 P11_KIT_PATH=/usr/include/p11-kit-1/p11-kit/
 CTK_PREFIX=$SGX_INSTALL_DIR/cryptoapitoolkit
@@ -32,7 +32,6 @@ check_prerequisites()
                 echo "sgx sdk is required for building cryptokit."
                 exit 1
         fi
-
 }
 
 check_prerequisites

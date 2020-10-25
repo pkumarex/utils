@@ -23,11 +23,7 @@ if [ -f ./csp_skc.conf ]; then
     if [ -n "$env_file_exports" ]; then eval export $env_file_exports; fi
 fi
 
-############## Install pre-req
-which jq &> /dev/null 
-if [ $? -ne 0 ]; then
-  yum install -y jq
-fi
+yum install -y jq
 
 echo "################ Uninstalling CMS....  #################"
 cms uninstall --purge

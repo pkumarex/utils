@@ -23,12 +23,8 @@ install_prerequisites()
 
 install_dcap_driver()
 {
-	if [[ $SGX_DRIVER_INSTALLED -eq 0 ]]; then
+	if [ $SGX_DRIVER_INSTALLED -eq 0 ] || [ $INKERNEL_SGX -eq 0 ] ; then
 		echo "found sgx driver, skipping dcap driver installation"
-		return
-	fi
-	if [[ $INKERNEL_SGX -eq 0 ]]; then
-		echo "found in-built sgx driver, skipping dcap driver installation"
 		return
 	fi
 
@@ -45,8 +41,9 @@ install_psw_qgl()
 	rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
 
 	sed -i "s|PCCS_URL=.*|PCCS_URL=https://$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g" /etc/sgx_default_qcnl.conf
+	#Update SCS root CA Certificate in SGX Compute node certificate store in order for  QPL to verify SCS
 	curl -k -H 'Accept:application/x-pem-file' https://$CSP_CMS_IP:$CSP_CMS_PORT/cms/v1/ca-certificates > /etc/pki/ca-trust/source/anchors/skc-lib-cms-ca.cert
-	#'update-ca-trust' command is specific to RHEL OS, to update the system-wide trust store configuration.
+	# 'update-ca-trust' command is specific to RHEL OS, to update the system-wide trust store configuration.
 	update-ca-trust
 }
 
@@ -65,7 +62,7 @@ install_skc_library_bin()
 	$SKCLIB_BIN/skc_library_v*.bin
 	if [ $? -ne 0 ]
 	then
-		echo "SKC Library installation failed with $?"
+		echo "skc_library installation failed"
 		exit 1
 	fi
 }
@@ -75,7 +72,7 @@ run_post_deployment_script()
 	./skc_library_create_roles.sh
 	if [ $? -ne 0 ]
 	then
-		echo "failed to create skc_library roles and get TLS certificate from CMS"
+		echo "failed to create skc_library user/roles"
 		exit 1
 	fi
 }
