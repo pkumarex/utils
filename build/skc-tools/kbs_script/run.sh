@@ -7,8 +7,8 @@ KBS_PORT=9443
 AAS_IP=aas.server.com
 AAS_PORT=8444
 
-AAS_USERNAME=admin
-AAS_PASSWORD=password
+AAS_USERNAME=admin@aas
+AAS_PASSWORD=aasAdminPass
 EnterPriseAdmin=EAdmin
 EnterPrisePassword=EPassword
 CACERT_PATH=cms-ca.cert

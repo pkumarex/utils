@@ -38,7 +38,7 @@ authservice uninstall --purge
 echo "################ Remove AAS DB....  #################"
 pushd $PWD
 cd /usr/local/pgsql
-sudo -u postgres dropdb aas_db
+sudo -u postgres dropdb aasdb
 echo "################ Uninstalling SCS....  #################"
 scs uninstall --purge
 echo "################ Remove SCS DB....  #################"
@@ -54,7 +54,7 @@ function is_database() {
     psql -U dbuser -lqt | cut -d \| -f 1 | grep -wq $1
 }
 
-export DBNAME=aas_db
+export DBNAME=aasdb
 if is_database $DBNAME
 then 
    echo $DBNAME database exists
