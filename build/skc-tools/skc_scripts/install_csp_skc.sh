@@ -45,9 +45,9 @@ echo "################ Uninstalling IHUB....  #################"
 ihub uninstall --purge
 popd
 
-export PGPASSWORD=dbpassword
+export PGPASSWORD=aasdbpassword
 function is_database() {
-    psql -U dbuser -lqt | cut -d \| -f 1 | grep -wq $1
+    psql -U aasdbuser -lqt | cut -d \| -f 1 | grep -wq $1
 }
 
 export DBNAME=aasdb
@@ -122,14 +122,14 @@ fi
 echo "################ Installed AuthService....  #################"
 
 echo "################ Create user and role on AuthService....  #################"
-TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin", "password": "password" }'`
+TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin@aas", "password": "aasAdminPass" }'`
 
 if [ $? -ne 0 ]; then
   echo "############ Could not get TOKEN from AuthService "
   exit 1
 fi
 
-USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@aas -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Got admin user ID $USER_ID"
 
 # SGX Caching Service User and Roles
@@ -174,8 +174,8 @@ echo "SHVS Token $SHVS_TOKEN"
 
 #  IHUB User and Roles
 
-IHUB_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "ihubuser@ihub","password": "ihubpassword"}'`
-IHUB_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=ihubuser@ihub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+IHUB_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
+IHUB_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@hub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created IHUB User with user ID $IHUB_USER_ID"
 IHUB_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=Integration HUB TLS Certificate;SAN='$IHUB_IP';certType=TLS"}' | jq -r ".role_id"`
 echo "Created IHUB TLS cert role with ID $IHUB_ROLE_ID1"
@@ -188,7 +188,7 @@ if [ $? -eq 0 ]; then
   curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$IHUB_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$IHUB_ROLE_ID1"'", "'"$IHUB_ROLE_ID2"'", "'"$IHUB_ROLE_ID3"'"]}'
 fi
 
-IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "ihubuser@ihub","password": "ihubpassword"}'`
+IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
 echo "IHUB Token $IHUB_TOKEN"
 
 echo "################ Update SCS env....  #################"
