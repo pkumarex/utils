@@ -4,6 +4,7 @@ echo "Setting up SGX_AGENT Related roles and user in AAS Database"
 
 AGENT_env="/root/sgx_agent.env";
 source $AGENT_env
+source agent.conf
 
 aas_hostname=$AAS_API_URL
 CURL_OPTS="-s -k"
@@ -14,8 +15,8 @@ tmpdir=$(mktemp -d -p /tmp/sgx_agent)
 
 cat >$tmpdir/aasAdmin.json <<EOF
 {
-"username": "admin",
-"password": "password"
+"username": "admin@aas",
+"password": "aasAdminPass"
 }
 EOF
 
