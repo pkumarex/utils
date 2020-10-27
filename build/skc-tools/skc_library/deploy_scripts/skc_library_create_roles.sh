@@ -23,8 +23,8 @@ update_credential_ini()
 
 cat > $tmpdir/aasadmin.json << EOF
 {
-"username": "admin",
-"password": "password"
+"username": "admin@aas",
+"password": "aasAdminPass"
 }
 EOF
 
