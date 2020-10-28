@@ -11,6 +11,7 @@ AAS_USERNAME=admin@aas
 AAS_PASSWORD=aasAdminPass
 EnterPriseAdmin=EAdmin
 EnterPrisePassword=EPassword
+# set this CA_CERT_PATH to the cms ca cert file (pem file) in /etc/kbs/certs/trustedca/ directory
 CACERT_PATH=cms-ca.cert
 
 CONTENT_TYPE="Content-Type: application/json"
@@ -40,7 +41,7 @@ curl -s -k -H "$CONTENT_TYPE" -H "Authorization: Bearer ${aas_token}" --data \{\
 BEARER_TOKEN=`curl -k -H "$CONTENT_TYPE" -H "$ACCEPT" -H "Authorization: Bearer $aas_token" --data \{\"username\":\"$EnterPriseAdmin\",\"password\":\"$EnterPrisePassword\"\} https://$AAS_IP:$AAS_PORT/aas/token`
 echo $BEARER_TOKEN
 
-curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "CONTENT_TYPE" --cacert $CACERT_PATH \
+curl -H "Authorization: Bearer ${BEARER_TOKEN}" -H "$CONTENT_TYPE" --cacert $CACERT_PATH \
 	-H "$ACCEPT" --data @transfer_policy_request.json  -o transfer_policy_response.json -w "%{http_code}" \
 	https://$KBS_IP:$KBS_PORT/v1/key-transfer-policies >transfer_policy_response.status 2>transfer_policy_debug.log
 
@@ -71,7 +72,7 @@ printf "{
 }" > key_request.json
 fi
 
-curl -v -H "Authorization: Bearer ${BEARER_TOKEN}" -H "$CONTENT_TYPE" --cacert $CACERT_PATH \
+curl -H "Authorization: Bearer ${BEARER_TOKEN}" -H "$CONTENT_TYPE" --cacert $CACERT_PATH \
     -H "$ACCEPT" --data @key_request.json -o key_response.json -w "%{http_code}" \
     https://$KBS_IP:$KBS_PORT/v1/keys > key_response.status 2>key_debug.log
 
