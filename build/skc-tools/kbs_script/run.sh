@@ -52,7 +52,7 @@ if [ "$1" = "reg" ]; then
 printf "{
    \"key_information\":{
       \"algorithm\":\"RSA\",
-      \"key_length\":2048,
+      \"key_length\":3072,
       \"key_string\":\"$(cat ${SERVER_PKCS8_KEY} | tr '\r\n' '@')\"
    },
     \"transfer_policy_ID\": ${transfer_policy_id}
@@ -65,7 +65,7 @@ else
 printf "{
    \"key_information\":{
    \"algorithm\":\"AES\",
-   \"key_length\":128
+   \"key_length\":256
    },
    \"transfer_policy_ID\":${transfer_policy_id}
 }" > key_request.json
