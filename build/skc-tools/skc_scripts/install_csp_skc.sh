@@ -164,9 +164,15 @@ SHVS_ROLE_ID4=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "
 echo "Created SHVS HostDataReader role with ID $SHVS_ROLE_ID4"
 SHVS_ROLE_ID5=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostListManager","context": ""}' | jq -r ".role_id"`
 echo "Created SHVS HostListManager role with ID $SHVS_ROLE_ID5"
+SHVS_ROLE_ID6=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostListReader","context": ""}' | jq -r ".role_id"`
+echo "Created SHVS HostListReader role with ID $SHVS_ROLE_ID6"
+SHVS_ROLE_ID7=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostDataReader","context": ""}' | jq -r ".role_id"`
+echo "Created SHVS HostDataReader role with ID $SHVS_ROLE_ID7"
+SHVS_ROLE_ID8=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostRegistration","context": ""}' | jq -r ".role_id"`
+echo "Created SHVS HostRegistration role with ID $SHVS_ROLE_ID8"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$SHVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SHVS_ROLE_ID1"'", "'"$SHVS_ROLE_ID2"'", "'"$SHVS_ROLE_ID3"'", "'"$SHVS_ROLE_ID4"'", "'"$SHVS_ROLE_ID5"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$SHVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SHVS_ROLE_ID1"'", "'"$SHVS_ROLE_ID2"'", "'"$SHVS_ROLE_ID3"'", "'"$SHVS_ROLE_ID4"'", "'"$SHVS_ROLE_ID5"'", "'"$SHVS_ROLE_ID6"'", "'"$SHVS_ROLE_ID7"'", "'"$SHVS_ROLE_ID8"'"]}'
 fi
 
 SHVS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "shvsuser@shvs","password": "shvspassword"}'`
