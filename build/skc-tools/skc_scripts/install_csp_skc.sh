@@ -181,15 +181,11 @@ echo "SHVS Token $SHVS_TOKEN"
 IHUB_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
 IHUB_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@hub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created IHUB User with user ID $IHUB_USER_ID"
-IHUB_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=Integration HUB TLS Certificate;SAN='$IHUB_IP';certType=TLS"}' | jq -r ".role_id"`
-echo "Created IHUB TLS cert role with ID $IHUB_ROLE_ID1"
-IHUB_ROLE_ID2=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostDataReader","context": ""}' | jq -r ".role_id"`
-echo "Created IHUB HostDataReader role with ID $IHUB_ROLE_ID2"
-IHUB_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostsListReader","context": ""}' | jq -r ".role_id"`
-echo "Created IHUB HostsListReader role with ID $IHUB_ROLE_ID3"
+IHUB_ROLE_ID=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=Integration HUB TLS Certificate;SAN='$IHUB_IP';certType=TLS"}' | jq -r ".role_id"`
+echo "Created IHUB TLS cert role with ID $IHUB_ROLE_ID"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$IHUB_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$IHUB_ROLE_ID1"'", "'"$IHUB_ROLE_ID2"'", "'"$IHUB_ROLE_ID3"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$IHUB_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$IHUB_ROLE_ID"'", "'"$SHVS_ROLE_ID6"'", "'"$SHVS_ROLE_ID7"'"]}'
 fi
 
 IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
