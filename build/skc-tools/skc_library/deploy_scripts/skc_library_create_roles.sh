@@ -87,7 +87,7 @@ EOF
 	#check if CertApprover role already exists
 	curl $CURL_OPTS -H "Authorization: Bearer ${Bearer_token}" -o $tmpdir/role_response.json -w "%{http_code}" $aas_url/roles?name=CertApprover > $tmpdir/role_response.status
 
-	cms_role_id=$(jq -r '.[] | select ( .context | contains("TLS-Client"))' < $tmpdir/role_response.json | jq -r '.role_id')
+	cms_role_id=$(jq --arg USER $SKC_USER -r '.[] | select ( .context | ( contains("TLS-Client") and contains($USER)))' < $tmpdir/role_response.json | jq -r '.role_id')
 	if [ -z $cms_role_id ]; then
 		curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "Authorization: Bearer ${Bearer_token}" --data @$tmpdir/certroles.json -o $tmpdir/role_response.json -w "%{http_code}" $aas_url/roles > $tmpdir/role_response-status.json
 
