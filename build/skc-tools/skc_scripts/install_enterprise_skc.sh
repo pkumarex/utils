@@ -81,7 +81,7 @@ popd
 pushd $PWD
 cd $SKC_BINARY_DIR
 echo "################ Installing CMS....  #################"
-AAS_URL=https://$AAS_IP:8444/aas/
+AAS_URL=https://$AAS_IP:8444/aas
 sed -i "s/^\(AAS_TLS_SAN\s*=\s*\).*\$/\1$AAS_IP/" ~/cms.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/cms.env
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$CMS_IP/" ~/cms.env
