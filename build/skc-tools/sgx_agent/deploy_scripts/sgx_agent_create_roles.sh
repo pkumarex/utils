@@ -88,6 +88,14 @@ cat > $tmpdir/hostregroles.json << EOF
 }
 EOF
 
+cat > $tmpdir/hostdataupdroles.json << EOF
+{
+	"service": "SCS",
+	"name": "HostDataUpdater",
+	"context": ""
+}
+EOF
+
 	#check if CertApprover role already exists
 	curl $CURL_OPTS -H "Authorization: Bearer ${Bearer_token}" -o $tmpdir/role_response.json -w "%{http_code}" $aas_hostname/roles?name=CertApprover > $tmpdir/role_response.status
 
@@ -123,7 +131,27 @@ EOF
 			shvs_role_id=$(jq -r '.role_id' < $tmpdir/role_resp.json)
 		fi
 	fi
-	ROLE_ID_TO_MAP=`echo \"$cms_role_id\",\"$shvs_role_id\"`
+
+	#check if HostDataUpdater role already exists
+	curl $CURL_OPTS -H "Authorization: Bearer ${Bearer_token}" -o $tmpdir/scs_role_resp.json -w "%{http_code}" $aas_hostname/roles?name=HostDataUpdater > $tmpdir/scs_role_resp.status
+
+	len=$(jq '. | length' < $tmpdir/scs_role_resp.json)
+	if [ $len -ne 0 ]; then
+		scs_role_id=$(jq -r '.[0] .role_id' < $tmpdir/scs_role_resp.json)
+	else
+		curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "Authorization: Bearer ${Bearer_token}" --data @$tmpdir/hostdataupdroles.json -o $tmpdir/scs_role_resp.json -w "%{http_code}" $aas_hostname/roles > $tmpdir/scs_role_resp-status.json
+
+		local status=$(cat $tmpdir/scs_role_resp-status.json)
+		if [ $status -ne 201 ]; then
+			return 1
+		fi
+
+		if [ -s $tmpdir/scs_role_resp.json ]; then
+			scs_role_id=$(jq -r '.role_id' < $tmpdir/scs_role_resp.json)
+		fi
+	fi
+
+	ROLE_ID_TO_MAP=`echo \"$cms_role_id\",\"$shvs_role_id\",\"$scs_role_id\"`
 }
 
 #Maps sgx_agent User to CertApprover/HostRegistration Roles
