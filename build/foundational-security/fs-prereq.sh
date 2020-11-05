@@ -1,20 +1,11 @@
-declare -a PRE_REQ_URLS
-PRE_REQ_URLS=(
+declare -a PRE_REQ_PACKAGES
+PRE_REQ_PACKAGES=(
 https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/m/makeself-2.4.2-1.el8.noarch.rpm
 http://mirror.centos.org/centos/8/PowerTools/x86_64/os/Packages/tpm2-abrmd-devel-2.1.1-3.el8.x86_64.rpm 
 http://mirror.centos.org/centos/8/PowerTools/x86_64/os/Packages/trousers-devel-0.3.14-4.el8.x86_64.rpm
-)
-
-declare -a PRE_REQ_PACKAGES
-PRE_REQ_PACKAGES=(
-makeself-2.4.2-1.el8.noarch.rpm
-tpm2-abrmd-devel-2.1.1-3.el8.x86_64.rpm
-trousers-devel-0.3.14-4.el8.x86_64.rpm
-java-1.8.0-openjdk.x86_64 
 wget 
 gcc 
-gcc-c++ 
-ant 
+gcc-c++  
 git 
 patch 
 zip 
@@ -24,22 +15,6 @@ tpm2-tss-2.0.0-4.el8.x86_64
 tpm2-abrmd-2.1.1-3.el8.x86_64 
 openssl-devel
 )
-
-#download pre-reqs
-download_prereqs() {
-  local error_code=0
-  for url in ${!PRE_REQ_URLS[@]}; do
-    local package_url=${PRE_REQ_URLS[${url}]}
-    wget --no-check-certificate ${package_url}
-    local return_code=$?
-    if [ ${return_code} -ne 0 ]; then
-      echo "ERROR: could not download [${package_url}]"
-      return ${return_code}
-    fi
-  done
- 
-  return ${error_code}
-}
 
 #install pre-reqs
 install_prereqs() {
@@ -62,13 +37,12 @@ install_prereqs() {
 print_help() {
         echo "Usage: $0 [-hs]"
     echo "    -h    print help and exit"
-    echo "    -s    pre-req setup"
+    echo "    -s    pre-req setup for Foundational Security"
 }
 
 dispatch_works() {
-    mkdir ~/.tmp
+    mkdir -p ~/.tmp
     if [[ $1 = *"s"* ]] ; then
-        download_prereqs
         install_prereqs
     fi
 }
