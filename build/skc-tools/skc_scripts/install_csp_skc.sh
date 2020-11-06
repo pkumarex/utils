@@ -32,53 +32,56 @@ authservice uninstall --purge
 echo "################ Remove AAS DB....  #################"
 pushd $PWD
 cd /usr/local/pgsql
-sudo -u postgres dropdb aasdb
+sudo -u postgres dropdb $AAS_DB_NAME
 echo "################ Uninstalling SCS....  #################"
 scs uninstall --purge
 echo "################ Remove SCS DB....  #################"
-sudo -u postgres dropdb pgscsdb
+sudo -u postgres dropdb $SCS_DB_NAME
 echo "################ Uninstalling SHVS....  #################"
 shvs uninstall --purge
 echo "################ Remove SHVS DB....  #################"
-sudo -u postgres dropdb pgshvsdb
+sudo -u postgres dropdb $SHVS_DB_NAME
 echo "################ Uninstalling IHUB....  #################"
 ihub uninstall --purge
 popd
 
-export PGPASSWORD=aasdbpassword
 function is_database() {
-    psql -U aasdbuser -lqt | cut -d \| -f 1 | grep -wq $1
+    export PGPASSWORD=$3
+    psql -U $2 -lqt | cut -d \| -f 1 | grep -wq $1
 }
 
-export DBNAME=aasdb
-if is_database $DBNAME
+if is_database $AAS_DB_NAME $AAS_DB_USERNAME $AAS_DB_PASSWORD
 then 
-   echo $DBNAME database exists
+   echo $AAS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for AAS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$AAS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$AAS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$AAS_DB_PASSWORD@" ~/iseclpgdb.env
    pushd $PWD
    cd ~
    bash install_pg.sh
 fi
 
-export DBNAME=pgscsdb
-if is_database $DBNAME
+if is_database $SCS_DB_NAME $SCS_DB_USERNAME $SCS_DB_PASSWORD
 then
-   echo $DBNAME database exists
+   echo $SCS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for SCS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$SCS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$SCS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$SCS_DB_PASSWORD@" ~/iseclpgdb.env
    bash install_pgscsdb.sh
 fi
 
-export DBNAME=pgshvsdb
-if is_database $DBNAME
+if is_database $SHVS_DB_NAME $SHVS_DB_USERNAME $SHVS_DB_PASSWORD
 then
-   echo $DBNAME database exists
+   echo $SHVS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for SHVS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$SHVS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$SHVS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$SHVS_DB_PASSWORD@" ~/iseclpgdb.env
    bash install_pgshvsdb.sh
 fi
 
