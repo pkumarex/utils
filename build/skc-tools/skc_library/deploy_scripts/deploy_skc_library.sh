@@ -49,12 +49,12 @@ install_psw_qgl()
 
 install_sgxssl()
 {
-        cp -prf sgxssl $SGX_INSTALL_DIR
+        \cp -prf sgxssl $SGX_INSTALL_DIR
 }
 
 install_cryptoapitoolkit()
 {
-	cp -prf cryptoapitoolkit $SGX_INSTALL_DIR
+	\cp -prf cryptoapitoolkit $SGX_INSTALL_DIR
 }
 
 install_skc_library_bin()

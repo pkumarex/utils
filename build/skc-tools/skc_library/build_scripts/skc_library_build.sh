@@ -14,11 +14,11 @@ install_prerequisites()
 
 create_skc_library_tar()
 {
-	cp -pf ../deploy_scripts/*.sh $SKCLIB_DIR
-	cp -pf ../deploy_scripts/skc_library.conf $SKCLIB_DIR
-	cp -pf ../deploy_scripts/README.install $SKCLIB_DIR
-	cp -pf ../deploy_scripts/openssl.patch $SKCLIB_DIR
-	cp -pf ../deploy_scripts/nginx.patch $SKCLIB_DIR
+	\cp -pf ../deploy_scripts/*.sh $SKCLIB_DIR
+	\cp -pf ../deploy_scripts/skc_library.conf $SKCLIB_DIR
+	\cp -pf ../deploy_scripts/README.install $SKCLIB_DIR
+	\cp -pf ../deploy_scripts/openssl.patch $SKCLIB_DIR
+	\cp -pf ../deploy_scripts/nginx.patch $SKCLIB_DIR
 	tar -cf $TAR_NAME.tar -C $SKCLIB_DIR . --remove-files
 	sha256sum $TAR_NAME.tar > $TAR_NAME.sha2
 	echo "skc_library.tar file and skc_library.sha2 checksum file created"

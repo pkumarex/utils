@@ -22,8 +22,8 @@ install_cryptoapitoolkit()
         ./configure --with-p11-kit-path=$P11_KIT_PATH --prefix=$CTK_INSTALL --enable-dcap || exit 1
 	make install || exit 1
 	popd
-	cp -rpf $CTK_INSTALL $SKCLIB_DIR
-	cp -rpf $SGXSSL_PREFIX $SKCLIB_DIR
+	\cp -rpf $CTK_INSTALL $SKCLIB_DIR
+	\cp -rpf $SGXSSL_PREFIX $SKCLIB_DIR
 }
 
 check_prerequisites()

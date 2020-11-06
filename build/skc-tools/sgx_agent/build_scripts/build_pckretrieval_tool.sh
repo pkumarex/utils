@@ -16,7 +16,7 @@ build_PCKID_Retrieval_tool()
 	git apply remove_pccs_connect.diff
 	make
 	mkdir -p $SGX_AGENT_BIN_DIR
-	cp -pf libdcap_quoteprov.so.1 pck_id_retrieval_tool_enclave.signed.so PCKIDRetrievalTool $SGX_AGENT_BIN_DIR
+	\cp -pf libdcap_quoteprov.so.1 pck_id_retrieval_tool_enclave.signed.so PCKIDRetrievalTool $SGX_AGENT_BIN_DIR
 	rm -rf $GIT_CLONE_PATH
 	popd
 }

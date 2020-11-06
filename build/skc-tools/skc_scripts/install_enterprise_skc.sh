@@ -5,18 +5,18 @@ SKC_BINARY_DIR=$HOME_DIR/binaries
 KBS_HOSTNAME=$("hostname")
 
 # Copy env files to Home directory
-cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/sqvs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/kbs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/sqvs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/kbs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
 
 # Copy DB scripts to Home directory
-cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
-cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
 
-cp -pf $SKC_BINARY_DIR/trusted_rootca.pem /tmp
+\cp -pf $SKC_BINARY_DIR/trusted_rootca.pem /tmp
 # read from environment variables file if it exists
 if [ -f ./enterprise_skc.conf ]; then
     echo "Reading Installation variables from $(pwd)/enterprise_skc.conf"

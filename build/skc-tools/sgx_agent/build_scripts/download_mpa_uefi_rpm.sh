@@ -8,8 +8,8 @@ MPA_URL="https://download.01.org/intel-sgx/sgx-dcap/$DCAP_VERSION/linux/tools/SG
 
 fetch_mpa_uefi_rpm() {
 	wget -q $MPA_URL/sgx_rpm_local_repo.tgz -O - | tar -xz || exit 1
-        cp sgx_rpm_local_repo/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm $SGX_AGENT_BIN_DIR
-        rm -rf sgx_rpm_local_repo sgx_rpm_local_repo.tgz
+	\cp sgx_rpm_local_repo/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm $SGX_AGENT_BIN_DIR
+	rm -rf sgx_rpm_local_repo sgx_rpm_local_repo.tgz
 }
 
 fetch_mpa_uefi_rpm

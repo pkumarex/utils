@@ -8,7 +8,7 @@ SGX_URL="https://download.01.org/intel-sgx/sgx-linux/${SGX_VERSION}/distro/$OS_F
 install_psw_qpl_qgl()
 {
 	wget -q $SGX_URL/sgx_rpm_local_repo.tgz || exit 1
-	cp -pf sgx_rpm_local_repo.tgz $SKCLIB_BIN_DIR 
+	\cp -pf sgx_rpm_local_repo.tgz $SKCLIB_BIN_DIR
         tar -xf sgx_rpm_local_repo.tgz
         yum-config-manager --add-repo file://$PWD/sgx_rpm_local_repo || exit 1
         dnf install -y --nogpgcheck libsgx-launch libsgx-uae-service libsgx-urts libsgx-dcap-ql-devel || exit 1
