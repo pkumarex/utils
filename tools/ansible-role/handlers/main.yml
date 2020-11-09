@@ -45,7 +45,7 @@
 
 - name: ISECL - KEY BROKER SERVICE | Start KBS
   systemd:
-    name: kms
+    name: kbs
     state: started
   listen: start kbs
 
@@ -91,8 +91,3 @@
     state: started
   listen: start sqvs   
   
-- name: ISECL - SGX KEY BROKER SERVICE | Start SKMS
-  service:
-    name: kms
-    state: started
-  listen: start skms  
