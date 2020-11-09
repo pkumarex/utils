@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bfb4c161-7403-4e51-850a-826b5a42fee2",
+		"_postman_id": "4381bc1e-6f73-42cb-a123-1857aba64546",
 		"name": "Secure Key Caching",
 		"description": "Key Protection is implemented by the SKC Client -- a set of libraries - which must be linked with a\ntenant workload, like Nginx, deployed in a CSP environment and the Key Broker Service (KBS)\ndeployed in the tenant's enterprise environment. The SKC Client retrieves the keys needed by the\nworkload from KBS after proving that the key can be protected in an SGX enclave.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -10,124 +10,12 @@
 			"name": "Authorization",
 			"item": [
 				{
-					"name": "createKmsToken",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "e634af5e-053e-4757-96e2-ed3313df4092",
-								"exec": [
-									"pm.environment.set(\"bearerTokenKms\", pm.response.text());"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/jwt",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"{{kmsUser}}\",\r\n    \"password\": \"{{kmsPass}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-							"protocol": "https",
-							"host": [
-								"{{aas}}"
-							],
-							"port": "{{aasPort}}",
-							"path": [
-								"aas",
-								"token"
-							]
-						},
-						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
-					},
-					"response": [
-						{
-							"name": "Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/jwt",
-										"type": "text"
-									},
-									{
-										"key": "Content-Transfer-Encoding",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"{{kmsUser}}\",\r\n    \"password\": \"{{kmsPass}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-									"protocol": "https",
-									"host": [
-										"{{aas}}"
-									],
-									"port": "{{aasPort}}",
-									"path": [
-										"aas",
-										"token"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "jwt",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/jwt"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 09 Sep 2020 13:14:33 GMT"
-								},
-								{
-									"key": "Content-Length",
-									"value": "843"
-								}
-							],
-							"cookie": [],
-							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6ImExMGFkYzJmNjA0OTg3NTRlYzExZjExNGQ0MDE3ZDI5ZDBjZmFiOWUiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IktNUyIsIm5hbWUiOiJLZXlDUlVEIn1dLCJwZXJtaXNzaW9ucyI6W3sic2VydmljZSI6IktNUyIsInJ1bGVzIjpbIio6KjoqIl19XSwiZXhwIjoxNTk5ODMwMDczLCJpYXQiOjE1OTk2NTcyNDMsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoiRVR1c2VyIn0.hNOT_2JXJ0x9xx9XUULLYtDQLFn_Z8FeyXC85_EJ5Ha5Z0yTSz_noD_c_EHE-RZYzYcncCa_0JKboQb7YuU7tO4zQEF4OsxQkHkaIvgNoxChRskY4UDSfQgJImM9YGFWF3iLAavlJPJ0K7IorCFSYajABi1try4XND0tDDo7ah8GPszLtFwpKLCb9-_C6r-_JlbNUGYy_P9gq4IgPaC7lisr46id-sCBgNd-a8Z6Pf55mcPcJVqWIay7EWirSF9qo3cZLtUJ_aHs-38z1qZXJpJklD7AVhPR-MQdwiyturDe57wUC5-XrF2UKiZ4sWSe3YNcVKrwTNiXk0FC2WC5mNOoFV7Rr294zLyrXeF_xThtViqdReT5C7SWuAvng37y52nPUL1S4tBbsH7zqYl1o8hityZAlaYVGb_0dw1eklUXkYfW-KzKcfJRt2PJ9fVE-bkBFkWPyoJv10Gt7eiufxIlJBM8bo1itPaxboOUH4BCZfXlkwICOx5T0W6CbtYo"
-						}
-					]
-				},
-				{
 					"name": "createSqvsToken",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "757167ec-b680-41f3-a1d4-414acd8083e0",
+								"id": "9815a692-12b2-4cf0-a9d9-88ac342651fd",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSqvs\", pm.response.text());"
 								],
@@ -232,6 +120,118 @@
 							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6Ijc0ZGY4M2U1ZWQ1Yjc0NmVhMzUyYzU5NWY4MmIzNjUyOTAxYjg3NzgiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U1FWUyBUTFMgQ2VydGlmaWNhdGU7U0FOPTEwLjgwLjIwNy4xNTtDRVJUVFlQRT1UTFMifSx7InNlcnZpY2UiOiJTUVZTIiwibmFtZSI6IlF1b3RlVmVyaWZpZXIifV0sImV4cCI6MTYwMDUxMzk2MSwiaWF0IjoxNjAwMzQxMTMxLCJpc3MiOiJBQVMgSldUIElzc3VlciIsInN1YiI6InNxdnN1c2VyQHNxdnMifQ.Z_-iSxnYTcqwhIsQLt5kBPfNVKHNbrO2kwl_TV4g2SS80cCYWu8ZRkRxq6cdQVdugkn9AIaI_GJfFCkBugCEmBDWWJ3jk2kWwIgqbr6txKCk_3G_Z0dBdF2hogAiToJrOqejvKKscKGCP2xzBSN6MQ7lPYRykZc2_oEDnqoIpoI5w7P2fd1OhWC-nxrtgXBwcOKPJplktETHm7SI7lDsWJXRx5gaakA4VH6wMr5Qd1-FzOCPa7w3iDAhjih0M_McV7Uj-llI0NcmRNVJvWvkomYB5_NHVPM-l6XOJKeILRqCbkbg3Mgml87G7dhMMqbXTF7TiIKD4dfneLAmcg7ENHYXPnsJXENIHAjaycBthDrAHb7wrCf3llISfON9JKNFmT51Afa3NLMOPTH1p38SxIJbB_Idp33OEOUIJmeUlWXJNO9Owp9eivbBrDhuzuoNVMEdTEpRb8TE1uqWkUgWDpwyw69U7OLykG_vD2zt6KqEcOhYUr2iA5Se3Jdp5M17"
 						}
 					]
+				},
+				{
+					"name": "createKbsToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7e81bc5a-8701-4020-bd10-b5b145465536",
+								"exec": [
+									"pm.environment.set(\"bearerTokenKbs\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{kbsUser}}\",\r\n    \"password\": \"{{kbsPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/jwt",
+										"type": "text"
+									},
+									{
+										"key": "Content-Transfer-Encoding",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{kbsUser}}\",\r\n    \"password\": \"{{kbsPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 09 Sep 2020 13:14:33 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "843"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6ImExMGFkYzJmNjA0OTg3NTRlYzExZjExNGQ0MDE3ZDI5ZDBjZmFiOWUiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IktNUyIsIm5hbWUiOiJLZXlDUlVEIn1dLCJwZXJtaXNzaW9ucyI6W3sic2VydmljZSI6IktNUyIsInJ1bGVzIjpbIio6KjoqIl19XSwiZXhwIjoxNTk5ODMwMDczLCJpYXQiOjE1OTk2NTcyNDMsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoiRVR1c2VyIn0.hNOT_2JXJ0x9xx9XUULLYtDQLFn_Z8FeyXC85_EJ5Ha5Z0yTSz_noD_c_EHE-RZYzYcncCa_0JKboQb7YuU7tO4zQEF4OsxQkHkaIvgNoxChRskY4UDSfQgJImM9YGFWF3iLAavlJPJ0K7IorCFSYajABi1try4XND0tDDo7ah8GPszLtFwpKLCb9-_C6r-_JlbNUGYy_P9gq4IgPaC7lisr46id-sCBgNd-a8Z6Pf55mcPcJVqWIay7EWirSF9qo3cZLtUJ_aHs-38z1qZXJpJklD7AVhPR-MQdwiyturDe57wUC5-XrF2UKiZ4sWSe3YNcVKrwTNiXk0FC2WC5mNOoFV7Rr294zLyrXeF_xThtViqdReT5C7SWuAvng37y52nPUL1S4tBbsH7zqYl1o8hityZAlaYVGb_0dw1eklUXkYfW-KzKcfJRt2PJ9fVE-bkBFkWPyoJv10Gt7eiufxIlJBM8bo1itPaxboOUH4BCZfXlkwICOx5T0W6CbtYo"
+						}
+					]
 				}
 			],
 			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
@@ -239,7 +239,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ab4a018a-f7ff-4197-9d85-9496af36dfde",
+						"id": "4d2491cd-c563-4703-a8cd-f20b62423f57",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -249,7 +249,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fd8bfa0c-0872-47cf-a32f-0406a16e409a",
+						"id": "a79836ee-5d9d-48bf-a1a5-b0b0d616ade7",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -262,12 +262,12 @@
 		{
 			"name": "Verify Services",
 			"item": [],
-			"description": "The command-line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify KMS:\n\n```\nkms status\n```\n\nVerify SQVS:\n\n```\nsqvs status\n```\n\nVerify SCS:\n\n```\nscs status\n```",
+			"description": "The command-line option can be used to confirm that all services are up and running before proceeding to the actual use case demonstration.\n\nVerify KBS:\n\n```\nkbs status\n```\n\nVerify SQVS:\n\n```\nsqvs status\n```\n\nVerify SCS:\n\n```\nscs status\n```",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0dd54522-264b-4dd5-9555-5832a8041af1",
+						"id": "f4717010-0d58-4aa2-895c-1c80b8080a9c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -277,7 +277,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2b0d29b0-9471-4b99-9966-45607f1b6457",
+						"id": "3d170e42-8acd-4f6c-8ee9-ee39b4e97894",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -288,160 +288,44 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Create a Asymmetric (RSA) Key",
+			"name": "Creating RSA Keys in Key Broker Service",
 			"item": [
 				{
 					"name": "keyTransferPolicy",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{bearerTokenKms}}",
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"sgx_enclave_issuer_anyof\": [\r\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\r\n    ],\r\n    \"sgx_enclave_issuer_product_id_anyof\": [\r\n        0\r\n    ],\r\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\r\n        \"00000000000000000000000000000000\"\r\n    ],\r\n    \"sgx_enclave_measurement_anyof\": [\r\n        \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\r\n    ],\r\n    \"sgx_config_id_svn\": 0,\r\n    \"sgx_enclave_svn_minimum\": 1,\r\n    \"sgx_config_id_anyof\": [\r\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\r\n    ],\r\n    \"tls_client_certificate_issuer_cn_anyof\": [\r\n        \"CMSCA\",\r\n        \"CMS TLS Client CA\"\r\n    ],\r\n    \"client_permissions_allof\": [\r\n        \"nginx\",\r\n        \"USA\"\r\n    ],\r\n    \"attestation_type_anyof\": [\r\n        \"SGX\"\r\n    ],\r\n    \"sgx_enforce_tcb_up_to_date\": false\r\n}",
-							"options": {
-								"raw": {}
-							}
-						},
-						"url": {
-							"raw": "https://{{kms}}:{{kmsPort}}/v1/key-transfer-policies",
-							"protocol": "https",
-							"host": [
-								"{{kms}}"
-							],
-							"port": "{{kmsPort}}",
-							"path": [
-								"v1",
-								"key-transfer-policies"
-							]
-						},
-						"description": "Creates a new Key Transfer Policy. Key Transfer Policy is defined by the enterprise administrator for application by Key Server during APK transfer to validate before release. A valid bearer token is required to authorize this REST call.\r\n\r\nExecute the below command in the host machine to get the SGX_MEASUREMENT value.\r\n\r\n```\r\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \r\n```"
-					},
-					"response": [
+					"event": [
 						{
-							"name": "Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{bearerTokenKms}}",
-										"type": "text",
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
+							"listen": "test",
+							"script": {
+								"id": "c57231ee-160e-4d24-8a2d-9c08938fd60e",
+								"exec": [
+									"pm.environment.set(\"keyTransferPolicyId\", pm.response.json().id)"
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"sgx_enclave_issuer_anyof\": [\r\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\r\n    ],\r\n    \"sgx_enclave_issuer_product_id_anyof\": [\r\n        0\r\n    ],\r\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\r\n        \"00000000000000000000000000000000\"\r\n    ],\r\n    \"sgx_enclave_measurement_anyof\": [\r\n        \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\r\n    ],\r\n    \"sgx_config_id_svn\": 0,\r\n    \"sgx_enclave_svn_minimum\": 1,\r\n    \"sgx_config_id_anyof\": [\r\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\r\n    ],\r\n    \"tls_client_certificate_issuer_cn_anyof\": [\r\n        \"CMSCA\",\r\n        \"CMS TLS Client CA\"\r\n    ],\r\n    \"client_permissions_allof\": [\r\n        \"nginx\",\r\n        \"USA\"\r\n    ],\r\n    \"attestation_type_anyof\": [\r\n        \"SGX\"\r\n    ],\r\n    \"sgx_enforce_tcb_up_to_date\": false\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{kms}}:{{kmsPort}}/v1/key-transfer-policies",
-									"protocol": "https",
-									"host": [
-										"{{kms}}"
-									],
-									"port": "{{kmsPort}}",
-									"path": [
-										"v1",
-										"key-transfer-policies"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 09 Sep 2020 13:15:03 GMT"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "JSESSIONID=node0nbpvrbx5mip2bv3ad2f4mi0y93.node0; Path=/; Secure"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 13:15:03 GMT"
-								},
-								{
-									"key": "Expires",
-									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Content-Security-Policy",
-									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
-								},
-								{
-									"key": "Content-Length",
-									"value": "834"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": \"success\",\n    \"operation\": \"create key transfer policy\",\n    \"created\": [\n        {\n            \"created_at\": \"2020-09-09T06:15:03-0700\",\n            \"id\": \"{{keyTransferPolicyId}}\",\n            \"sgx_enclave_issuer_anyof\": [\n                \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\n            ],\n            \"sgx_enclave_issuer_product_id_anyof\": [\n                0\n            ],\n            \"sgx_enclave_issuer_extended_product_id_anyof\": [\n                \"00000000000000000000000000000000\"\n            ],\n            \"sgx_enclave_measurement_anyof\": [\n                \"9874cdc64dcd9a9b07389c6c5f4f225b8582596b7c182f2d43f34bd0d81bd8ad\"\n            ],\n            \"sgx_enclave_svn_minimum\": 1,\n            \"sgx_config_id_anyof\": [\n                \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n            ],\n            \"sgx_config_id_svn\": 0,\n            \"tls_client_certificate_issuer_cn_anyof\": [\n                \"CMSCA\",\n                \"CMS TLS Client CA\"\n            ],\n            \"client_permissions_allof\": [\n                \"nginx\",\n                \"USA\"\n            ],\n            \"attestation_type_anyof\": [\n                \"SGX\"\n            ]\n        }\n    ]\n}"
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				{
-					"name": "keyUsagePolicy",
+					],
 					"request": {
 						"method": "POST",
 						"header": [
 							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenKms}}",
-								"type": "text",
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+								"value": "Bearer {{bearerTokenKbs}}"
 							},
 							{
+								"description": "(Required) Accept header",
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"description": "(Required) Content-Type header"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"not_after\": \"2021-08-17T22:24:20-08:00\",\r\n    \"not_before\": \"2020-08-17T22:24:20-08:00\",\r\n    \"lease_time_limit\": 1\r\n}",
+							"raw": "{\n    \"sgx_enclave_issuer_anyof\": [\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\n    ],\n    \"sgx_enclave_issuer_product_id_anyof\": [\n        0\n    ],\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\n        \"00000000000000000000000000000000\"\n    ],\n    \"sgx_enclave_measurement_anyof\": [\n        \"7df0b7e815bd4b4af41239038d04a740daccf0beb412a2056c8d900b45b621fd\"\n    ],\n    \"sgx_config_id_svn\": 0,\n    \"sgx_enclave_svn_minimum\": 1,\n    \"sgx_config_id_anyof\": [\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n    ],\n    \"tls_client_certificate_issuer_cn_anyof\": [\n        \"CMSCA\",\n        \"CMS TLS Client CA\"\n    ],\n    \"client_permissions_allof\": [\n        \"nginx\",\n        \"USA\"\n    ],\n    \"attestation_type_anyof\": [\n        \"SGX\"\n    ],\n    \"sgx_enforce_tcb_up_to_date\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -449,18 +333,18 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{kms}}:{{kmsPort}}/v1/key-usage-policies",
+							"raw": "https://{{kbs}}:{{kbsPort}}/v1/key-transfer-policies",
 							"protocol": "https",
 							"host": [
-								"{{kms}}"
+								"{{kbs}}"
 							],
-							"port": "{{kmsPort}}",
+							"port": "{{kbsPort}}",
 							"path": [
 								"v1",
-								"key-usage-policies"
+								"key-transfer-policies"
 							]
 						},
-						"description": "Creates a new Key Usage Policy. Key Usage Policy is defined by the enterprise administrator for application by Key Agent to validate before release during crypto operations at workload VM. A valid bearer token is required to authorize this REST call."
+						"description": "Creates a key transfer policy.\n\nThe serialized KeyTransferPolicyAttributes Go struct object represents the content of the request body.\n\n | Attribute                                    | Description |\n |----------------------------------------------|-------------|\n | sgx_enclave_issuer_anyof                     | Array of allowed common names of SGX enclave’s code signing certificate. This is mandatory. The same issuer must be added as a trusted certificate in key server configuration settings. |\n | sgx_enclave_issuer_product_id_anyof          | Array of (16-bit value) (ISVPRODID). This is mandatory. This is like a qualifier for the issuer so same issuer (code signing) key can sign separate products. |\n | sgx_enclave_issuer_extended_product_id_anyof | Array of (16-byte value) (ISVPRODID). This is like a qualifier for the issuer so same issuer key can sign separate products, it's like product id but simply bigger (starts in Coffee Lake). |\n | sgx_enclave_measurement_anyof                | Array of enclave measurements that are allowed to retrieve the key (MRENCLAVE). Expect client to have one of these measurements in the SGX quote (this supports use case of providing key only to an SGX enclave that will enforce the key usage policy locally). |\n | sgx_config_id_svn                            | Integer. |\n | sgx_enclave_svn_minimum                      | Minimum version number required. |\n | sgx_config_id_anyof                          | Array of config id measurements that are allowed to retrieve the key. Required value for the enclave to have when it launched. for loading e.g. Java applets into enclavized JVM, so that enclave measurement is JVM measurement, and when it launches it's configured with this id, so when it loads applet it can measure it and compare to config id in register, and refuse to load applet if wrong (starts in Coffee Lake). |\n | tls_client_certificate_issuer_cn_anyof       | Array of Common Name to expect on client certificate's issuer field. Expect client certificate to have any one of these issuers. |\n | tls_client_certificate_san_anyof             | Array of Subject Alternative Name to expect in client certificate's extensions. Expect client certificate to have any of these names. |\n | tls_client_certificate_san_allof             | Array of Subject Alternative Name to expect in client certificate's extensions. Expect client certificate to have all of these names. |\n | attestation_type_anyof                       | Array of Attestation Type identifiers that client must support to get the key expect client to advertise these with the key request e.g. \"SGX\", \"KPT2\" (note that if key server needs to restrict technologies, then it should list only the ones that can receive the key). |\n | sgx_enforce_tcb_up_to_date                   | Boolean. |\n"
 					},
 					"response": [
 						{
@@ -469,25 +353,24 @@
 								"method": "POST",
 								"header": [
 									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenKms}}",
-										"type": "text",
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+										"value": "Bearer {{bearerTokenKbs}}"
 									},
 									{
+										"description": "(Required) Accept header",
 										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
+										"value": "application/json"
 									},
 									{
 										"key": "Content-Type",
 										"value": "application/json",
-										"type": "text"
+										"description": "(Required) Content-Type header"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"not_after\": \"2021-08-17T22:24:20-08:00\",\r\n    \"not_before\": \"2020-08-17T22:24:20-08:00\",\r\n    \"lease_time_limit\": 1\r\n}",
+									"raw": "{\n    \"sgx_enclave_issuer_anyof\": [\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\n    ],\n    \"sgx_enclave_issuer_product_id_anyof\": [\n        0\n    ],\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\n        \"00000000000000000000000000000000\"\n    ],\n    \"sgx_enclave_measurement_anyof\": [\n        \"7df0b7e815bd4b4af41239038d04a740daccf0beb412a2056c8d900b45b621fd\"\n    ],\n    \"sgx_config_id_svn\": 0,\n    \"sgx_enclave_svn_minimum\": 1,\n    \"sgx_config_id_anyof\": [\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n    ],\n    \"tls_client_certificate_issuer_cn_anyof\": [\n        \"CMSCA\",\n        \"CMS TLS Client CA\"\n    ],\n    \"client_permissions_allof\": [\n        \"nginx\",\n        \"USA\"\n    ],\n    \"attestation_type_anyof\": [\n        \"SGX\"\n    ],\n    \"sgx_enforce_tcb_up_to_date\": false\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -495,53 +378,37 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{kms}}:{{kmsPort}}/v1/key-usage-policies",
+									"raw": "https://{{kbs}}:{{kbsPort}}/v1/key-transfer-policies",
 									"protocol": "https",
 									"host": [
-										"{{kms}}"
+										"{{kbs}}"
 									],
-									"port": "{{kmsPort}}",
+									"port": "{{kbsPort}}",
 									"path": [
 										"v1",
-										"key-usage-policies"
+										"key-transfer-policies"
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
+							"status": "Created",
+							"code": 201,
 							"_postman_previewlanguage": "json",
 							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 09 Sep 2020 13:16:57 GMT"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "JSESSIONID=node0z9uy2a2c5jbj1736l3ysvz1vn104.node0; Path=/; Secure"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 13:16:57 GMT"
-								},
-								{
-									"key": "Expires",
-									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
-								},
 								{
 									"key": "Content-Type",
 									"value": "application/json"
 								},
 								{
-									"key": "Content-Security-Policy",
-									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
+									"key": "Date",
+									"value": "Mon, 09 Nov 2020 10:32:57 GMT"
 								},
 								{
 									"key": "Content-Length",
-									"value": "258"
+									"value": "767"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": \"success\",\n    \"operation\": \"create key usage policy\",\n    \"created\": [\n        {\n            \"not_after\": \"2021-08-17T22:24:20-08:00\",\n            \"not_before\": \"2020-08-17T22:24:20-08:00\",\n            \"lease_time_limit\": 1,\n            \"created_at\": \"2020-09-09T06:16:57-0700\",\n            \"id\": \"{{keyUsagePolicyId}}\"\n        }\n    ]\n}"
+							"body": "{\n    \"id\": \"{{keyTransferPolicyId}}\",\n    \"created_at\": \"2020-11-09T10:32:57.962968825Z\",\n    \"sgx_enclave_issuer_anyof\": [\n        \"cd171c56941c6ce49690b455f691d9c8a04c2e43e0a4d30f752fa5285c7ee57f\"\n    ],\n    \"sgx_enclave_issuer_product_id_anyof\": [\n        0\n    ],\n    \"sgx_enclave_issuer_extended_product_id_anyof\": [\n        \"00000000000000000000000000000000\"\n    ],\n    \"sgx_enclave_measurement_anyof\": [\n        \"7df0b7e815bd4b4af41239038d04a740daccf0beb412a2056c8d900b45b621fd\"\n    ],\n    \"sgx_config_id_svn\": 0,\n    \"sgx_enclave_svn_minimum\": 1,\n    \"sgx_config_id_anyof\": [\n        \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n    ],\n    \"tls_client_certificate_issuer_cn_anyof\": [\n        \"CMSCA\",\n        \"CMS TLS Client CA\"\n    ],\n    \"client_permissions_allof\": [\n        \"nginx\",\n        \"USA\"\n    ],\n    \"attestation_type_anyof\": [\n        \"SGX\"\n    ]\n}"
 						}
 					]
 				},
@@ -551,42 +418,43 @@
 						"method": "POST",
 						"header": [
 							{
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenKms}}",
-								"type": "text",
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+								"value": "Bearer {{bearerTokenKbs}}"
 							},
 							{
+								"description": "(Required) Accept header",
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"description": "(Required) Content-Type header"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\r\n    \"algorithm\": \"RSA\",\r\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\r\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\r\n    \"private_key\": \"{{privateKey}}\"\r\n}",
+							"raw": "{\n    \"key_information\": {\n        \"algorithm\": \"RSA\",\n        \"key_length\": 3072,\n        \"key_string\": \"{{privateKey}}\"\n    },\n    \"transfer_policy_ID\": \"{{keyTransferPolicyId}}\"\n}",
 							"options": {
-								"raw": {}
+								"raw": {
+									"language": "json"
+								}
 							}
 						},
 						"url": {
-							"raw": "https://{{kms}}:{{kmsPort}}/v1/keys",
+							"raw": "https://{{kbs}}:{{kbsPort}}/v1/keys",
 							"protocol": "https",
 							"host": [
-								"{{kms}}"
+								"{{kbs}}"
 							],
-							"port": "{{kmsPort}}",
+							"port": "{{kbsPort}}",
 							"path": [
 								"v1",
 								"keys"
 							]
 						},
-						"description": "Creates a new Application Key based on the provided Key Algorithm, Key Transfer Policy and Key Usage Policy details in the request body. Decision to switch to appropriate plugin for different applications is based on descriptor_uri. The generated secret key is encoded in JSON format and stored in a file (keyId as filename) on the disk. A valid bearer token is required to authorize this REST call."
+						"description": "Creates or Registers a key.\n\nThe serialized KeyRequest Go struct object represents the content of the request body.\n\n | Attribute          | Description |\n |--------------------|-------------|\n | key_information    | A json object having all the required information about a key. |\n | transfer_policy_id | Unique identifier of the transfer policy to apply to this key. |\n | label              | String to attach optionally a text description to the key, e.g. \"US Nginx key\". |\n | usage              | String to attach optionally a usage criteria for the key, e.g. \"Country:US,State:CA\". |\n\nThe serialized KeyInformation Go struct object represents the content of the key_information field.\n\n | Attribute   | Description |\n |-------------|-------------|\n | algorithm   | Encryption algorithm used to create or register key. Supported algorithms are AES, RSA and EC. |\n | key_length  | Key length used to create key. Supported key lengths are 128,192,256 bits for AES and 2048,3072,4096,7680,15360 bits for RSA. |\n | curve_type  | Elliptic curve used to create key. Supported curves are secp256r1, secp384r1 and secp521r1. |\n | key_string  | Base64 encoded private key to be registered. Supported only if key is created locally. |\n | kmip_key_id | Unique KMIP identifier of key to be registered. Supported only if key is created on KMIP server. |\n"
 					},
 					"response": [
 						{
@@ -595,26 +463,24 @@
 								"method": "POST",
 								"header": [
 									{
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenKms}}",
-										"type": "text",
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+										"value": "Bearer {{bearerTokenKbs}}"
 									},
 									{
+										"description": "(Required) Accept header",
 										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
+										"value": "application/json"
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
-										"type": "text"
+										"description": "(Required) Content-Type header"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\r\n    \"algorithm\": \"RSA\",\r\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\r\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\r\n    \"private_key\": \"{{privateKey}}\"\r\n}",
+									"raw": "{\n    \"key_information\": {\n        \"algorithm\": \"RSA\",\n        \"key_length\": 3072,\n        \"key_string\": \"{{privateKey}}\"\n    },\n    \"transfer_policy_ID\": \"{{keyTransferPolicyId}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -622,63 +488,47 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{kms}}:{{kmsPort}}/v1/keys",
+									"raw": "https://{{kbs}}:{{kbsPort}}/v1/keys",
 									"protocol": "https",
 									"host": [
-										"{{kms}}"
+										"{{kbs}}"
 									],
-									"port": "{{kmsPort}}",
+									"port": "{{kbsPort}}",
 									"path": [
 										"v1",
 										"keys"
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
+							"status": "Created",
+							"code": 201,
 							"_postman_previewlanguage": "json",
 							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 09 Sep 2020 17:53:55 GMT"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "JSESSIONID=node0g2xvwllcvu761i7i23mziijjs172.node0; Path=/; Secure"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Tue, 08-Sep-2020 17:53:55 GMT"
-								},
-								{
-									"key": "Expires",
-									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
-								},
 								{
 									"key": "Content-Type",
 									"value": "application/json"
 								},
 								{
-									"key": "Content-Security-Policy",
-									"value": "default-src 10.219.138.63; form-action 10.219.138.63; frame-ancestors 10.219.138.63; plugin-types application/pdf"
+									"key": "Date",
+									"value": "Mon, 09 Nov 2020 10:46:23 GMT"
 								},
 								{
 									"key": "Content-Length",
-									"value": "852"
+									"value": "289"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"meta\": {\n        \"operation\": \"register key\",\n        \"status\": \"success\"\n    },\n    \"id\": \"<keyId>\",\n    \"created_date\": \"2020-09-09T10:53:55-07:00\",\n    \"descriptor_uri\": \"urn:intel:dhsm2:crypto-schema:storage\",\n    \"algorithm\": \"RSA\",\n    \"key_length\": 2048,\n    \"transfer_policy\": \"{{keyTransferPolicyId}}\",\n    \"usage_policy\": \"{{keyUsagePolicyId}}\",\n    \"transfer_link\": \"https://<kms>:<kmsPort>/v1/keys/<keyId>/transfer\",\n    \"public_key\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3dyvJrOS/c5d1+nYJOZpSnWNCXTA0aXczWgfLCHRnbUxS6OEfepgyVOtl/ofFFhly0AJJAwXu5ITWvxTbXkPDo9bPjVtH1K3ku2WsG9NgEtkcS+0cG7n3JA0j+cGLVJ+gZsRML74Z+S9InUHXyt0Tms8Pzep4JYybn0iAVaJFCMR5dPIpep7xKACo9Znq5TtdeI+rmRsWAyBaH/PKVN4auQ2FK7HYFG/L3BpzvAgjbCNRiHnZt+XMRRJvFjlFomIMyz++MMTLuk4NhCfwC+3+2p6Mse/IZZYIAUkqTBG2tUHeGME6orRcokp6Yo7tOrTqO722KiA1ciyGZHC2hTlwIDAQAB\"\n}"
+							"body": "{\n    \"key_information\": {\n        \"id\": \"{{keyId}}\",\n        \"algorithm\": \"RSA\"\n    },\n    \"transfer_policy_id\": \"{{keyTransferPolicyId}}\",\n    \"transfer_link\": \"https://{{kbs}}:{{kbsPort}}/v1/keys/1403a86e-e75e-451e-a481-c12cbfe3bd21/transfer\",\n    \"created_at\": \"2020-11-09T10:46:23.354730925Z\"\n}"
 						}
 					]
 				}
 			],
-			"description": "To create a asymmetric (RSA) key, execute the \"run.sh\" script present in /root/workspace/utils/build/skc-tools/kbs_script/. KMS_IP and AAS_IP should be configured in this script manually.\n\nUpdate transfer_policy_request.json with modified sgx_* values in the file with corresponding values obtained by running the below command on the host machine.\n\n```\n/tmp/sgx/crypto-api-toolkit/src/test/p11test AsymWrapUnwrapTests \n```\n\n```\n./run.sh reg\n```\n\nThe \"run.sh\" script will create the Key Transfer Policy, Key Usage Policy, and Asymmetric (RSA) Key by calling the following Key Broker Service (KBS) REST endpoints.\n\nThen we have to copy the created certificate to the SGX Compute Node /root directory.\n\n```\ncp output/server.cert output/<keyId>.crt\n```\n\n```\nscp output/<keyId>.crt root@<SGX Compute Node>:/root/\n```",
+			"description": "To create a asymmetric (RSA) key, execute the \"run.sh\" script present in /root/workspace/utils/build/skc-tools/kbs_script/ . \n\nUpdate KBS and AAS IP addresses in run.sh and update CACERT_PATH variable with trustedca certificate inside directory /etc/kbs/certs/trustedca/<id.pem>.\n\n\nThe \"./run.sh reg\"  will create the Key Transfer Policy, and Asymmetric (RSA) Key by calling the following Key Broker Service (KBS) REST endpoints.\n\nCopy the generated cert file to SGX Compute node where skc_library is deployed.\n\n```\nscp <cert path> root@<SGX Compute Node>:/root/\n```",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c3ab0c8f-b067-46a5-a588-cb5c15b8b728",
+						"id": "dbb5b309-cce0-4482-9812-bb861f5ce130",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -688,7 +538,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6c1081c7-2192-482d-904e-147b972594ab",
+						"id": "90b453e1-3e7f-4690-bc54-5c6b0bce48ac",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -699,14 +549,14 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Configure Ngnix on SGX Compute Node",
+			"name": "Configuration for NGINX testing",
 			"item": [],
-			"description": "We should configure Ngnix on SGX Compute Node by following the below steps:\n\n1. Copy /root/workspace/skc_library/container/resources/openssl.cnf to /etc/pki/tls/ path. \n2. Copy /root/workspace/skc_library/container/resources/nginx.conf to /etc/nginx/ path. \n3. Update the SSL certificate path and Key ID in the \"nginx.conf\".\n4. Add a new attribute \"preload_keys\" with its value \"keys.txt\" file path in \n   the core section of the /opt/skc/etc/pkcs11-apimodule.ini file.\n5. Create or edit the \"keys.txt\" file with the Key ID and object as per the \n   Nginx configuration file.\n\nNOTE: Check the hostname in the /etc/hosts file.",
+			"description": "OpenSSL and NGINX configuration updates are provided as patches (nginx.patch and openssl.patch) as part of the skc_library deployment script.\n\n1. Update openssl configuration file /etc/pki/tls/openssl.cnf with below changes:\n```\n[openssl_def] \nengines = engine_section \n[engine_section] \npkcs11 = pkcs11_section \n[pkcs11_section]\nengine_id = pkcs11\ndynamic_path =/usr/lib64/engines-1.1/pkcs11.so\nMODULE_PATH =/opt/skc/lib/libpkcs11-api.so\ninit = 0\n```\n\n2. Update nginx configuration file /etc/nginx/nginx.conf with below changes:\n```\nuser root;\nssl_engine pkcs11;\nUpdate the location of certificate with the loaction where it was copied into the skc_library machine.\nssl_certificate \"add absolute path of crt file\";\nUpdate the KeyID with the KeyID received when RSA key was generated in KBS\nssl_certificate_key \"engine:pkcs11:pkcs11:token=KMS;id=164b41ae-be61-4c7c-a027-4a2ab1e5e4c4;object=RSAKEY;type=private;pin-value=1234\";\n```\n\n3. SKC Configuration\n\nCreate keys.txt in /tmp folder and add the PKCS11 URL.\nPKCS11 URL entry in keys.txt should match with the one in nginx.conf\n\nAdd a new attribute \"preload_keys\" with its value \"keys.txt\" file path in \nthe core section of the /opt/skc/etc/pkcs11-apimodule.ini file.\n\nNOTE: 'daemon off' should not be present in nginx.conf file.",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "7ef9a6b5-851a-4f4a-8191-5e36743b47a3",
+						"id": "775ba345-e631-48fb-9ca6-22bd345dd3f6",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -716,7 +566,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b0689029-4178-4fe7-b5f5-5717e20404eb",
+						"id": "6506961b-e2c8-4b30-b4c6-67e973cc30e7",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -727,7 +577,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Establish Session and Transfer Key",
+			"name": "KBS key-transfer flow",
 			"item": [
 				{
 					"name": "verifyQuote",
@@ -848,7 +698,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5af8ff9c-4fb6-45c5-9e20-0ef500f56abb",
+						"id": "151edf27-c4e3-408e-8ea6-b855ff825c40",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -858,7 +708,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1f60e991-5496-4d90-a7ac-e229d5469a38",
+						"id": "69a0a283-316e-4538-9d77-81cbe596e8a0",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -873,7 +723,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "8bba635d-0709-46f4-bc3c-9144e25849d0",
+				"id": "61c0327e-8be3-40c3-9a7d-5b0e9054a43b",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -883,7 +733,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "fc958721-02b5-4b95-9a1a-74d6a367d570",
+				"id": "e001f143-ca8d-412f-ad19-583c4db7efe9",
 				"type": "text/javascript",
 				"exec": [
 					""
