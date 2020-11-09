@@ -5,8 +5,9 @@ An ansible role that installs Intel® Security Libraries for Data Center (Intel�
 
 Table of Contents
 -----------------
-
+  
    * [Ansible Role - Intel Security Libraries - DC](#ansible-role---intel-security-libraries---dc)
+      * [Table of Contents](#table-of-contents)
       * [Requirements](#requirements)
       * [Dependencies](#dependencies)
       * [Usecase and Playbook Support](#usecase-and-playbook-support)
@@ -21,6 +22,7 @@ Table of Contents
       * [Role Variables](#role-variables)
       * [License](#license)
       * [Author Information](#author-information)
+
 
 Requirements
 ------------
@@ -107,17 +109,13 @@ Packages & Repos Installed by Role
 
 
 The below is installed for only `Launch Time Protection - Container Confidentiality with Docker Runtime` Usecase on Enterprise and Compute Node
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-19.03.5-3.el7.x86_64.rpm
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.5-3.el7.x86_64.rpm 
+* docker-ce-19.03.13
 
 
 The below is installed for only `Launch Time Protection - Container Confidentiality with CRIO Runtime` Usecase on Enterprise and Compute Node
 * https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
 * https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.16/CentOS_8/devel:kubic:libcontainers:stable:cri-o:1.16.repo
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-19.03.5-3.el7.x86_64.rpm
-* https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.5-3.el7.x86_64.rpm
+* docker-ce-19.03.13
 * skopeo
 * crio
 > **Note** : As part of CRIO installation,  this role would also configure crio runtime to work with Intel® SecL-DC
@@ -400,74 +398,78 @@ ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported us
 Additional Examples and Tips
 ----------------------------
 
-* If the Trusted Platform Module(TPM) is already owned, the owner secret(SRK) can be provided directly during runtime in the playbook:
-  
-  ```shell
-  ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to> --extra-vars tpm_secret=<tpm owner secret>
-  ```
-  or
+#### TPM is already owned
 
-  Update the following vars in `defaults/main.yml`
+If the Trusted Platform Module(TPM) is already owned, the owner secret(SRK) can be provided directly during runtime in the playbook:
 
-  ```yaml
-  # The TPM Storage Root Key(SRK) Password to be used if TPM is already owned
-  tpm_owner_secret: <tpm_secret>
-  ```
+```shell
+ansible-playbook <playbook-name> \
+--extra-vars setup=<setup var from supported usecases> \
+--extra-vars binaries_path=<path where built binaries are copied to> \
+--extra-vars tpm_secret=<tpm owner secret>
+```
+or
 
-* If using for `Launch Time Protection - Workload Confidentiality with CRIO Runtime` , following option can be provided during runtime in playbook
+Update the following vars in `defaults/main.yml`
 
-  ```shell
-  ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to> --extra-vars skip_sdd=yes
-  ```
-  or
+```yaml
+# The TPM Storage Root Key(SRK) Password to be used if TPM is already owned
+tpm_owner_secret: <tpm_secret>
+```
 
-  Update the following vars in `defaults/main.yml`
+#### Deploying for Workload Confidentiality with CRIO Runtime
 
-  ```yaml
-  #Enable/disable container security for CRIO runtime
-  # [yes - Launch Time Protection with CRIO Containers, NA - others]
-  skip_secure_docker_daemon: 'yes'
-  ```
+If using for `Launch Time Protection - Workload Confidentiality with CRIO Runtime` , following option can be provided during runtime in playbook. By default, the playbook is configured to install for `Launch Time Protection - Workload Confidentiality with Docker Runtime`
 
-* If using Docker notary when working with `Launch Time Protection - Workload Confidentiality with Docker Runtime`, following options can be provided during runtime in the playbook
+```shell
+ansible-playbook <playbook-name> \
+--extra-vars setup=<setup var from supported usecases> \
+--extra-vars binaries_path=<path where built binaries are copied to> \
+--extra-vars skip_sdd=yes
+```
+or
 
-  ```shell
-  ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to> --extra-vars insecure_verify=<insecure_verify[TRUE/FALSE]> --extra-vars registry_ipaddr=<registry ipaddr> --extra-vars registry_scheme=<registry schedme[http/https]>
-  ```
-  or
+Update the following vars in `defaults/main.yml`
 
-  Update the following vars in `defaults/main.yml`
+```yaml
+#Enable/disable container security for CRIO runtime
+# [yes - Launch Time Protection with CRIO Containers, NA - others]
+skip_secure_docker_daemon: <skip_sdd>
+```
 
-  ```yaml
-  # [TRUE/FALSE based on registry configured with http/https respectively]
-  # Required for Workload Integrity with containers
-  insecure_skip_verify: <insecure_skip_verify>
+#### Using Docker Notary
 
-  # The registry IP for the Docker registry from where container images are pulled
-  # Required for Workload Integrity with containers
-  registry_ip: <registry_ipaddr>
+If using Docker notary when working with `Launch Time Protection - Workload Confidentiality with Docker Runtime`, following options can be provided during runtime in the playbook
 
-  # The registry protocol for talking to the remote registry [http/https]
-  # Required for Workload Integrity with containers
-  registry_scheme_type: <registry_scheme>
-  ```
+```shell
+ansible-playbook <playbook-name> \
+--extra-vars setup=<setup var from supported usecases> \
+--extra-vars binaries_path=<path where built binaries are copied to> \
+--extra-vars insecure_verify=<insecure_verify[TRUE/FALSE]> \
+--extra-vars registry_ipaddr=<registry ipaddr> \
+--extra-vars registry_scheme=<registry scheme[http/https]>
+```
+or
 
-* For `secure-key-caching` & `security-aware-orchestration` usecase following options can be provided during runtime in the playbook for providing the PCS server key
+Update the following vars in `defaults/main.yml`
 
-  ```shell
-   ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to> --extra-vars intel_provisioning_server_api_key=<pcs server key>
-  ```
+```yaml
+# [TRUE/FALSE based on registry configured with http/https respectively]
+# Required for Workload Integrity with containers
+insecure_skip_verify: <insecure_skip_verify>
 
-  or 
+# The registry IP for the Docker registry from where container images are pulled
+# Required for Workload Integrity with containers
+registry_ip: <registry_ipaddr>
 
-  Update the following vars in `defaults/main.yml`
+# The registry protocol for talking to the remote registry [http/https]
+# Required for Workload Integrity with containers
+registry_scheme_type: <registry_scheme>
+```
 
-  ```yaml
-  intel_provisioning_server_api_key_sandbox: <pcs server key>
-  ```
+#### In case of Misconfigurations 
 
-* If any service installation fails due to any misconfiguration, just uninstall the specific service manually , fix the misconfiguration in ansible 
-  and rerun the playbook. The successfully installed services wont be reinstalled.
+If any service installation fails due to any misconfiguration, just uninstall the specific service manually , fix the misconfiguration in ansible and rerun the playbook. The successfully installed services wont be reinstalled.
 
 
 Intel® SecL-DC Services Details
