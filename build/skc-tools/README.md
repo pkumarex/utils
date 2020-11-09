@@ -75,7 +75,7 @@
     - authservice status
     - scs status
     - sqvs status
-    - kms status
+    - kbs status
 - Turn off Firewall service or ensure that these services can be accessed from the machine where SGX Agent/SKC_Library is running
    # systemctl stop firewalld
 
@@ -116,7 +116,7 @@ Follow the instructions in README.install file
 
 ​	cd into kbs_scripts folder
 
-​	Update KBS and AAS IP address in run.sh
+​	Update KBS/AAS IP address in run.sh. Also update the CA_CERT with the pem file in /etc/kbs/certs/trustedca/ directory
 
 **Create AES Key**
 
