@@ -67,10 +67,10 @@ scs_db_hostname: localhost
 scs_db_name: pgscsdb
 
 # The db user for SGX Caching Service
-scs_db_user: dbuser
+scs_db_user: scsdbuser
 
 # The db password for SGX Caching Service
-scs_db_password: dbpassword
+scs_db_password: scsdbpassword
 
 # The db hostname for SGX Host Verification Service
 shvs_db_hostname: localhost
@@ -79,10 +79,10 @@ shvs_db_hostname: localhost
 shvs_db_name: pgshvsdb
 
 # The db user for SGX Host Verification Service
-shvs_db_user: dbuser
+shvs_db_user: shvsdbuser
 
 # The db password for SGX Host Verification Service
-shvs_db_password: dbpassword
+shvs_db_password: shvsdbpassword
 
 
 # ---------------------------------- AUTHENTICATION AND AUTHORIZATION SERVICE -------------------------------------- #
@@ -181,7 +181,7 @@ wls_service_password: wlsAdminPass
 # ----------------------------------------- KEY BROKER SERVICE -------------------------------------- #
 
 # The name of the binary installer as per release tag for Key Broker Service
-kbs_installer_file_name: kms-6.1-SNAPSHOT.bin
+kbs_installer_file_name: kbs-v3.1.0.bin
 
 # The binary installer file source for Key Broker Service
 kbs_installer_file_src: "{{binaries_path}}/{{kbs_installer_file_name}}"
@@ -189,6 +189,11 @@ kbs_installer_file_src: "{{binaries_path}}/{{kbs_installer_file_name}}"
 # The port for running the Key Broker Service
 kbs_port: 9443
 
+# The service account username for Key Broker Service
+kbs_admin_username: admin@kbs
+
+# The service account password for Key Broker Service
+kbs_admin_password: kbsAdminPass
 
 # ---------------------------------------- SKOPEO -----------------------------------------------------#
 
@@ -359,24 +364,6 @@ sqvs_trusted_rootca_filename: trusted_rootca.pem
 
 # The trusted root ca file source for SGX Quote Verification Service
 sqvs_trusted_rootca_file_src: "{{binaries_path}}/{{sqvs_trusted_rootca_filename}}"
-
-
-# --------------------------------------- SKC Key Broker Service ------------------------------------ #
-
-# The service account username for SKC Key Broker Service
-skbs_admin_username: admin@kms
-
-# The service account password for SKC Key Broker Service
-skbs_admin_password: kmsAdminPass
-
-# The name of the binary installer as per release tag for SKC Key Broker Service
-skbs_installer_name: kms-6.1-SNAPSHOT.bin
-
-# The binary installer file source for SKC Key Broker Service
-skbs_installer_file_src: "{{binaries_path}}/{{skbs_installer_name}}"
-
-# The port for running the SKC Key Broker Service
-skbs_port: 9443
 
 
 # --------------------------------------- SGX Agent ------------------------------------------------- #
