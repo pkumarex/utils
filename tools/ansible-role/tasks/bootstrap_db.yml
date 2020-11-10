@@ -75,7 +75,7 @@
   args: 
      chdir: /root
      executable: /bin/bash
-  when: setup == 'secure-key-caching' or setup == 'sgx-orchestration'
+  when: setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup== 'sgx-attestation'
 
 
 - name: ISECL - BOOTSTRAP DB | Create DB for SGX Host Verification Service
@@ -83,5 +83,5 @@
   args:
      chdir: /root
      executable: /bin/bash
-  when: setup == 'secure-key-caching' or setup == 'sgx-orchestration'
+  when: setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup== 'sgx-attestation'
 
