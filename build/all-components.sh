@@ -2,18 +2,18 @@
 
 echo "Installing Foundational Security pre-reqs..."
 cd foundational-security/
-./fs-prereqs.sh -s
+chmod +x fs-prereq.sh;./fs-prereq.sh -s
 cd ..
 
 echo "Installing Workload Security pre-reqs"
 cd workload-security/
+chmod +x ws-prereq.sh
 
 #VM-C
-./ws-prereqs.sh -v
+./ws-prereq.sh -v
 
 #Container-Conf-Docker
-./ws-prereqs.sh -d
+./ws-prereq.sh -d
 
 #Container-Conf-CRIO
-./ws-prereqs.sh -c
-
+./ws-prereq.sh -c
