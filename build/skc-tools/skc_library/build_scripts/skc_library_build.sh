@@ -2,6 +2,14 @@
 SKCLIB_DIR=skc_library
 TAR_NAME=$(basename $SKCLIB_DIR)
 
+# Check OS and VERSION
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+VER=$(cat /etc/os-release | grep ^VERSION_ID | tr -d 'VERSION_ID="')
+OS_FLAVOUR="$OS""$VER"
+
 install_prerequisites()
 {
 	source build_prerequisites.sh	
@@ -70,7 +78,13 @@ build_skc_library()
 }
 
 rm -rf $SKCLIB_DIR
-rm -f /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+
+if [ "$OS" == "rhel" ]
+then
+# RHEL
+  rm -f /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+fi
+
 install_prerequisites
 download_dcap_driver
 install_sgxsdk
