@@ -374,6 +374,11 @@ sgxagent_installer_name: sgx_agent.tar
 # The binary installer file source for SGX Agent
 sgxagent_installer_file_src: "{{binaries_path}}"
 
+# The service account username for SGX Agent
+sgxagent_admin_username: sgx_agent
+
+# The service account password for SGX Agent
+sgxagent_admin_password: password
 
 # --------------------------------------- SKC Library ----------------------------------------------- #
 
