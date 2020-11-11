@@ -269,8 +269,8 @@
       - setup == 'workload-conf-vm'
       
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: csp
-- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for secure-key-caching/sgx-orchestration usecase
+# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for secure-key-caching/sgx-orchestration/sgx-attestation usecase
   set_fact:
     cms: "{{ ansible_default_ipv4.address }}"
     cms_hostname: "{{ ansible_fqdn }}"
@@ -292,11 +292,11 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'csp')
-      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
+      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-orchestration and isecl_role: csp
-- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for sgx-orchestration usecase
+# os: Redhat and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for sgx-orchestration/sgx-attestation usecase
   set_fact:
     ihub: "{{ ansible_default_ipv4.address }}"
     ihub_hostname: "{{ ansible_fqdn }}"    
@@ -311,11 +311,11 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'csp')
-      - (setup == 'sgx-orchestration')
+      - (setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: csp
-- name: ISECL - SETUP | Install CSP services for secure-key-caching/sgx-orchestration usecase
+# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for secure-key-caching/sgx-orchestration/sgx-attestation usecase
   include: "{{ item }}"
   loop:
       - install_cms.yml
@@ -328,11 +328,11 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'csp')
-      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
+      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-orchestration and isecl_role: csp
-- name: ISECL - SETUP | Install CSP services for sgx-orchestration usecase
+# os: Redhat and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for sgx-orchestration/sgx-attestation usecase
   include: "{{ item }}"  
   loop:
       - install_shub.yml
@@ -341,10 +341,10 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'csp')
-      - (setup == 'sgx-orchestration') 
+      - (setup == 'sgx-orchestration' or setup == 'sgx-attestation') 
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: csp
+# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP | Set fact for CMS TLS certificate
   set_fact:
     cmstlscertsha384_csp: "{{ cms_tlscertsha384 }}"
@@ -358,7 +358,7 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'csp')
-      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
+      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
 # os: Redhat and setup: secure-key-caching/sgx-orchestration  and isecl_role: enterprise
@@ -431,6 +431,71 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
 
+# os: Redhat and setup: sgx-attestation  and isecl_role: enterprise
+- name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for sgx-attestation usecase
+  set_fact:
+    cms: "{{ ansible_default_ipv4.address }}"
+    cms_hostname: "{{ ansible_fqdn }}"
+    aas: "{{ ansible_default_ipv4.address }}"
+    aas_hostname: "{{ ansible_fqdn }}"
+    scs: "{{ ansible_default_ipv4.address }}"
+    scs_hostname: "{{ ansible_fqdn }}"
+    sqvs: "{{ ansible_default_ipv4.address }}"
+    sqvs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items:
+      -  "{{ groups['Enterprise'] }}"
+  loop_control:
+    loop_var: host
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'sgx-attestation')
+
+
+# os: Redhat and setup: sgx-attestation and isecl_role: enterprise
+- name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for sgx-attestation usecase
+  set_fact:
+    cms_enterprise: "{{ ansible_default_ipv4.address }}"
+    cms_enterprise_hostname: "{{ ansible_fqdn }}"
+    aas_enterprise: "{{ ansible_default_ipv4.address }}"
+    aas_enterprise_hostname: "{{ ansible_fqdn }}"
+    sqvs: "{{ ansible_default_ipv4.address }}"
+    sqvs_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items:
+      -  "{{ groups['Node'] }}"
+  loop_control:
+    loop_var: host
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'sgx-attestation')
+
+
+# os: Redhat and setup: sgx-attestation and isecl_role: enterprise
+- name: ISECL - SETUP | Install Enterprise services for sgx-attestation usecase
+  include: "{{ item }}"
+  loop:
+      - install_cms.yml
+      - bootstrap_db.yml
+      - install_aas.yml
+      - install_scs.yml
+      - install_sqvs.yml
+  when:
+      - "'Enterprise' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'enterprise')
+      - (setup == 'sgx-attestation')
+
+
 # os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: node
 - name: ISECL - SETUP PREREQUISITES | Set required Node facts for secure-key-caching/sgx-orchestration usecase
   set_fact:
@@ -462,4 +527,36 @@
       - ansible_os_family == 'RedHat'
       - (isecl_role == 'node')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
+
+# os: Redhat and setup: sgx-attestation and isecl_role: node
+- name: ISECL - SETUP PREREQUISITES | Set required Node facts for sgx-attestation usecase
+  set_fact:
+    sgx_agent: "{{ ansible_default_ipv4.address }}"
+    sgx_agent_hostname: "{{ ansible_fqdn }}"
+  delegate_to: "{{ host }}"
+  delegate_facts: true
+  with_items:
+      -  "{{ groups['Node'] }}"
+  loop_control:
+    loop_var: host
+  when:
+     - "'Node' in groups"
+     - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+     - ansible_os_family == 'RedHat'
+     - (isecl_role == 'node')
+     - ( setup == 'sgx-attestation')
+
+
+# os: Redhat and setup: sgx-attestation and isecl_role: node
+- name: ISECL - SETUP | Install Node services for sgx-attestation usecase
+  include: "{{ item }}"
+  loop:
+      - install_sgx_agent.yml
+      - install_sgx_dependencies.yml
+  when:
+      - "'Node' in groups"
+      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
+      - ansible_os_family == 'RedHat'
+      - (isecl_role == 'node')
+      - (setup == 'sgx-attestation')
 
