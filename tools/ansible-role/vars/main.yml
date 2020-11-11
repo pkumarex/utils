@@ -10,7 +10,7 @@ postgres_rpm_name: pgdg-redhat-repo-latest.noarch.rpm
 #Below variables are required to be modified by user if running behind proxy
 
 # The http_proxy for setting up Intel® SecL-DC libraries
-http_proxy: 
+http_proxy:
 
 # The http_proxy for setting up Intel® SecL-DC libraries
 https_proxy: 
