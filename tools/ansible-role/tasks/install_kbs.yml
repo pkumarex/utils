@@ -33,7 +33,7 @@
     use_proxy: no
     validate_certs: no
     return_content: yes
-  register: setup_admin_token
+  register: setup_admin_token_sgx
   when: setup == 'secure-key-caching' or setup == 'sgx-orchestration'
 
 - name: ISECL - KEY BROKER SERVICE | Generate kbs.env file
