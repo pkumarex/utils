@@ -1,24 +1,16 @@
 ---
-- name: INSTALL DOCKER | Install containerd
-  dnf: 
-    name: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm
+- name: K8s MASTER | Install docker repo
+  shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    chdir: /root
+    executable: /bin/bash
+
+- name: K8s MASTER | Install docker
+  dnf:
+    name: "{{item}}"
     state: present
-    disable_gpg_check: true
-
-
-- name: INSTALL DOCKER | Install docker-ce-cli
-  dnf: 
-    name: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-19.03.5-3.el7.x86_64.rpm
-    state: present
-    disable_gpg_check: true
-
-
-- name: INSTALL DOCKER | docker-ce-{{docker_version}}
-  dnf: 
-    name: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.5-3.el7.x86_64.rpm
-    state: present
-    disable_gpg_check: true
+  with_items:
+    - "docker-ce-{{docker_version}}"
   notify: start docker
-
 
 - meta: flush_handlers
