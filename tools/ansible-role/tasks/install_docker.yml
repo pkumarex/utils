@@ -1,11 +1,11 @@
 ---
-- name: K8s MASTER | Install docker repo
+- name: INSTALL DOCKER | Install docker repo
   shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   args:
     chdir: /root
     executable: /bin/bash
 
-- name: K8s MASTER | Install docker
+- name: INSTALL DOCKER | Install docker
   dnf:
     name: "{{item}}"
     state: present
