@@ -1,7 +1,7 @@
 ---
 - name: ISECL - TRUST AGENT | Install tboot
   dnf:
-    name: tboot
+    name: tboot-1.9.10
     state: present
 
 
