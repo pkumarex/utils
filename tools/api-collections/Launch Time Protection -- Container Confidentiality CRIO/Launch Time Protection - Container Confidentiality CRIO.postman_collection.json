@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d496a70f-e70a-4585-833b-d6652608d43f",
+		"_postman_id": "92d7797a-15a9-4d7c-afbf-5e74b84e0476",
 		"name": "Launch Time Protection - Container Confidentiality CRIO",
 		"description": "Launch Time Protection - Container Confidentiality with CRIO Runtime allows container images to be encrypted at rest, with key access tied to platform integrity attestation.  Because security attributes contained in the platform integrity attestation report are used to control access to the decryption keys, this feature provides both protection for at-rest data, IP, code, etc in container image, and also enforcement of image-owner-controlled placement policies.  When decryption keys are released, they are sealed to the physical TPM of the host that was attested, meaning that only a server that has successfully met the policy requirements for the image can actually gain access. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9962097a-5ca4-4721-b643-80166729173e",
+								"id": "a3ad972b-b240-47d9-bc01-61585af455cf",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -130,7 +130,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "70323df7-afdb-4caf-9b70-ba419c0fbac6",
+								"id": "7f2141cc-c8d2-47eb-959f-e1f59a29acef",
 								"exec": [
 									"var report=pm.response.json()\r",
 									"pm.environment.set(\"hostId\", report.reports[0].host_id)"
@@ -141,7 +141,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "285a97f9-d36c-4315-813a-ee3a64c86c39",
+								"id": "70c5f9d6-75ff-4ce7-9575-799dcf72e2c2",
 								"exec": [
 									""
 								],
@@ -357,7 +357,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f7124e17-f96a-42aa-81fc-f4c659f0670e",
+						"id": "e57631b7-14ed-4217-87ad-250c12a015c6",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -367,7 +367,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "39e9c280-544f-4eb6-b8f9-226d305b02a8",
+						"id": "349cd42b-205c-4a66-be73-f7d2759b6098",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -381,45 +381,49 @@
 			"name": "Importing Verification Service Certificates",
 			"item": [
 				{
-					"name": "Importing a SAML certificate",
+					"name": "Import Saml Certificate",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{bearerToken}}"
+								"description": "(Required) Content-Type header",
+								"key": "Content-Type",
+								"value": "application/x-pem-file"
 							},
 							{
-								"description": "(Required)",
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/x-pem-file"
+								"description": "(Required) Accept header",
+								"key": "Accept",
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/DCCAmSgAwIBAgIBCDANBgkqhkiG9w0BAQwFADBQMQswCQYDVQQGEwJVUzEL\r\nMAkGA1UECBMCU0YxCzAJBgNVBAcTAlNDMQ4wDAYDVQQKEwVJTlRFTDEXMBUGA1UE\r\nAxMOQ01TIFNpZ25pbmcgQ0EwHhcNMjAwOTIxMTYxNjQ0WhcNMjEwOTIxMTYxNjQ0\r\nWjAfMR0wGwYDVQQDExRIVlMgU0FNTCBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcN\r\nAQEBBQADggGPADCCAYoCggGBAMP4weJn9SCShsKApdREt1yWmI81U/9CxrzCCRkR\r\nU5KUKqR7im8+r7Ws1PAt1qBY9+yOZmMCBuBLeaczKo5yGfJdwCb1vNl5j6sXAG5F\r\nK5FPSx/jXC1cIxqPjSKWTxVjbYx00MAyRPOXlNiQIkMfi5l1Aty3G6M/ZC2B5rKN\r\nu8TnXhX8NLiPsZ6x51fecKMsRgCYnx7e7EGkrnyC5VTKnOkaw8PwUhwj2cXOKVFZ\r\n3H5zqVt0pgcGakC7Mpre+O06ELf1dk5R0Xkf59IV+l4FN2DRr/4fN28RnaYhPtMU\r\nHvTgUkVWzPkJvHdzF3EXlSpipYFpwG40+fZAk3dpS4YjNtlEgI/yzNIpkT4rmDE7\r\nBG3V23XHbGZXhRg10i8un6bAz8OMOwbozyHhfSWxEdIBQTLCYnkV/+jNJjU8Gtz1\r\nHD9PgdAKqhYjoJGNyKWjrE20cmRtCN//rLsHAvWE25tH/Jw2s2N45KL8fpag9G++\r\nx0VxOXhOw0TASyhKDuX426O9FwIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBsAwDQYJ\r\nKoZIhvcNAQEMBQADggGBAKTRG1QUbUoC7IBrMD7v0LRicmG80ZI1O7LhVxmiD/EL\r\nWkNL+i8XZzhGRoR0O3cWXVAHa6BDohCK/EIyM6uY1EhhZlUeYOa9yy9RjfV3JJsr\r\nFcccDoyxekETmab/K27JrVonnUtJtbA7yEtvIJCWZIaOsE6uWlP9qNcfMibNf02p\r\nV9QjF+dL45CVASvPvYqnnZi6TiBLd0w0i5b+9h8o/eMQPcG5H1jWggidZHNYWDq7\r\nNHVwr3CnSNVoTdhfzRA2UkpL0vg+EJbdF06uFDCaG0OAMz9gNO5B06+yHlCKH4jg\r\npZ6PoApzltp5qfaRJX8O76x6n7Lcd/1FwxvcKArmgDq3RTzc6rtpq5WnTg/LZPpN\r\nEweozWVJKSOC4+Vfl/LZK9x5+uA7qlxXllQYeywk5hvvcCzeqn7AkwCLsFz+POEm\r\nRF272tY1dzJ19mN/HmcDA13TSbE3ANd2V5Z6NA9/9FF3l9+i8gtgBICNLWPLCA93\r\nOz2IQ9qXBWa8v7mh2lezoA==\r\n-----END CERTIFICATE-----",
-							"options": {
-								"raw": {
-									"language": "text"
-								}
-							}
+							"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/DCCAmSgAwIBAgIBCDANBgkqhkiG9w0BAQwFADBQMQswCQYDVQQGEwJVUzEL\r\nMAkGA1UECBMCU0YxCzAJBgNVBAcTAlNDMQ4wDAYDVQQKEwVJTlRFTDEXMBUGA1UE\r\nAxMOQ01TIFNpZ25pbmcgQ0EwHhcNMjAwOTIxMTYxNjQ0WhcNMjEwOTIxMTYxNjQ0\r\nWjAfMR0wGwYDVQQDExRIVlMgU0FNTCBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcN\r\nAQEBBQADggGPADCCAYoCggGBAMP4weJn9SCShsKApdREt1yWmI81U/9CxrzCCRkR\r\nU5KUKqR7im8+r7Ws1PAt1qBY9+yOZmMCBuBLeaczKo5yGfJdwCb1vNl5j6sXAG5F\r\nK5FPSx/jXC1cIxqPjSKWTxVjbYx00MAyRPOXlNiQIkMfi5l1Aty3G6M/ZC2B5rKN\r\nu8TnXhX8NLiPsZ6x51fecKMsRgCYnx7e7EGkrnyC5VTKnOkaw8PwUhwj2cXOKVFZ\r\n3H5zqVt0pgcGakC7Mpre+O06ELf1dk5R0Xkf59IV+l4FN2DRr/4fN28RnaYhPtMU\r\nHvTgUkVWzPkJvHdzF3EXlSpipYFpwG40+fZAk3dpS4YjNtlEgI/yzNIpkT4rmDE7\r\nBG3V23XHbGZXhRg10i8un6bAz8OMOwbozyHhfSWxEdIBQTLCYnkV/+jNJjU8Gtz1\r\nHD9PgdAKqhYjoJGNyKWjrE20cmRtCN//rLsHAvWE25tH/Jw2s2N45KL8fpag9G++\r\nx0VxOXhOw0TASyhKDuX426O9FwIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBsAwDQYJ\r\nKoZIhvcNAQEMBQADggGBAKTRG1QUbUoC7IBrMD7v0LRicmG80ZI1O7LhVxmiD/EL\r\nWkNL+i8XZzhGRoR0O3cWXVAHa6BDohCK/EIyM6uY1EhhZlUeYOa9yy9RjfV3JJsr\r\nFcccDoyxekETmab/K27JrVonnUtJtbA7yEtvIJCWZIaOsE6uWlP9qNcfMibNf02p\r\nV9QjF+dL45CVASvPvYqnnZi6TiBLd0w0i5b+9h8o/eMQPcG5H1jWggidZHNYWDq7\r\nNHVwr3CnSNVoTdhfzRA2UkpL0vg+EJbdF06uFDCaG0OAMz9gNO5B06+yHlCKH4jg\r\npZ6PoApzltp5qfaRJX8O76x6n7Lcd/1FwxvcKArmgDq3RTzc6rtpq5WnTg/LZPpN\r\nEweozWVJKSOC4+Vfl/LZK9x5+uA7qlxXllQYeywk5hvvcCzeqn7AkwCLsFz+POEm\r\nRF272tY1dzJ19mN/HmcDA13TSbE3ANd2V5Z6NA9/9FF3l9+i8gtgBICNLWPLCA93\r\nOz2IQ9qXBWa8v7mh2lezoA==\r\n-----END CERTIFICATE-----"
 						},
 						"url": {
-							"raw": "https://{{kbs}}:{{kbsPort}}/v1/saml-certificates",
+							"raw": "https://{{kbs}}:{{kbsPort}}/kbs/v1/saml-certificates",
 							"protocol": "https",
 							"host": [
 								"{{kbs}}"
 							],
 							"port": "{{kbsPort}}",
 							"path": [
+								"kbs",
 								"v1",
 								"saml-certificates"
 							]
 						},
-						"description": "Use OpenSSL to display the SAML certificate content:\r\n\r\n```shell\r\nopenssl x509 -in /etc/hvs/certs/trustedca/saml-cert.pem\r\n```\r\n\r\nUse the SAML certificate output in the following POST call\r\nto the Key Broker"
+						"description": "</b>Imports a saml certificate.</b>\n<pre>\nThis method registers a SAML public key certificate to this service. During the SAML transfer\nkey API call, a SAML report containing the same SAML certificate is provided and the\ncertificate is compared and verified against the SAML certificates registered with this service.\nThe certificate object model includes an ID, base64 encoded certificate and a revoked status.\n</pre>\n\nUse cat to display the SAML certificate content:\n\n```shell\ncat /etc/hvs/certs/trustedca/saml-cert.pem\n```\nUse the SAML certificate output in the following POST call to the Key Broker"
 					},
 					"response": [
 						{
@@ -428,118 +432,103 @@
 								"method": "POST",
 								"header": [
 									{
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-										"key": "Authorization",
-										"type": "text",
-										"value": "Bearer {{bearerToken}}"
+										"description": "(Required) Content-Type header",
+										"key": "Content-Type",
+										"value": "application/x-pem-file"
 									},
 									{
-										"description": "(Required)",
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/x-pem-file"
+										"description": "(Required) Accept header",
+										"key": "Accept",
+										"value": "application/json"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/DCCAmSgAwIBAgIBCDANBgkqhkiG9w0BAQwFADBQMQswCQYDVQQGEwJVUzEL\r\nMAkGA1UECBMCU0YxCzAJBgNVBAcTAlNDMQ4wDAYDVQQKEwVJTlRFTDEXMBUGA1UE\r\nAxMOQ01TIFNpZ25pbmcgQ0EwHhcNMjAwOTE1MDgzNzE4WhcNMjEwOTE1MDgzNzE4\r\nWjAfMR0wGwYDVQQDExRIVlMgU0FNTCBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcN\r\nAQEBBQADggGPADCCAYoCggGBAMZAB3S4sLm3ctGdU9Km0/Yd+1osYFyZGVxU8s2b\r\n5gtOpsOKqlSlIt1b042h8i/ued0sOq25wwdMHbMFpAAa+YD0Mw+OTCeHNJ7CD2+E\r\n4wsXarmvsGdeDF0/rhE1aGA8coK/HrzeffTKXVm58A0i5nY4ASX1se3I+D4d3sB8\r\nsKE/6mXZ8FCv+Iu+QeOEAGfMISr7IV/aawU4J0GLAErQ0aoIIwY/8jKt+8lYsGIJ\r\nk0uLLzsAopAByNwqV96qZ0EV1UKboMSjTYwYrF7U5ZM642grVBr9f4vyttgKoXU6\r\naTygX3gXN4Hl5/x7pNw3LEKv05qWSD4YEtiiC4f9H4uqTFtlR5vc8DzJy1FqUvIR\r\nP4nGCWCRT2hYvL0TNFXlrOv/Lc1Z3RYtyU8EE5r/TKzMdKOCrtySAzHux5Woc0X6\r\nEYLDLmjO3AYoRK6n/PYYuTeo4iCi3Oyb4yIP8Ve4QY54WohT3EjJFkhMMkKbUdZ2\r\nR9M1mSXbmyGhmQXAVOXWyuuI5wIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBsAwDQYJ\r\nKoZIhvcNAQEMBQADggGBABMxuWMsp/+a976CH9VIwFnX+qQ/TEk72rKJBIWHH873\r\neoGoWkqVKwLvPTy+F7nqvZLyhwoNSCCIWiKV9/nfZAAo7CojOLXOxTwHUtME/a1l\r\noeFuOjCSzyoi2WTL2hsOHHFZEGwGmFazOt4pnAQankBhpXvZwN6f9iQ7zS+ojs1i\r\nyi42SDYDJLEHpW0RG1peZBWpL4I7Xcr0bgMIhlaoXwGe3gG2HxpLR9G9E6qa0duW\r\ndk9WvASLaMpI2k3uztIoaWfFX6u8rriBRu7yk9fri/LhRb4zdgrmGtOgLwCAHxUA\r\nt3REqprHWC/6peAqFyfKxIaF/puPrCu5hRQW27p9zkTQJ++22BQzuYJ3gySiL1hh\r\nEbnGebZme6NpFtx9ox8AKVXHzlCc6esSNtHCpLjQsq3dt386NCVKDF0UioWnoeMP\r\nE0ZxYr5mTBj9KL6tcWlbXTWzEX0YZm5UViWxKF8A7CKW0K6VLkUXswA0lIh4H7Ew\r\nxHa3Z45kyMyQ/Eb2WF29Tw==\r\n-----END CERTIFICATE-----",
-									"options": {
-										"raw": {
-											"language": "text"
-										}
-									}
+									"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/DCCAmSgAwIBAgIBCDANBgkqhkiG9w0BAQwFADBQMQswCQYDVQQGEwJVUzEL\r\nMAkGA1UECBMCU0YxCzAJBgNVBAcTAlNDMQ4wDAYDVQQKEwVJTlRFTDEXMBUGA1UE\r\nAxMOQ01TIFNpZ25pbmcgQ0EwHhcNMjAwOTIxMTYxNjQ0WhcNMjEwOTIxMTYxNjQ0\r\nWjAfMR0wGwYDVQQDExRIVlMgU0FNTCBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcN\r\nAQEBBQADggGPADCCAYoCggGBAMP4weJn9SCShsKApdREt1yWmI81U/9CxrzCCRkR\r\nU5KUKqR7im8+r7Ws1PAt1qBY9+yOZmMCBuBLeaczKo5yGfJdwCb1vNl5j6sXAG5F\r\nK5FPSx/jXC1cIxqPjSKWTxVjbYx00MAyRPOXlNiQIkMfi5l1Aty3G6M/ZC2B5rKN\r\nu8TnXhX8NLiPsZ6x51fecKMsRgCYnx7e7EGkrnyC5VTKnOkaw8PwUhwj2cXOKVFZ\r\n3H5zqVt0pgcGakC7Mpre+O06ELf1dk5R0Xkf59IV+l4FN2DRr/4fN28RnaYhPtMU\r\nHvTgUkVWzPkJvHdzF3EXlSpipYFpwG40+fZAk3dpS4YjNtlEgI/yzNIpkT4rmDE7\r\nBG3V23XHbGZXhRg10i8un6bAz8OMOwbozyHhfSWxEdIBQTLCYnkV/+jNJjU8Gtz1\r\nHD9PgdAKqhYjoJGNyKWjrE20cmRtCN//rLsHAvWE25tH/Jw2s2N45KL8fpag9G++\r\nx0VxOXhOw0TASyhKDuX426O9FwIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBsAwDQYJ\r\nKoZIhvcNAQEMBQADggGBAKTRG1QUbUoC7IBrMD7v0LRicmG80ZI1O7LhVxmiD/EL\r\nWkNL+i8XZzhGRoR0O3cWXVAHa6BDohCK/EIyM6uY1EhhZlUeYOa9yy9RjfV3JJsr\r\nFcccDoyxekETmab/K27JrVonnUtJtbA7yEtvIJCWZIaOsE6uWlP9qNcfMibNf02p\r\nV9QjF+dL45CVASvPvYqnnZi6TiBLd0w0i5b+9h8o/eMQPcG5H1jWggidZHNYWDq7\r\nNHVwr3CnSNVoTdhfzRA2UkpL0vg+EJbdF06uFDCaG0OAMz9gNO5B06+yHlCKH4jg\r\npZ6PoApzltp5qfaRJX8O76x6n7Lcd/1FwxvcKArmgDq3RTzc6rtpq5WnTg/LZPpN\r\nEweozWVJKSOC4+Vfl/LZK9x5+uA7qlxXllQYeywk5hvvcCzeqn7AkwCLsFz+POEm\r\nRF272tY1dzJ19mN/HmcDA13TSbE3ANd2V5Z6NA9/9FF3l9+i8gtgBICNLWPLCA93\r\nOz2IQ9qXBWa8v7mh2lezoA==\r\n-----END CERTIFICATE-----"
 								},
 								"url": {
-									"raw": "https://{{kbs}}:{{kbs_port}}/v1/saml-certificates",
+									"raw": "https://{{kbs}}:{{kbsPort}}/kbs/v1/saml-certificates",
 									"protocol": "https",
 									"host": [
 										"{{kbs}}"
 									],
-									"port": "{{kbs_port}}",
+									"port": "{{kbsPort}}",
 									"path": [
+										"kbs",
 										"v1",
 										"saml-certificates"
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
+							"status": "Created",
+							"code": 201,
 							"_postman_previewlanguage": "json",
 							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 15 Sep 2020 10:35:42 GMT"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "JSESSIONID=node01i8ame2l3qvmvv4ql2q4kv0vi2.node0; Path=/; Secure"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Mon, 14-Sep-2020 10:35:42 GMT"
-								},
-								{
-									"key": "Expires",
-									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
-								},
 								{
 									"key": "Content-Type",
 									"value": "application/json"
 								},
 								{
-									"key": "Content-Security-Policy",
-									"value": "default-src 10.105.168.90; form-action 10.105.168.90; frame-ancestors 10.105.168.90; plugin-types application/pdf"
+									"key": "Date",
+									"value": "Wed, 11 Nov 2020 09:53:30 GMT"
 								},
 								{
 									"key": "Content-Length",
-									"value": "1446"
+									"value": "2035"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": \"c7a2b3ff-66e4-4486-8fb5-75615e510df2\",\n    \"certificate\": \"MIID/DCCAmSgAwIBAgIBCDANBgkqhkiG9w0BAQwFADBQMQswCQYDVQQGEwJVUzELMAkGA1UECBMCU0YxCzAJBgNVBAcTAlNDMQ4wDAYDVQQKEwVJTlRFTDEXMBUGA1UEAxMOQ01TIFNpZ25pbmcgQ0EwHhcNMjAwOTE1MDgzNzE4WhcNMjEwOTE1MDgzNzE4WjAfMR0wGwYDVQQDExRIVlMgU0FNTCBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMZAB3S4sLm3ctGdU9Km0/Yd+1osYFyZGVxU8s2b5gtOpsOKqlSlIt1b042h8i/ued0sOq25wwdMHbMFpAAa+YD0Mw+OTCeHNJ7CD2+E4wsXarmvsGdeDF0/rhE1aGA8coK/HrzeffTKXVm58A0i5nY4ASX1se3I+D4d3sB8sKE/6mXZ8FCv+Iu+QeOEAGfMISr7IV/aawU4J0GLAErQ0aoIIwY/8jKt+8lYsGIJk0uLLzsAopAByNwqV96qZ0EV1UKboMSjTYwYrF7U5ZM642grVBr9f4vyttgKoXU6aTygX3gXN4Hl5/x7pNw3LEKv05qWSD4YEtiiC4f9H4uqTFtlR5vc8DzJy1FqUvIRP4nGCWCRT2hYvL0TNFXlrOv/Lc1Z3RYtyU8EE5r/TKzMdKOCrtySAzHux5Woc0X6EYLDLmjO3AYoRK6n/PYYuTeo4iCi3Oyb4yIP8Ve4QY54WohT3EjJFkhMMkKbUdZ2R9M1mSXbmyGhmQXAVOXWyuuI5wIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBsAwDQYJKoZIhvcNAQEMBQADggGBABMxuWMsp/+a976CH9VIwFnX+qQ/TEk72rKJBIWHH873eoGoWkqVKwLvPTy+F7nqvZLyhwoNSCCIWiKV9/nfZAAo7CojOLXOxTwHUtME/a1loeFuOjCSzyoi2WTL2hsOHHFZEGwGmFazOt4pnAQankBhpXvZwN6f9iQ7zS+ojs1iyi42SDYDJLEHpW0RG1peZBWpL4I7Xcr0bgMIhlaoXwGe3gG2HxpLR9G9E6qa0duWdk9WvASLaMpI2k3uztIoaWfFX6u8rriBRu7yk9fri/LhRb4zdgrmGtOgLwCAHxUAt3REqprHWC/6peAqFyfKxIaF/puPrCu5hRQW27p9zkTQJ++22BQzuYJ3gySiL1hhEbnGebZme6NpFtx9ox8AKVXHzlCc6esSNtHCpLjQsq3dt386NCVKDF0UioWnoeMPE0ZxYr5mTBj9KL6tcWlbXTWzEX0YZm5UViWxKF8A7CKW0K6VLkUXswA0lIh4H7EwxHa3Z45kyMyQ/Eb2WF29Tw==\",\n    \"revoked\": false\n}"
+							"body": "{\n    \"id\": \"adc56d7d-be5b-4630-8f11-62cf6c46f169\",\n    \"certificate\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEL0RDQ0FtU2dBd0lCQWdJQkNEQU5CZ2txaGtpRzl3MEJBUXdGQURCUU1Rc3dDUVlEVlFRR0V3SlZVekVMDQpNQWtHQTFVRUNCTUNVMFl4Q3pBSkJnTlZCQWNUQWxORE1RNHdEQVlEVlFRS0V3VkpUbFJGVERFWE1CVUdBMVVFDQpBeE1PUTAxVElGTnBaMjVwYm1jZ1EwRXdIaGNOTWpBd09USXhNVFl4TmpRMFdoY05NakV3T1RJeE1UWXhOalEwDQpXakFmTVIwd0d3WURWUVFERXhSSVZsTWdVMEZOVENCRFpYSjBhV1pwWTJGMFpUQ0NBYUl3RFFZSktvWklodmNODQpBUUVCQlFBRGdnR1BBRENDQVlvQ2dnR0JBTVA0d2VKbjlTQ1Noc0tBcGRSRXQxeVdtSTgxVS85Q3hyekNDUmtSDQpVNUtVS3FSN2ltOCtyN1dzMVBBdDFxQlk5K3lPWm1NQ0J1QkxlYWN6S281eUdmSmR3Q2Ixdk5sNWo2c1hBRzVGDQpLNUZQU3gvalhDMWNJeHFQalNLV1R4VmpiWXgwME1BeVJQT1hsTmlRSWtNZmk1bDFBdHkzRzZNL1pDMkI1cktODQp1OFRuWGhYOE5MaVBzWjZ4NTFmZWNLTXNSZ0NZbng3ZTdFR2tybnlDNVZUS25Pa2F3OFB3VWh3ajJjWE9LVkZaDQozSDV6cVZ0MHBnY0dha0M3TXByZStPMDZFTGYxZGs1UjBYa2Y1OUlWK2w0Rk4yRFJyLzRmTjI4Um5hWWhQdE1VDQpIdlRnVWtWV3pQa0p2SGR6RjNFWGxTcGlwWUZwd0c0MCtmWkFrM2RwUzRZak50bEVnSS95ek5JcGtUNHJtREU3DQpCRzNWMjNYSGJHWlhoUmcxMGk4dW42YkF6OE9NT3dib3p5SGhmU1d4RWRJQlFUTENZbmtWLytqTkpqVThHdHoxDQpIRDlQZ2RBS3FoWWpvSkdOeUtXanJFMjBjbVJ0Q04vL3JMc0hBdldFMjV0SC9KdzJzMk40NUtMOGZwYWc5RysrDQp4MFZ4T1hoT3cwVEFTeWhLRHVYNDI2TzlGd0lEQVFBQm94SXdFREFPQmdOVkhROEJBZjhFQkFNQ0JzQXdEUVlKDQpLb1pJaHZjTkFRRU1CUUFEZ2dHQkFLVFJHMVFVYlVvQzdJQnJNRDd2MExSaWNtRzgwWkkxTzdMaFZ4bWlEL0VMDQpXa05MK2k4WFp6aEdSb1IwTzNjV1hWQUhhNkJEb2hDSy9FSXlNNnVZMUVoaFpsVWVZT2E5eXk5UmpmVjNKSnNyDQpGY2NjRG95eGVrRVRtYWIvSzI3SnJWb25uVXRKdGJBN3lFdHZJSkNXWklhT3NFNnVXbFA5cU5jZk1pYk5mMDJwDQpWOVFqRitkTDQ1Q1ZBU3ZQdllxbm5aaTZUaUJMZDB3MGk1Yis5aDhvL2VNUVBjRzVIMWpXZ2dpZFpITllXRHE3DQpOSFZ3cjNDblNOVm9UZGhmelJBMlVrcEwwdmcrRUpiZEYwNnVGRENhRzBPQU16OWdOTzVCMDYreUhsQ0tINGpnDQpwWjZQb0Fwemx0cDVxZmFSSlg4Tzc2eDZuN0xjZC8xRnd4dmNLQXJtZ0RxM1JUemM2cnRwcTVXblRnL0xaUHBODQpFd2VveldWSktTT0M0K1ZmbC9MWks5eDUrdUE3cWx4WGxsUVlleXdrNWh2dmNDemVxbjdBa3dDTHNGeitQT0VtDQpSRjI3MnRZMWR6SjE5bU4vSG1jREExM1RTYkUzQU5kMlY1WjZOQTkvOUZGM2w5K2k4Z3RnQklDTkxXUExDQTkzDQpPejJJUTlxWEJXYTh2N21oMmxlem9BPT0NCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=\",\n    \"revoked\": false\n}"
 						}
 					]
 				},
 				{
-					"name": "Importing a PrivacyCA Certificate",
+					"name": "Import Tpm Identity Certificate",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{bearerToken}}"
+								"description": "(Required) Content-Type header",
+								"key": "Content-Type",
+								"value": "application/x-pem-file"
 							},
 							{
-								"description": "(Required)",
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/x-pem-file"
+								"description": "(Required) Accept header",
+								"key": "Accept",
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
 							"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/zCCAmegAwIBAgIRANE3MIDovA5c+tGhxlfdosswDQYJKoZIhvcNAQELBQAw\r\nIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTIxMTYx\r\nNjUwWhcNMjUwOTIxMTYxNjUwWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0\r\naWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBANdDpOyazYx9\r\n/O5AJOc7W+DkvueHacfDmGdw2yCJPDyZbqY75pJI0lt/WaJWywuirvALjKvqS9q8\r\n6BNcgyg38eTYWzoUQrOVL3Z/lNbsAZTQoK092fscOzaVjShju7MJuNvyMkhtXms8\r\n0VMkrlPPviADmTCukhnHhraJot0Ahb4CMia4CLKBfAnlZ3dOoWrJV46cORy14Lnj\r\nx0BkxSUYKadpBf7bVCA64DOGiWstbpPVlaPiXY8PIW6AFSeI2RCIgptQ84NCNp3Q\r\nhjauO5pbTI0VnvwXGiMsKFPztz80Vkm3OvcyBv9Yi7qbU7z+Lfs8m7olMiG5LhwV\r\naTEEWRC3kM+ppRjam6W6rQPwAHpzp6MdoY7+SiYlrhHeVywk5Mr4/JaSmAo6zAJT\r\ne+vVUs4lWlARDYMI4wOBL9rdViNGF7fTm0rfgqawfk/1r/97fSQUlnxP/b5JJfxE\r\nd5z7R5maBfu+rOYTaVictd+ALfsWaGDH1qcZo4FPk6EZ83jf+MMwBwIDAQABozAw\r\nLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAw\r\nDQYJKoZIhvcNAQELBQADggGBAEN6+PZgn2QSUfRp+LWNwsMoI+gUTX7TgDGhjt+/\r\nTJuCZZU/Y4YtCnzy6aca8cSSYncKznXuNByzwBp/WZ/PcConhyY/pSgfpdt+HYYK\r\n3N+vp35RlfiViKjFf1p/ZG6dS3qA2KwqvFXaNv71113s9mbW8D30OG38tHC4iN80\r\nVtvQq734WfrfSVAjjgY9H6dXMn9oRR7tf9Z4R4Q49iJDFOOUOy92yUkopqfPMooS\r\nCOQ7mrEJWSgTPBsMirX0X3IV1c06/uQV+mMz28iT3MTFydf+JEsQBALZLIGj2XMV\r\nwTQX0JkOSvBbMVujW+7bTZKJJwfXcgZGyMBlvTFm8WWem3AyvZxpvZKwQiXKkC/6\r\nURGHm4kKVjuK7DNRSs1uOTavzzhoZ3eWm0iYU1RjMtKcrjWUCsKUBSkNtgfIKDSg\r\n4ncIrBBI89WO+y8rsGW3ZiJEOYzxKIEdI1D0muEq27XxjtSHVPrnw3yOAdEYm9xt\r\nRd/xbkDMtn7S2B3m28u9DLseBA==\r\n-----END CERTIFICATE-----",
 							"options": {
-								"raw": {
-									"language": "text"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
-							"raw": "https://{{kbs}}:{{kbsPort}}/v1/tpm-identity-certificates",
+							"raw": "https://{{kbs}}:{{kbsPort}}/kbs/v1/tpm-identity-certificates",
 							"protocol": "https",
 							"host": [
 								"{{kbs}}"
 							],
 							"port": "{{kbsPort}}",
 							"path": [
+								"kbs",
 								"v1",
 								"tpm-identity-certificates"
 							]
 						},
-						"description": "Use OpenSSL to display the PrivacyCA certificate content:\r\n\r\n```shell\r\nopenssl x509 -in /etc/hvs/certs/trustedca/privacy-ca/privacy-ca-cert.pem\r\n```\r\n\r\nUse the PrivacyCA certificate output in the following POST call\r\nto the Key Broker"
+						"description": "</b>Imports a privacy-ca certificate.</b>\n<pre>\nThis method registers a HVS privacy-ca public key certificate to the service. During the\nSAML transfer key API call, a SAML report containing a host TPM AIK certificate is provided.\nIt is verified that a HVS privacy-ca certificate registered with this service has signed this\nAIK. The binding key certificate is retrieved from the SAML report and it verifies that a\nHVS privacy-ca certificate has signed this cert as well. The certificate object model includes\nan ID, base64 encoded certificate and a revoked status.\n</pre>\n\nUse OpenSSL to display the PrivacyCA certificate content:\n\n```shell\nopenssl x509 -in /etc/hvs/certs/trustedca/privacy-ca/privacy-ca-cert.pem\n```\n\nUse the PrivacyCA certificate output in the following POST call\nto the Key Broker"
 					},
 					"response": [
 						{
@@ -548,75 +537,53 @@
 								"method": "POST",
 								"header": [
 									{
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-										"key": "Authorization",
-										"type": "text",
-										"value": "Bearer {{bearerToken}}"
+										"description": "(Required) Content-Type header",
+										"key": "Content-Type",
+										"value": "application/x-pem-file"
 									},
 									{
-										"description": "(Required)",
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/x-pem-file"
+										"description": "(Required) Accept header",
+										"key": "Accept",
+										"value": "application/json"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/zCCAmegAwIBAgIRALBwwXSt6mmr39pU6OQdHucwDQYJKoZIhvcNAQELBQAw\r\nIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTE1MDgz\r\nNzIxWhcNMjUwOTE1MDgzNzIxWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0\r\naWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBALWv+RaKZDkb\r\nS8nqbiu2VcXbMJFSV7nndsPMsLnz0CM06rpdhjL5swRra7IcInNQQ7W0Nm1Z0sUZ\r\n5GvBKcie2PbNRh6qRcnf/QPa2dhIvWinloznMptOIEOWgUS62F0ILIp8IMBlW7Qr\r\nQ8rP2lA9UOZx8i77ZJI1TZaDHcWHVB9b2cuh0YmkQXMsVXDshlVzfqKEwUZNvyE/\r\nn9SSLlGSbtyGXntC0gLzE6QpJ01cR09uH93CPghkJ8utgQ8v3faB9H1J/eIzuIjC\r\nCwRsjFlKG0Xf9v2g5S83mxidkVnE9WbUnN9yMJt+f1DTAw/d+TajTsCLHQiubsGi\r\nmsAtKznn+y1hV3/H6Q0zqH9eZPyQaEWT3eXPidYgqqpyta2kaO+avkJ4JLsUFYHc\r\nFrqrgyzOuKVw9Di/gGTiBxsrUyTtw3pX69kQ/Slnmz7IDPzRDuQwrcBm9wyFn+oo\r\nCix71Y0OpAWZ48XZvQaFH9CFFmMZez32C2C5bkAxpoMVxy28VXJbSQIDAQABozAw\r\nLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAw\r\nDQYJKoZIhvcNAQELBQADggGBAFzblkhKgERXAUg6PQ6889pUEwZvDe72QRyOBVXo\r\nzs0MmizLDiQi4C64uDEZAyOXyppP2DawOvbgRxEI6LwbrPojS7kmTmXLrLDn4BHL\r\n2Ghvx7mTOofQEkkGoWMN/IpVCNQq5e8pok1fwqIK+g1g3fbLOB0hbJU0QXADCw1N\r\naf3tyvhSwfbaHS8vUoPDguRn54t5r7A/PzWAluN2V8uGf8XPQax4ZwMj4ENyGROa\r\nRf870rfTknaitukTxg7Tu1RSgdl3KP1Uvc9b3eFUXadImKvauPQfh43XV8MFXIDG\r\ng0cYdfbjLtP51n/gkZMHC6HkI08HNKHVEVkI5MA90iGcJcsVp6pFaGQr5Qh3NiHO\r\nFly0LjGeTDWKMFzEHwCpuPbdMELwZJA8FvlkqOH/tb4oui4JhCGJflcQUtVBJ3/F\r\neB8qbm6HqksU3XGSRrcK8CnIpzzdRkpSnqoZFvL1tiELfujyNLV9Z7mpMpwsPDFU\r\nqW8YCpIWHGHsWlloUHpNuW89pA==\r\n-----END CERTIFICATE-----",
-									"options": {
-										"raw": {
-											"language": "text"
-										}
-									}
+									"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/zCCAmegAwIBAgIRANE3MIDovA5c+tGhxlfdosswDQYJKoZIhvcNAQELBQAw\r\nIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTIxMTYx\r\nNjUwWhcNMjUwOTIxMTYxNjUwWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0\r\naWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBANdDpOyazYx9\r\n/O5AJOc7W+DkvueHacfDmGdw2yCJPDyZbqY75pJI0lt/WaJWywuirvALjKvqS9q8\r\n6BNcgyg38eTYWzoUQrOVL3Z/lNbsAZTQoK092fscOzaVjShju7MJuNvyMkhtXms8\r\n0VMkrlPPviADmTCukhnHhraJot0Ahb4CMia4CLKBfAnlZ3dOoWrJV46cORy14Lnj\r\nx0BkxSUYKadpBf7bVCA64DOGiWstbpPVlaPiXY8PIW6AFSeI2RCIgptQ84NCNp3Q\r\nhjauO5pbTI0VnvwXGiMsKFPztz80Vkm3OvcyBv9Yi7qbU7z+Lfs8m7olMiG5LhwV\r\naTEEWRC3kM+ppRjam6W6rQPwAHpzp6MdoY7+SiYlrhHeVywk5Mr4/JaSmAo6zAJT\r\ne+vVUs4lWlARDYMI4wOBL9rdViNGF7fTm0rfgqawfk/1r/97fSQUlnxP/b5JJfxE\r\nd5z7R5maBfu+rOYTaVictd+ALfsWaGDH1qcZo4FPk6EZ83jf+MMwBwIDAQABozAw\r\nLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAw\r\nDQYJKoZIhvcNAQELBQADggGBAEN6+PZgn2QSUfRp+LWNwsMoI+gUTX7TgDGhjt+/\r\nTJuCZZU/Y4YtCnzy6aca8cSSYncKznXuNByzwBp/WZ/PcConhyY/pSgfpdt+HYYK\r\n3N+vp35RlfiViKjFf1p/ZG6dS3qA2KwqvFXaNv71113s9mbW8D30OG38tHC4iN80\r\nVtvQq734WfrfSVAjjgY9H6dXMn9oRR7tf9Z4R4Q49iJDFOOUOy92yUkopqfPMooS\r\nCOQ7mrEJWSgTPBsMirX0X3IV1c06/uQV+mMz28iT3MTFydf+JEsQBALZLIGj2XMV\r\nwTQX0JkOSvBbMVujW+7bTZKJJwfXcgZGyMBlvTFm8WWem3AyvZxpvZKwQiXKkC/6\r\nURGHm4kKVjuK7DNRSs1uOTavzzhoZ3eWm0iYU1RjMtKcrjWUCsKUBSkNtgfIKDSg\r\n4ncIrBBI89WO+y8rsGW3ZiJEOYzxKIEdI1D0muEq27XxjtSHVPrnw3yOAdEYm9xt\r\nRd/xbkDMtn7S2B3m28u9DLseBA==\r\n-----END CERTIFICATE-----"
 								},
 								"url": {
-									"raw": "https://{{kbs}}:{{kbs_port}}/v1/tpm-identity-certificates",
+									"raw": "https://{{kbs}}:{{kbsPort}}/kbs/v1/tpm-identity-certificates",
 									"protocol": "https",
 									"host": [
 										"{{kbs}}"
 									],
-									"port": "{{kbs_port}}",
+									"port": "{{kbsPort}}",
 									"path": [
+										"kbs",
 										"v1",
 										"tpm-identity-certificates"
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
+							"status": "Created",
+							"code": 201,
 							"_postman_previewlanguage": "json",
 							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 15 Sep 2020 10:38:31 GMT"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "JSESSIONID=node01onfmm5pmvh7e16zf4oglvfoed3.node0; Path=/; Secure"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Mon, 14-Sep-2020 10:38:31 GMT"
-								},
-								{
-									"key": "Expires",
-									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
-								},
 								{
 									"key": "Content-Type",
 									"value": "application/json"
 								},
 								{
-									"key": "Content-Security-Policy",
-									"value": "default-src 10.105.168.90; form-action 10.105.168.90; frame-ancestors 10.105.168.90; plugin-types application/pdf"
+									"key": "Date",
+									"value": "Wed, 11 Nov 2020 09:53:35 GMT"
 								},
 								{
 									"key": "Content-Length",
-									"value": "1450"
+									"value": "2039"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": \"8df4f3e4-6a24-4f90-91ec-67267e6b1330\",\n    \"certificate\": \"MIID/zCCAmegAwIBAgIRALBwwXSt6mmr39pU6OQdHucwDQYJKoZIhvcNAQELBQAwIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTE1MDgzNzIxWhcNMjUwOTE1MDgzNzIxWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0aWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBALWv+RaKZDkbS8nqbiu2VcXbMJFSV7nndsPMsLnz0CM06rpdhjL5swRra7IcInNQQ7W0Nm1Z0sUZ5GvBKcie2PbNRh6qRcnf/QPa2dhIvWinloznMptOIEOWgUS62F0ILIp8IMBlW7QrQ8rP2lA9UOZx8i77ZJI1TZaDHcWHVB9b2cuh0YmkQXMsVXDshlVzfqKEwUZNvyE/n9SSLlGSbtyGXntC0gLzE6QpJ01cR09uH93CPghkJ8utgQ8v3faB9H1J/eIzuIjCCwRsjFlKG0Xf9v2g5S83mxidkVnE9WbUnN9yMJt+f1DTAw/d+TajTsCLHQiubsGimsAtKznn+y1hV3/H6Q0zqH9eZPyQaEWT3eXPidYgqqpyta2kaO+avkJ4JLsUFYHcFrqrgyzOuKVw9Di/gGTiBxsrUyTtw3pX69kQ/Slnmz7IDPzRDuQwrcBm9wyFn+ooCix71Y0OpAWZ48XZvQaFH9CFFmMZez32C2C5bkAxpoMVxy28VXJbSQIDAQABozAwLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAwDQYJKoZIhvcNAQELBQADggGBAFzblkhKgERXAUg6PQ6889pUEwZvDe72QRyOBVXozs0MmizLDiQi4C64uDEZAyOXyppP2DawOvbgRxEI6LwbrPojS7kmTmXLrLDn4BHL2Ghvx7mTOofQEkkGoWMN/IpVCNQq5e8pok1fwqIK+g1g3fbLOB0hbJU0QXADCw1Naf3tyvhSwfbaHS8vUoPDguRn54t5r7A/PzWAluN2V8uGf8XPQax4ZwMj4ENyGROaRf870rfTknaitukTxg7Tu1RSgdl3KP1Uvc9b3eFUXadImKvauPQfh43XV8MFXIDGg0cYdfbjLtP51n/gkZMHC6HkI08HNKHVEVkI5MA90iGcJcsVp6pFaGQr5Qh3NiHOFly0LjGeTDWKMFzEHwCpuPbdMELwZJA8FvlkqOH/tb4oui4JhCGJflcQUtVBJ3/FeB8qbm6HqksU3XGSRrcK8CnIpzzdRkpSnqoZFvL1tiELfujyNLV9Z7mpMpwsPDFUqW8YCpIWHGHsWlloUHpNuW89pA==\",\n    \"revoked\": false\n}"
+							"body": "{\n    \"id\": \"b368f95e-ed13-4d10-8016-d248f9ce94a1\",\n    \"certificate\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEL3pDQ0FtZWdBd0lCQWdJUkFORTNNSURvdkE1Yyt0R2h4bGZkb3Nzd0RRWUpLb1pJaHZjTkFRRUxCUUF3DQpJakVnTUI0R0ExVUVBeE1YU0ZaVElGQnlhWFpoWTNrZ1EyVnlkR2xtYVdOaGRHVXdIaGNOTWpBd09USXhNVFl4DQpOalV3V2hjTk1qVXdPVEl4TVRZeE5qVXdXakFpTVNBd0hnWURWUVFERXhkSVZsTWdVSEpwZG1GamVTQkRaWEowDQphV1pwWTJGMFpUQ0NBYUl3RFFZSktvWklodmNOQVFFQkJRQURnZ0dQQURDQ0FZb0NnZ0dCQU5kRHBPeWF6WXg5DQovTzVBSk9jN1crRGt2dWVIYWNmRG1HZHcyeUNKUER5WmJxWTc1cEpJMGx0L1dhSld5d3VpcnZBTGpLdnFTOXE4DQo2Qk5jZ3lnMzhlVFlXem9VUXJPVkwzWi9sTmJzQVpUUW9LMDkyZnNjT3phVmpTaGp1N01KdU52eU1raHRYbXM4DQowVk1rcmxQUHZpQURtVEN1a2huSGhyYUpvdDBBaGI0Q01pYTRDTEtCZkFubFozZE9vV3JKVjQ2Y09SeTE0TG5qDQp4MEJreFNVWUthZHBCZjdiVkNBNjRET0dpV3N0YnBQVmxhUGlYWThQSVc2QUZTZUkyUkNJZ3B0UTg0TkNOcDNRDQpoamF1TzVwYlRJMFZudndYR2lNc0tGUHp0ejgwVmttM092Y3lCdjlZaTdxYlU3eitMZnM4bTdvbE1pRzVMaHdWDQphVEVFV1JDM2tNK3BwUmphbTZXNnJRUHdBSHB6cDZNZG9ZNytTaVlscmhIZVZ5d2s1TXI0L0phU21BbzZ6QUpUDQplK3ZWVXM0bFdsQVJEWU1JNHdPQkw5cmRWaU5HRjdmVG0wcmZncWF3ZmsvMXIvOTdmU1FVbG54UC9iNUpKZnhFDQpkNXo3UjVtYUJmdStyT1lUYVZpY3RkK0FMZnNXYUdESDFxY1pvNEZQazZFWjgzamYrTU13QndJREFRQUJvekF3DQpMakFPQmdOVkhROEJBZjhFQkFNQ0FRWXdEd1lEVlIwVEFRSC9CQVV3QXdFQi96QUxCZ05WSFJFRUJEQUNnZ0F3DQpEUVlKS29aSWh2Y05BUUVMQlFBRGdnR0JBRU42K1BaZ24yUVNVZlJwK0xXTndzTW9JK2dVVFg3VGdER2hqdCsvDQpUSnVDWlpVL1k0WXRDbnp5NmFjYThjU1NZbmNLem5YdU5CeXp3QnAvV1ovUGNDb25oeVkvcFNnZnBkdCtIWVlLDQozTit2cDM1UmxmaVZpS2pGZjFwL1pHNmRTM3FBMkt3cXZGWGFOdjcxMTEzczltYlc4RDMwT0czOHRIQzRpTjgwDQpWdHZRcTczNFdmcmZTVkFqamdZOUg2ZFhNbjlvUlI3dGY5WjRSNFE0OWlKREZPT1VPeTkyeVVrb3BxZlBNb29TDQpDT1E3bXJFSldTZ1RQQnNNaXJYMFgzSVYxYzA2L3VRVittTXoyOGlUM01URnlkZitKRXNRQkFMWkxJR2oyWE1WDQp3VFFYMEprT1N2QmJNVnVqVys3YlRaS0pKd2ZYY2daR3lNQmx2VEZtOFdXZW0zQXl2WnhwdlpLd1FpWEtrQy82DQpVUkdIbTRrS1ZqdUs3RE5SU3MxdU9UYXZ6emhvWjNlV20waVlVMVJqTXRLY3JqV1VDc0tVQlNrTnRnZklLRFNnDQo0bmNJckJCSTg5V08reThyc0dXM1ppSkVPWXp4S0lFZEkxRDBtdUVxMjdYeGp0U0hWUHJudzN5T0FkRVltOXh0DQpSZC94YmtETXRuN1MyQjNtMjh1OURMc2VCQT09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t\",\n    \"revoked\": false\n}"
 						}
 					]
 				}
@@ -632,7 +599,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c4d0cb3a-d654-435a-9433-5a2e695ef312",
+						"id": "ff3d149f-c06c-4e18-a669-4dc08d794ae6",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -642,7 +609,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5ef49e43-c99e-46f9-9482-9d257d0b38bc",
+						"id": "035b47b0-9f80-434b-a8cc-72d98ad875a8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -660,7 +627,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "4c71c223-c889-4a39-9378-ab0e2ee5fee9",
+						"id": "13d15afb-190f-44de-9cfe-6017cd0f71dd",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -670,7 +637,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "cbcbfba2-7693-4e2c-be12-467842755e51",
+						"id": "834e57bc-9ff0-4e98-8768-fd42433d678b",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -688,7 +655,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "6e23601b-0bc4-4506-848c-8a6eb84dc8b9",
+						"id": "7e765574-875c-41b1-b796-6f87f1a1cec4",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -698,7 +665,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "db97677a-6d1f-4e10-aebc-d25e389bceb5",
+						"id": "fe72de32-19de-4113-99ab-992402494c1e",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -713,7 +680,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "769632e3-df51-4b50-a258-913be7f252d6",
+				"id": "5b8c552f-b823-4b46-9e43-f07d7a08c174",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -723,7 +690,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "999947a0-77dc-42b2-8245-005f0809e122",
+				"id": "163e1d42-1ee3-4a85-a933-1e03dbfccd45",
 				"type": "text/javascript",
 				"exec": [
 					""
