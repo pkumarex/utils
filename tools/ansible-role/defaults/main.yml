@@ -206,7 +206,7 @@ skopeo_installer_file_name: skopeo
 # ----------------------------------------- DOCKER ----------------------------------------------------#
 
 # The docker version supported by Intel® SecL-DC for Launch Time Protection - Container Confidentiality with Docker
-docker_version: "19.03.5"
+docker_version: "19.03.13"
 
 
 # ---------------------------------------- WORKLOAD POLICY MANAGER ------------------------------------ #
