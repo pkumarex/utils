@@ -34,20 +34,19 @@ cat > $tmpdir/aasadmin.json << EOF
 EOF
 
 #Get the AAS Admin JWT Token
-output=`curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "ACCEPT" --data @$tmpdir/aasadmin.json -w "%{http_code}" $aas_url/token`
+output=`curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "$ACCEPT" --data @$tmpdir/aasadmin.json -w "%{http_code}" $aas_url/token`
 Bearer_token=`echo $output | rev | cut -c 4- | rev`
 
 if [ "$OS" == "rhel" ]
 then
 # RHEL
 dnf install -qy jq
-
 elif [ "$OS" == "ubuntu" ]
 then
 # Ubuntu
 apt install -qy jq
-
 fi
+
 
 # This routined checks if skc_library user exists and reurns user id
 # it creates a new user if one does not exist
@@ -104,10 +103,13 @@ cat > $tmpdir/keytransferroles.json << EOF
 EOF
 
 	#check if CertApprover role already exists
-	curl $CURL_OPTS -H "Authorization: Bearer ${Bearer_token}" -o $tmpdir/role_response.json -w "%{http_code}" $aas_url/roles?name=CertApprover > $tmpdir/role_response.status
+	curl $CURL_OPTS -H "Authorization: Bearer ${Bearer_token}" -o $tmpdir/role_response.json -w "%{http_code}" $aas_url/roles?contextContains=CN=$SKC_USER > $tmpdir/role_response.status
 
-	cms_role_id=$(jq --arg USER $SKC_USER -r '.[] | select ( .context | ( contains("TLS-Client") and contains($USER)))' < $tmpdir/role_response.json | jq -r '.role_id')
-	if [ -z $cms_role_id ]; then
+	len=$(jq '. | length' < $tmpdir/role_response.json)
+        if [ $len -ne 0 ]; then
+                cms_role_id=$(jq -r '.[0] .role_id' < $tmpdir/role_response.json)
+                echo $cms_role_id
+        else
 		curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "Authorization: Bearer ${Bearer_token}" --data @$tmpdir/certroles.json -o $tmpdir/role_response.json -w "%{http_code}" $aas_url/roles > $tmpdir/role_response-status.json
 
 		local status=$(cat $tmpdir/role_response-status.json)

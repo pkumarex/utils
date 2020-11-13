@@ -26,7 +26,7 @@ build_skc_library()
 	\cp -pf skc_library_v*.bin $SKCLIB_BIN_DIR
 	popd
 if [ "$OS" == "rhel" ]
-then	
+then
 	\cp -pf /usr/lib64/engines-1.1/pkcs11.so $SKCLIB_BIN_DIR
 	\cp -pf /usr/lib64/libp11.so.3.4.3 $SKCLIB_BIN_DIR
 elif [ "$OS" == "ubuntu" ]

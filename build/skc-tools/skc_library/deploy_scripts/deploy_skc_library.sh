@@ -52,13 +52,6 @@ then
 	yum-config-manager --add-repo file://$PWD/sgx_rpm_local_repo || exit 1
 	dnf install -y --nogpgcheck libsgx-launch libsgx-uae-service libsgx-urts libsgx-ae-qve libsgx-dcap-ql libsgx-dcap-ql-devel libsgx-dcap-default-qpl-devel libsgx-dcap-default-qpl || exit 1
 	rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
-
-	sed -i "s|PCCS_URL=.*|PCCS_URL=https://$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g" /etc/sgx_default_qcnl.conf
-	#Update SCS root CA Certificate in SGX Compute node certificate store in order for  QPL to verify SCS
-	curl -k -H 'Accept:application/x-pem-file' https://$CSP_CMS_IP:$CSP_CMS_PORT/cms/v1/ca-certificates > /etc/pki/ca-trust/source/anchors/skc-lib-cms-ca.cert
-	# 'update-ca-trust' command is specific to RHEL OS, to update the system-wide trust store configuration.
-	update-ca-trust
-
 elif [ "$OS" == "ubuntu" ]
 then
 # UBUNTU
@@ -67,11 +60,12 @@ then
        apt update
        apt install -y libsgx-launch libsgx-uae-service libsgx-urts || exit 1
        apt install -y libsgx-ae-qve libsgx-dcap-ql libsgx-dcap-ql-dev libsgx-dcap-default-qpl-dev libsgx-dcap-default-qpl || exit 1
-
-       sed -i "s|PCCS_URL=.*|PCCS_URL=https://$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g" /etc/sgx_default_qcnl.conf
-       sed -i "s|USE_SECURE_CERT=.*|USE_SECURE_CERT=FALSE|g" /etc/sgx_default_qcnl.conf
 fi
-
+	sed -i "s|PCCS_URL=.*|PCCS_URL=https://$SCS_IP:$SCS_PORT/scs/sgx/certification/v1/|g" /etc/sgx_default_qcnl.conf
+	#Update SCS root CA Certificate in SGX Compute node certificate store in order for  QPL to verify SCS
+	curl -k -H 'Accept:application/x-pem-file' https://$CSP_CMS_IP:$CSP_CMS_PORT/cms/v1/ca-certificates > /etc/pki/ca-trust/source/anchors/skc-lib-cms-ca.cert
+	# 'update-ca-trust' command is specific to RHEL OS, to update the system-wide trust store configuration.
+	update-ca-trust
 }
 
 install_sgxssl()
