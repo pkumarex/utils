@@ -510,7 +510,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/jCCAmagAwIBAgIQaywjb049veHFaF1LglnoPTANBgkqhkiG9w0BAQsFADAi\r\nMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0aWZpY2F0ZTAeFw0yMDExMTAwNjA4\r\nMzVaFw0yNTExMTAwNjA4MzVaMCIxIDAeBgNVBAMTF0hWUyBQcml2YWN5IENlcnRp\r\nZmljYXRlMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAtubJ824Z04I2\r\nRad1Y0FW9qySBgI1daoG9H6rSPU00Vu5gsiAlMVNMuqNBE9FFJrCTcD0GsPHdsPw\r\neKTVRQl4us9XvlqbjK2J6d3XQhcQ6ypokeZSFyO+XhsfujQDK2zXcnUOn26Za06z\r\nH23Umh37Pa8zw8g6IXT1Nt1gWDGgXp0QMLkD7Xc3vl8MD1A596G0i+hUmau0XlDA\r\nv03jSWCkoDcUnQ0VKvA6qe26t+3MuU++eNMpaijqSgzZX5x41U3Cl8urkT0tzueu\r\nVQVywLZNoEjiFxAiZmnKJp8C5QGr+a6gr9d/qF9k4gJdnz0pGZwpEhS79E+7bPpd\r\nltLdXfBpXelOYGqQnyVzLeRwJPzU5TlksDUAYTX4QMwSOiwJJFBaC0f8LRdPst9q\r\npTIOx6hPjJTLkizscTZTiF9SKoMODwCCCVf8mHzT94WPd/37mmysA+90pyrihrnY\r\nMZzhD4c0i6SRLER+Dc+o2phkjXtMhHBVrGM2dVvaoN9gk2PBsQGfAgMBAAGjMDAu\r\nMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MAsGA1UdEQQEMAKCADAN\r\nBgkqhkiG9w0BAQsFAAOCAYEAVfyDjpNPbJ9he8CO4h/uQCQbq2TNoUQeAGXWTNwB\r\nmP1AiICX0OFEdZapxwXrrj53RihauNJr33MVrVs3hh/ThhVPNI3z5k2MiRmJL+ID\r\nXDorzAWoR8OMDZOskLYhxT+9qwk/HBpq5stc7D2AzuiWyZCpJiERMZeksi4XgTlC\r\nf8MDn8hFXIjnY1Ap9HNt1A+eLec/DJdlRiBgZtKDGDAQDNKd3Jg99zR96E6rRHC4\r\n2cT+lnLO0YzCn53I2eEuDx18AnheWF+1hZHvQ8TTCcSCKk1la1hFpFtbuDCJZCHZ\r\nweV+TT4qgWqy69uvs086aSwBGqtr1/kf6JecxTRm4hTRPc8SLhvnyLP/bE0062kC\r\n/lNQ5/UEYJgmy+bD885BGq+pnoCbTme7hireddksRB1MgwdRhfxrvjuFhU6PExaN\r\nafyOyr1pBQNCoxJrvJmQdHmbQyTrtedEgWaDc/9SBHSMTaQpbiIwpgfPhrSN8BpO\r\nqufMEA1q/Kqzr9et4n1FTa7s\r\n-----END CERTIFICATE-----",
+							"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/zCCAmegAwIBAgIRANE3MIDovA5c+tGhxlfdosswDQYJKoZIhvcNAQELBQAw\r\nIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTIxMTYx\r\nNjUwWhcNMjUwOTIxMTYxNjUwWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0\r\naWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBANdDpOyazYx9\r\n/O5AJOc7W+DkvueHacfDmGdw2yCJPDyZbqY75pJI0lt/WaJWywuirvALjKvqS9q8\r\n6BNcgyg38eTYWzoUQrOVL3Z/lNbsAZTQoK092fscOzaVjShju7MJuNvyMkhtXms8\r\n0VMkrlPPviADmTCukhnHhraJot0Ahb4CMia4CLKBfAnlZ3dOoWrJV46cORy14Lnj\r\nx0BkxSUYKadpBf7bVCA64DOGiWstbpPVlaPiXY8PIW6AFSeI2RCIgptQ84NCNp3Q\r\nhjauO5pbTI0VnvwXGiMsKFPztz80Vkm3OvcyBv9Yi7qbU7z+Lfs8m7olMiG5LhwV\r\naTEEWRC3kM+ppRjam6W6rQPwAHpzp6MdoY7+SiYlrhHeVywk5Mr4/JaSmAo6zAJT\r\ne+vVUs4lWlARDYMI4wOBL9rdViNGF7fTm0rfgqawfk/1r/97fSQUlnxP/b5JJfxE\r\nd5z7R5maBfu+rOYTaVictd+ALfsWaGDH1qcZo4FPk6EZ83jf+MMwBwIDAQABozAw\r\nLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAw\r\nDQYJKoZIhvcNAQELBQADggGBAEN6+PZgn2QSUfRp+LWNwsMoI+gUTX7TgDGhjt+/\r\nTJuCZZU/Y4YtCnzy6aca8cSSYncKznXuNByzwBp/WZ/PcConhyY/pSgfpdt+HYYK\r\n3N+vp35RlfiViKjFf1p/ZG6dS3qA2KwqvFXaNv71113s9mbW8D30OG38tHC4iN80\r\nVtvQq734WfrfSVAjjgY9H6dXMn9oRR7tf9Z4R4Q49iJDFOOUOy92yUkopqfPMooS\r\nCOQ7mrEJWSgTPBsMirX0X3IV1c06/uQV+mMz28iT3MTFydf+JEsQBALZLIGj2XMV\r\nwTQX0JkOSvBbMVujW+7bTZKJJwfXcgZGyMBlvTFm8WWem3AyvZxpvZKwQiXKkC/6\r\nURGHm4kKVjuK7DNRSs1uOTavzzhoZ3eWm0iYU1RjMtKcrjWUCsKUBSkNtgfIKDSg\r\n4ncIrBBI89WO+y8rsGW3ZiJEOYzxKIEdI1D0muEq27XxjtSHVPrnw3yOAdEYm9xt\r\nRd/xbkDMtn7S2B3m28u9DLseBA==\r\n-----END CERTIFICATE-----",
 							"options": {
 								"raw": {}
 							}
@@ -530,7 +530,62 @@
 						},
 						"description": "</b>Imports a privacy-ca certificate.</b>\n<pre>\nThis method registers a HVS privacy-ca public key certificate to the service. During the\nSAML transfer key API call, a SAML report containing a host TPM AIK certificate is provided.\nIt is verified that a HVS privacy-ca certificate registered with this service has signed this\nAIK. The binding key certificate is retrieved from the SAML report and it verifies that a\nHVS privacy-ca certificate has signed this cert as well. The certificate object model includes\nan ID, base64 encoded certificate and a revoked status.\n</pre>\n\nUse OpenSSL to display the PrivacyCA certificate content:\n\n```shell\nopenssl x509 -in /etc/hvs/certs/trustedca/privacy-ca/privacy-ca-cert.pem\n```\n\nUse the PrivacyCA certificate output in the following POST call\nto the Key Broker"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) Content-Type header",
+										"key": "Content-Type",
+										"value": "application/x-pem-file"
+									},
+									{
+										"description": "(Required) Accept header",
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "-----BEGIN CERTIFICATE-----\r\nMIID/zCCAmegAwIBAgIRANE3MIDovA5c+tGhxlfdosswDQYJKoZIhvcNAQELBQAw\r\nIjEgMB4GA1UEAxMXSFZTIFByaXZhY3kgQ2VydGlmaWNhdGUwHhcNMjAwOTIxMTYx\r\nNjUwWhcNMjUwOTIxMTYxNjUwWjAiMSAwHgYDVQQDExdIVlMgUHJpdmFjeSBDZXJ0\r\naWZpY2F0ZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBANdDpOyazYx9\r\n/O5AJOc7W+DkvueHacfDmGdw2yCJPDyZbqY75pJI0lt/WaJWywuirvALjKvqS9q8\r\n6BNcgyg38eTYWzoUQrOVL3Z/lNbsAZTQoK092fscOzaVjShju7MJuNvyMkhtXms8\r\n0VMkrlPPviADmTCukhnHhraJot0Ahb4CMia4CLKBfAnlZ3dOoWrJV46cORy14Lnj\r\nx0BkxSUYKadpBf7bVCA64DOGiWstbpPVlaPiXY8PIW6AFSeI2RCIgptQ84NCNp3Q\r\nhjauO5pbTI0VnvwXGiMsKFPztz80Vkm3OvcyBv9Yi7qbU7z+Lfs8m7olMiG5LhwV\r\naTEEWRC3kM+ppRjam6W6rQPwAHpzp6MdoY7+SiYlrhHeVywk5Mr4/JaSmAo6zAJT\r\ne+vVUs4lWlARDYMI4wOBL9rdViNGF7fTm0rfgqawfk/1r/97fSQUlnxP/b5JJfxE\r\nd5z7R5maBfu+rOYTaVictd+ALfsWaGDH1qcZo4FPk6EZ83jf+MMwBwIDAQABozAw\r\nLjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zALBgNVHREEBDACggAw\r\nDQYJKoZIhvcNAQELBQADggGBAEN6+PZgn2QSUfRp+LWNwsMoI+gUTX7TgDGhjt+/\r\nTJuCZZU/Y4YtCnzy6aca8cSSYncKznXuNByzwBp/WZ/PcConhyY/pSgfpdt+HYYK\r\n3N+vp35RlfiViKjFf1p/ZG6dS3qA2KwqvFXaNv71113s9mbW8D30OG38tHC4iN80\r\nVtvQq734WfrfSVAjjgY9H6dXMn9oRR7tf9Z4R4Q49iJDFOOUOy92yUkopqfPMooS\r\nCOQ7mrEJWSgTPBsMirX0X3IV1c06/uQV+mMz28iT3MTFydf+JEsQBALZLIGj2XMV\r\nwTQX0JkOSvBbMVujW+7bTZKJJwfXcgZGyMBlvTFm8WWem3AyvZxpvZKwQiXKkC/6\r\nURGHm4kKVjuK7DNRSs1uOTavzzhoZ3eWm0iYU1RjMtKcrjWUCsKUBSkNtgfIKDSg\r\n4ncIrBBI89WO+y8rsGW3ZiJEOYzxKIEdI1D0muEq27XxjtSHVPrnw3yOAdEYm9xt\r\nRd/xbkDMtn7S2B3m28u9DLseBA==\r\n-----END CERTIFICATE-----"
+								},
+								"url": {
+									"raw": "https://{{kbs}}:{{kbsPort}}/kbs/v1/tpm-identity-certificates",
+									"protocol": "https",
+									"host": [
+										"{{kbs}}"
+									],
+									"port": "{{kbsPort}}",
+									"path": [
+										"kbs",
+										"v1",
+										"tpm-identity-certificates"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 11 Nov 2020 09:53:35 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2039"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"b368f95e-ed13-4d10-8016-d248f9ce94a1\",\n    \"certificate\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEL3pDQ0FtZWdBd0lCQWdJUkFORTNNSURvdkE1Yyt0R2h4bGZkb3Nzd0RRWUpLb1pJaHZjTkFRRUxCUUF3DQpJakVnTUI0R0ExVUVBeE1YU0ZaVElGQnlhWFpoWTNrZ1EyVnlkR2xtYVdOaGRHVXdIaGNOTWpBd09USXhNVFl4DQpOalV3V2hjTk1qVXdPVEl4TVRZeE5qVXdXakFpTVNBd0hnWURWUVFERXhkSVZsTWdVSEpwZG1GamVTQkRaWEowDQphV1pwWTJGMFpUQ0NBYUl3RFFZSktvWklodmNOQVFFQkJRQURnZ0dQQURDQ0FZb0NnZ0dCQU5kRHBPeWF6WXg5DQovTzVBSk9jN1crRGt2dWVIYWNmRG1HZHcyeUNKUER5WmJxWTc1cEpJMGx0L1dhSld5d3VpcnZBTGpLdnFTOXE4DQo2Qk5jZ3lnMzhlVFlXem9VUXJPVkwzWi9sTmJzQVpUUW9LMDkyZnNjT3phVmpTaGp1N01KdU52eU1raHRYbXM4DQowVk1rcmxQUHZpQURtVEN1a2huSGhyYUpvdDBBaGI0Q01pYTRDTEtCZkFubFozZE9vV3JKVjQ2Y09SeTE0TG5qDQp4MEJreFNVWUthZHBCZjdiVkNBNjRET0dpV3N0YnBQVmxhUGlYWThQSVc2QUZTZUkyUkNJZ3B0UTg0TkNOcDNRDQpoamF1TzVwYlRJMFZudndYR2lNc0tGUHp0ejgwVmttM092Y3lCdjlZaTdxYlU3eitMZnM4bTdvbE1pRzVMaHdWDQphVEVFV1JDM2tNK3BwUmphbTZXNnJRUHdBSHB6cDZNZG9ZNytTaVlscmhIZVZ5d2s1TXI0L0phU21BbzZ6QUpUDQplK3ZWVXM0bFdsQVJEWU1JNHdPQkw5cmRWaU5HRjdmVG0wcmZncWF3ZmsvMXIvOTdmU1FVbG54UC9iNUpKZnhFDQpkNXo3UjVtYUJmdStyT1lUYVZpY3RkK0FMZnNXYUdESDFxY1pvNEZQazZFWjgzamYrTU13QndJREFRQUJvekF3DQpMakFPQmdOVkhROEJBZjhFQkFNQ0FRWXdEd1lEVlIwVEFRSC9CQVV3QXdFQi96QUxCZ05WSFJFRUJEQUNnZ0F3DQpEUVlKS29aSWh2Y05BUUVMQlFBRGdnR0JBRU42K1BaZ24yUVNVZlJwK0xXTndzTW9JK2dVVFg3VGdER2hqdCsvDQpUSnVDWlpVL1k0WXRDbnp5NmFjYThjU1NZbmNLem5YdU5CeXp3QnAvV1ovUGNDb25oeVkvcFNnZnBkdCtIWVlLDQozTit2cDM1UmxmaVZpS2pGZjFwL1pHNmRTM3FBMkt3cXZGWGFOdjcxMTEzczltYlc4RDMwT0czOHRIQzRpTjgwDQpWdHZRcTczNFdmcmZTVkFqamdZOUg2ZFhNbjlvUlI3dGY5WjRSNFE0OWlKREZPT1VPeTkyeVVrb3BxZlBNb29TDQpDT1E3bXJFSldTZ1RQQnNNaXJYMFgzSVYxYzA2L3VRVittTXoyOGlUM01URnlkZitKRXNRQkFMWkxJR2oyWE1WDQp3VFFYMEprT1N2QmJNVnVqVys3YlRaS0pKd2ZYY2daR3lNQmx2VEZtOFdXZW0zQXl2WnhwdlpLd1FpWEtrQy82DQpVUkdIbTRrS1ZqdUs3RE5SU3MxdU9UYXZ6emhvWjNlV20waVlVMVJqTXRLY3JqV1VDc0tVQlNrTnRnZklLRFNnDQo0bmNJckJCSTg5V08reThyc0dXM1ppSkVPWXp4S0lFZEkxRDBtdUVxMjdYeGp0U0hWUHJudzN5T0FkRVltOXh0DQpSZC94YmtETXRuN1MyQjNtMjh1OURMc2VCQT09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t\",\n    \"revoked\": false\n}"
+						}
+					]
 				}
 			],
 			"description": "After installation, the Key Broker must import the SAML and PrivacyCA certificates from any Verification\r\nServices it will trust. This provides the Key Broker a way to ensure that only attestations that come from\r\n\"known\" Verification Service. The SAML and PrivacyCA certificates needed can be found on the Verification\r\nService.",
