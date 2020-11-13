@@ -1,0 +1,21 @@
+TARGETS = trust-agent
+
+all: clean $(TARGETS) intel-secl
+	mkdir binaries
+	cp intel-secl/deployments/installer/*.bin binaries/
+	cp intel-secl/deployments/installer/*.sh binaries/
+	cp trust-agent/out/*.bin binaries/
+
+clean: $(patsubst %, %-clean, $(TARGETS))
+	rm -rf binaries/
+
+intel-secl:
+	cd $@ && make cms-installer && make aas-installer && make hvs-installer && make ihub-installer
+
+$(TARGETS):
+	cd $@ && make installer
+
+%-clean:
+	cd $* && make clean
+
+.PHONY: all clean $(TARGETS) intel-secl
