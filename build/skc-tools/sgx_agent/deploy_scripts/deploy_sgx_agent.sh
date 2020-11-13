@@ -10,6 +10,14 @@ INKERNEL_SGX=$?
 /sbin/modinfo intel_sgx &> /dev/null
 SGX_DRIVER_INSTALLED=$?
 
+# Check OS and VERSION
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+VER=$(cat /etc/os-release | grep ^VERSION_ID | tr -d 'VERSION_ID="')
+OS_FLAVOUR="$OS""$VER"
+
 install_prerequisites()
 {
         source deployment_prerequisites.sh
@@ -35,23 +43,52 @@ install_dcap_driver()
 
 install_psw_qgl()
 {
+if [ "$OS" == "rhel" ]
+then
+# RHEL
 	tar -xf $SGX_AGENT_BIN/sgx_rpm_local_repo.tgz 
 	yum-config-manager --add-repo file://$PWD/sgx_rpm_local_repo
 	yum-config-manager --save --setopt=tmp_sgx_sgx_rpm_local_repo.gpgcheck=0
 	dnf install -y --nogpgcheck libsgx-dcap-ql || exit 1
 	rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+elif [ "$OS" == "ubuntu" ]
+then
+# UBUNTU
+        echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/intel-sgx.list
+        wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | sudo apt-key add -
+        apt update
+        apt install -y libsgx-dcap-ql || exit 1
+fi
 }
 	
 install_multipackage_agent_rpm()
 {
+if [ "$OS" == "rhel" ]
+then
+# RHEL
 	rpm -ivh $SGX_AGENT_BIN/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm
+elif [ "$OS" == "ubuntu" ]
+then
+# UBUNTU
+       apt install libsgx-ra-uefi
+fi
 }
 
 install_pckretrieval_tool()
 {
+if [ "$OS" == "rhel" ]
+then
+#RHEL
 	dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
+elif [ "$OS" == "ubuntu" ]
+then
+#UBUNTU
+       apt install -y msr-tools
+	modprobe msr
+fi
 	\cp -pf $SGX_AGENT_BIN/libdcap_quoteprov.so.1 $SGX_AGENT_BIN/pck_id_retrieval_tool_enclave.signed.so /usr/sbin/
 	\cp -pf $SGX_AGENT_BIN/PCKIDRetrievalTool /usr/sbin/
+
 }
 
 install_sgx_agent() { 

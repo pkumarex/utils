@@ -1,4 +1,13 @@
 #!/bin/bash
+
+# Check OS and VERSION
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+VER=$(cat /etc/os-release | grep ^VERSION_ID | tr -d 'VERSION_ID="')
+OS_FLAVOUR="$OS""$VER"
+
 source skc_library.conf
 
 SKCLIB_INST_PATH=/opt/skc
@@ -28,7 +37,16 @@ EOF
 output=`curl $CURL_OPTS -X POST -H "$CONTENT_TYPE" -H "$ACCEPT" --data @$tmpdir/aasadmin.json -w "%{http_code}" $aas_url/token`
 Bearer_token=`echo $output | rev | cut -c 4- | rev`
 
+if [ "$OS" == "rhel" ]
+then
+# RHEL
 dnf install -qy jq
+elif [ "$OS" == "ubuntu" ]
+then
+# Ubuntu
+apt install -qy jq
+fi
+
 
 # This routined checks if skc_library user exists and reurns user id
 # it creates a new user if one does not exist
