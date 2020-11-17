@@ -26,15 +26,26 @@ elif [ "$OS" == "ubuntu" ]
 then
 # Ubuntu
        apt install build-essential ocaml automake autoconf libtool tar wget python libssl-dev
-       apt-get install libcurl4-openssl-dev libprotobuf-dev
+       apt-get install libcurl4-openssl-dev libprotobuf-dev curl
        apt install -y dkms make jq libjsoncpp1 libjsoncpp-dev softhsm libgda-5.0-4
        apt install -y nginx
 fi
-	\cp -rpf bin/pkcs11.so /usr/lib64/engines-1.1/
-	\cp -rpf bin/libp11.so.3.4.3 /usr/lib64/
-	ln -sf /usr/lib64/libp11.so.3.4.3 /usr/lib64/libp11.so
-	ln -sf /usr/lib64/engines-1.1/pkcs11.so /usr/lib64/engines-1.1/libpkcs11.so
+
+if [ "$OS" == "rhel" ]
+then
+        \cp -rpf bin/pkcs11.so /usr/lib64/engines-1.1/
+        \cp -rpf bin/libp11.so.3.4.3 /usr/lib64/
+        ln -sf /usr/lib64/libp11.so.3.4.3 /usr/lib64/libp11.so
+        ln -sf /usr/lib64/engines-1.1/pkcs11.so /usr/lib64/engines-1.1/libpkcs11.so
         ln -sf /usr/lib64/libjsoncpp.so /usr/lib64/libjsoncpp.so.0
+elif [ "$OS" == "ubuntu" ]
+then
+        \cp -rpf bin/pkcs11.so /usr/lib/x86_64-linux-gnu/engines-1.1/
+        \cp -rpf bin/libp11.so.3.4.3 /usr/lib/
+        ln -sf /usr/lib/libp11.so.3.4.3 /usr/lib/libp11.so
+        ln -sf /usr/lib/x86_64-linux-gnu/engines-1.1/pkcs11.so /usr/lib/x86_64-linux-gnu/engines-1.1/libpkcs11.so
+        ln -sf /usr/lib/libjsoncpp.so /usr/lib/libjsoncpp.so.0
+fi
 }
 
 install_pre_requisites
