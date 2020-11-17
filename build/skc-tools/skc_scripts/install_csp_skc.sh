@@ -3,17 +3,17 @@ HOME_DIR=~/
 SKC_BINARY_DIR=$HOME_DIR/binaries
 
 # Copy env files to Home directory
-cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/shvs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/ihub.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/shvs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/ihub.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
 
 # Copy DB scripts to Home directory
-cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
-cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
-cp -pf $SKC_BINARY_DIR/install_pgshvsdb.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pgshvsdb.sh $HOME_DIR
 
 # read from environment variables file if it exists
 if [ -f ./csp_skc.conf ]; then
@@ -23,11 +23,7 @@ if [ -f ./csp_skc.conf ]; then
     if [ -n "$env_file_exports" ]; then eval export $env_file_exports; fi
 fi
 
-############## Install pre-req
-which jq &> /dev/null 
-if [ $? -ne 0 ]; then
-  yum install -y jq
-fi
+yum install -y jq
 
 echo "################ Uninstalling CMS....  #################"
 cms uninstall --purge
@@ -36,53 +32,56 @@ authservice uninstall --purge
 echo "################ Remove AAS DB....  #################"
 pushd $PWD
 cd /usr/local/pgsql
-sudo -u postgres dropdb aas_db
+sudo -u postgres dropdb $AAS_DB_NAME
 echo "################ Uninstalling SCS....  #################"
 scs uninstall --purge
 echo "################ Remove SCS DB....  #################"
-sudo -u postgres dropdb pgscsdb
+sudo -u postgres dropdb $SCS_DB_NAME
 echo "################ Uninstalling SHVS....  #################"
 shvs uninstall --purge
 echo "################ Remove SHVS DB....  #################"
-sudo -u postgres dropdb pgshvsdb
+sudo -u postgres dropdb $SHVS_DB_NAME
 echo "################ Uninstalling IHUB....  #################"
 ihub uninstall --purge
 popd
 
-export PGPASSWORD=dbpassword
 function is_database() {
-    psql -U dbuser -lqt | cut -d \| -f 1 | grep -wq $1
+    export PGPASSWORD=$3
+    psql -U $2 -lqt | cut -d \| -f 1 | grep -wq $1
 }
 
-export DBNAME=aas_db
-if is_database $DBNAME
+if is_database $AAS_DB_NAME $AAS_DB_USERNAME $AAS_DB_PASSWORD
 then 
-   echo $DBNAME database exists
+   echo $AAS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for AAS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$AAS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$AAS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$AAS_DB_PASSWORD@" ~/iseclpgdb.env
    pushd $PWD
    cd ~
    bash install_pg.sh
 fi
 
-export DBNAME=pgscsdb
-if is_database $DBNAME
+if is_database $SCS_DB_NAME $SCS_DB_USERNAME $SCS_DB_PASSWORD
 then
-   echo $DBNAME database exists
+   echo $SCS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for SCS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$SCS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$SCS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$SCS_DB_PASSWORD@" ~/iseclpgdb.env
    bash install_pgscsdb.sh
 fi
 
-export DBNAME=pgshvsdb
-if is_database $DBNAME
+if is_database $SHVS_DB_NAME $SHVS_DB_USERNAME $SHVS_DB_PASSWORD
 then
-   echo $DBNAME database exists
+   echo $SHVS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for SHVS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$SHVS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$SHVS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$SHVS_DB_PASSWORD@" ~/iseclpgdb.env
    bash install_pgshvsdb.sh
 fi
 
@@ -91,7 +90,7 @@ popd
 pushd $PWD
 cd $SKC_BINARY_DIR
 echo "################ Installing CMS....  #################"
-AAS_URL=https://$AAS_IP:8444/aas/
+AAS_URL=https://$AAS_IP:8444/aas
 sed -i "s/^\(AAS_TLS_SAN\s*=\s*\).*\$/\1$AAS_IP/" ~/cms.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/cms.env
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$CMS_IP/" ~/cms.env
@@ -110,7 +109,7 @@ export AAS_TLS_SAN=$AAS_IP
 CMS_TOKEN=`cms setup cms_auth_token --force | grep 'JWT Token:' | awk '{print $3}'`
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$CMS_TOKEN/"  ~/authservice.env
 
-CMS_TLS_SHA=`cat /etc/cms/config.yml | grep tlscertdigest |  cut -d' ' -f2`
+CMS_TLS_SHA=`cat /etc/cms/config.yml | grep tls-cert-digest |  cut -d' ' -f2`
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/"  ~/authservice.env
 
 CMS_URL=https://$CMS_IP:8445/cms/v1/
@@ -126,14 +125,14 @@ fi
 echo "################ Installed AuthService....  #################"
 
 echo "################ Create user and role on AuthService....  #################"
-TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin", "password": "password" }'`
+TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin@aas", "password": "aasAdminPass" }'`
 
 if [ $? -ne 0 ]; then
   echo "############ Could not get TOKEN from AuthService "
   exit 1
 fi
 
-USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@aas -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Got admin user ID $USER_ID"
 
 # SGX Caching Service User and Roles
@@ -168,9 +167,13 @@ SHVS_ROLE_ID4=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "
 echo "Created SHVS HostDataReader role with ID $SHVS_ROLE_ID4"
 SHVS_ROLE_ID5=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostListManager","context": ""}' | jq -r ".role_id"`
 echo "Created SHVS HostListManager role with ID $SHVS_ROLE_ID5"
+SHVS_ROLE_ID6=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostsListReader","context": ""}' | jq -r ".role_id"`
+echo "Created SHVS HostsListReader role with ID $SHVS_ROLE_ID6"
+SHVS_ROLE_ID7=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostDataReader","context": ""}' | jq -r ".role_id"`
+echo "Created SHVS HostDataReader role with ID $SHVS_ROLE_ID7"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$SHVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SHVS_ROLE_ID1"'", "'"$SHVS_ROLE_ID2"'", "'"$SHVS_ROLE_ID3"'", "'"$SHVS_ROLE_ID4"'", "'"$SHVS_ROLE_ID5"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$SHVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SHVS_ROLE_ID1"'", "'"$SHVS_ROLE_ID2"'", "'"$SHVS_ROLE_ID3"'", "'"$SHVS_ROLE_ID4"'", "'"$SHVS_ROLE_ID5"'", "'"$SHVS_ROLE_ID6"'", "'"$SHVS_ROLE_ID7"'"]}'
 fi
 
 SHVS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "shvsuser@shvs","password": "shvspassword"}'`
@@ -178,21 +181,17 @@ echo "SHVS Token $SHVS_TOKEN"
 
 #  IHUB User and Roles
 
-IHUB_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "ihubuser@ihub","password": "ihubpassword"}'`
-IHUB_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=ihubuser@ihub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+IHUB_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
+IHUB_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@hub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created IHUB User with user ID $IHUB_USER_ID"
-IHUB_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=Integration HUB TLS Certificate;SAN='$IHUB_IP';certType=TLS"}' | jq -r ".role_id"`
-echo "Created IHUB TLS cert role with ID $IHUB_ROLE_ID1"
-IHUB_ROLE_ID2=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostDataReader","context": ""}' | jq -r ".role_id"`
-echo "Created IHUB HostDataReader role with ID $IHUB_ROLE_ID2"
-IHUB_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SHVS","name": "HostsListReader","context": ""}' | jq -r ".role_id"`
-echo "Created IHUB HostsListReader role with ID $IHUB_ROLE_ID3"
+IHUB_ROLE_ID=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=Integration HUB TLS Certificate;SAN='$IHUB_IP';certType=TLS"}' | jq -r ".role_id"`
+echo "Created IHUB TLS cert role with ID $IHUB_ROLE_ID"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$IHUB_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$IHUB_ROLE_ID1"'", "'"$IHUB_ROLE_ID2"'", "'"$IHUB_ROLE_ID3"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$IHUB_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$IHUB_ROLE_ID"'", "'"$SHVS_ROLE_ID6"'", "'"$SHVS_ROLE_ID7"'"]}'
 fi
 
-IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "ihubuser@ihub","password": "ihubpassword"}'`
+IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
 echo "IHUB Token $IHUB_TOKEN"
 
 echo "################ Update SCS env....  #################"

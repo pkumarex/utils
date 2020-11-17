@@ -5,8 +5,8 @@ END_SET_KEYWORD=END_SET
 
 AAS_TOKEN=""
 
-AAS_USERNAME=admin
-AAS_PASSWORD=password
+AAS_USERNAME=admin@aas
+AAS_PASSWORD=aasAdminPass
 AAS_URL=https://127.0.0.1/aas
 
 CONFIG=config.conf

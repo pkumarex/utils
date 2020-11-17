@@ -1,7 +1,7 @@
 ---
 - name: ISECL - TRUST AGENT | Install tboot
   dnf:
-    name: tboot
+    name: tboot-1.9.10
     state: present
 
 
@@ -86,7 +86,7 @@
 
 
 - name: ISECL - TRUST AGENT | Update the grub boot loader
-  shell: "grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg"
+  shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   
    
 - name: ISECL - TRUST AGENT | Reboot for default SOFTWARE manifest to be measured and extended to TPM

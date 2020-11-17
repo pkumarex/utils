@@ -2,17 +2,28 @@
 SGX_AGENT_DIR=sgx_agent
 TAR_NAME=$(basename $SGX_AGENT_DIR)
 
+# Check OS and VERSION
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+VER=$(cat /etc/os-release | grep ^VERSION_ID | tr -d 'VERSION_ID="')
+OS_FLAVOUR="$OS""$VER"
+
 create_sgx_agent_tar()
 {
-	cp -pf ../deploy_scripts/*.sh $SGX_AGENT_DIR
-	cp -pf ../deploy_scripts/README.install $SGX_AGENT_DIR
-	cp -pf ../deploy_scripts/agent.conf $SGX_AGENT_DIR
+	\cp -pf ../deploy_scripts/*.sh $SGX_AGENT_DIR
+	\cp -pf ../deploy_scripts/README.install $SGX_AGENT_DIR
+	\cp -pf ../deploy_scripts/agent.conf $SGX_AGENT_DIR
 	tar -cf $TAR_NAME.tar -C $SGX_AGENT_DIR . --remove-files
 	sha256sum $TAR_NAME.tar > $TAR_NAME.sha2
 	echo "sgx_agent.tar file and sgx_agent.sha2 checksum file created"
 }
 
-rm -f /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+if [ "$OS" == "rhel" ]
+then
+ rm -f /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+fi
 
 source build_prerequisites.sh
 if [ $? -ne 0 ]

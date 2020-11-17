@@ -1,0 +1,41 @@
+TARGETS = intel-secl workload-service k8s-extensions trust-agent
+
+all: clean $(TARGETS) workload-agent workload-policy-manager skopeo cri-o
+	mkdir binaries
+	cp intel-secl/deployments/installer/*.bin binaries/
+	cp intel-secl/deployments/installer/*.sh binaries/
+	cp workload-service/out/*.bin binaries/
+	cp workload-policy-manager/out/*.bin binaries/
+	cp trust-agent/out/*.bin binaries/
+	cp workload-agent/out/*.bin binaries/
+	cp skopeo/skopeo binaries/
+	cp cri-o/bin/crio binaries/
+	cp k8s-extensions/out/isecl-k8s-extensions-v*.tar.gz binaries/
+
+clean: $(patsubst %, %-clean, $(TARGETS))
+	rm -rf binaries/
+
+workload-policy-manager: 
+	cd workload-policy-manager && \
+	make installer-no-docker
+
+workload-agent:
+	cd workload-agent && \
+	make installer-no-docker
+
+skopeo:
+	cd skopeo && \
+	make binary-local DISABLE_CGO=1
+
+cri-o:
+	cd cri-o && \
+	sed -i 's/override CFLAGS += -static/#override CFLAGS += -static/g' pause/Makefile && \
+	make
+
+$(TARGETS):
+	cd $@ && make installer
+
+%-clean:
+	cd $* && make clean
+
+.PHONY: all clean $(TARGETS)  workload-policy-manager workload-agent skopeo cri-o

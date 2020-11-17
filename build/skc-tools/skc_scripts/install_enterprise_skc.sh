@@ -2,21 +2,21 @@
 HOME_DIR=~/
 SKC_BINARY_DIR=$HOME_DIR/binaries
 
-KMS_HOSTNAME=$("hostname")
+KBS_HOSTNAME=$("hostname")
 
 # Copy env files to Home directory
-cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/sqvs.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/kms.env $HOME_DIR
-cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/cms.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/authservice.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/scs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/sqvs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/kbs.env $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/env/iseclpgdb.env $HOME_DIR
 
 # Copy DB scripts to Home directory
-cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
-cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pg.sh $HOME_DIR
+\cp -pf $SKC_BINARY_DIR/install_pgscsdb.sh $HOME_DIR
 
-cp -pf $SKC_BINARY_DIR/trusted_rootca.pem /tmp
+\cp -pf $SKC_BINARY_DIR/trusted_rootca.pem /tmp
 # read from environment variables file if it exists
 if [ -f ./enterprise_skc.conf ]; then
     echo "Reading Installation variables from $(pwd)/enterprise_skc.conf"
@@ -38,41 +38,43 @@ authservice uninstall --purge
 echo "################ Remove AAS DB....  #################"
 pushd $PWD
 cd /usr/local/pgsql
-sudo -u postgres dropdb aas_db
+sudo -u postgres dropdb $AAS_DB_NAME
 echo "################ Uninstalling SCS....  #################"
 scs uninstall --purge
 echo "################ Remove SCS DB....  #################"
-sudo -u postgres dropdb pgscsdb
+sudo -u postgres dropdb $SCS_DB_NAME
 echo "################ Uninstalling SQVS....  #################"
 sqvs uninstall --purge
 echo "################ Uninstalling KBS....  #################"
-kms uninstall --purge
+kbs uninstall --purge
 popd
 
-export PGPASSWORD=dbpassword
 function is_database() {
-    psql -U dbuser -lqt | cut -d \| -f 1 | grep -wq $1
+    export PGPASSWORD=$3
+    psql -U $2 -lqt | cut -d \| -f 1 | grep -wq $1
 }
 
-export DBNAME=aas_db
-if is_database $DBNAME
+if is_database $AAS_DB_NAME $AAS_DB_USERNAME $AAS_DB_PASSWORD
 then 
-   echo $DBNAME database exists
+   echo $AAS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for AAS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$AAS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$AAS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$AAS_DB_PASSWORD@" ~/iseclpgdb.env
    pushd $PWD
    cd ~
    bash install_pg.sh
 fi
 
-export DBNAME=pgscsdb
-if is_database $DBNAME
+if is_database $SCS_DB_NAME $SCS_DB_USERNAME $SCS_DB_PASSWORD
 then
-   echo $DBNAME database exists
+   echo $SCS_DB_NAME database exists
 else
    echo "################ Update iseclpgdb.env for SCS....  #################"
-   sed -i "s/^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$/\1$DBNAME/" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_DBNAME\s*=\s*\).*\$@\1$SCS_DB_NAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERNAME\s*=\s*\).*\$@\1$SCS_DB_USERNAME@" ~/iseclpgdb.env
+   sed -i "s@^\(ISECL_PGDB_USERPASSWORD\s*=\s*\).*\$@\1$SCS_DB_PASSWORD@" ~/iseclpgdb.env
    bash install_pgscsdb.sh
 fi
 
@@ -81,7 +83,7 @@ popd
 pushd $PWD
 cd $SKC_BINARY_DIR
 echo "################ Installing CMS....  #################"
-AAS_URL=https://$AAS_IP:8444/aas/
+AAS_URL=https://$AAS_IP:8444/aas
 sed -i "s/^\(AAS_TLS_SAN\s*=\s*\).*\$/\1$AAS_IP/" ~/cms.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/cms.env
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$CMS_IP/" ~/cms.env
@@ -100,7 +102,7 @@ export AAS_TLS_SAN=$AAS_IP
 CMS_TOKEN=`cms setup cms_auth_token --force | grep 'JWT Token:' | awk '{print $3}'`
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$CMS_TOKEN/"  ~/authservice.env
 
-CMS_TLS_SHA=`cat /etc/cms/config.yml | grep tlscertdigest |  cut -d' ' -f2`
+CMS_TLS_SHA=`cat /etc/cms/config.yml | grep tls-cert-digest |  cut -d' ' -f2`
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/"  ~/authservice.env
 
 CMS_URL=https://$CMS_IP:8445/cms/v1/
@@ -116,14 +118,14 @@ fi
 echo "################ Installed AuthService....  #################"
 
 echo "################ Create user and role on AuthService....  #################"
-TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin", "password": "password" }'`
+TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin@aas", "password": "aasAdminPass" }'`
 
 if [ $? -ne 0 ]; then
   echo "############ Could not get TOKEN from AuthService "
   exit 1
 fi
 
-USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@aas -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Got admin user ID $USER_ID"
 
 # SGX Caching Service User and Roles
@@ -160,21 +162,21 @@ echo "SQVS Token $SQVS_TOKEN"
 
 # KBS User and Roles
 
-KMS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kmsuser@kms","password": "kmspassword"}'`
-KMS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=kmsuser@kms -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
-echo "Created KMS User with user ID $KMS_USER_ID"
-KMS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KMS TLS Certificate;SAN='$KMS_IP','$KMS_HOSTNAME';certType=TLS"}' | jq -r ".role_id"`
-echo "Created KMS TLS cert role with ID $KMS_ROLE_ID1"
-KMS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
-echo "Retrieved KMS Administrator role with ID $KMS_ROLE_ID2"
-KMS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
+KBS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
+KBS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@kbs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+echo "Created KBS User with user ID $KBS_USER_ID"
+KBS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KBS TLS Certificate;SAN='$KBS_IP';certType=TLS"}' | jq -r ".role_id"`
+echo "Created KBS TLS cert role with ID $KBS_ROLE_ID1"
+KBS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
+echo "Retrieved KBS Administrator role with ID $KBS_ROLE_ID2"
+KBS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$KMS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KMS_ROLE_ID1"'", "'"$KMS_ROLE_ID2"'", "'"$KMS_ROLE_ID3"'"]}'
+  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$KBS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KBS_ROLE_ID1"'", "'"$KBS_ROLE_ID2"'", "'"$KBS_ROLE_ID3"'"]}'
 fi
 
-KMS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "kmsuser@kms","password": "kmspassword"}'`
-echo "KMS Token $KMS_TOKEN"
+KBS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
+echo "KBS Token $KBS_TOKEN"
 
 echo "################ Update SCS env....  #################"
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SCS_IP/"  ~/scs.env
@@ -211,16 +213,15 @@ fi
 echo "################ Installed SQVS....  #################"
 
 echo "################ Update KBS env....  #################"
-sed -i "s/^\(JETTY_TLS_CERT_IP\s*=\s*\).*\$/\1$KMS_IP/" ~/kms.env
-sed -i "s/^\(JETTY_TLS_CERT_DNS\s*=\s*\).*\$/\1$KMS_HOSTNAME/" ~/kms.env
-sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KMS_TOKEN/" ~/kms.env
-sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kms.env
-sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kms.env
-sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kms.env
+sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_IP/" ~/kbs.env
+sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KBS_TOKEN/" ~/kbs.env
+sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kbs.env
+sed -i "s@^\(AAS_BASE_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
+sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kbs.env
 SQVS_URL=https://$SQVS_IP:12000/svs/v1
-sed -i "s@^\(SVS_BASE_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kms.env
+sed -i "s@^\(SQVS_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kbs.env
 echo "################ Installing KBS....  #################"
-./kms-*.bin || exit 1
+./kbs-*.bin || exit 1
 if [ $? -ne 0 ]; then
   echo "############ KBS Installation Failed"
   exit 1
