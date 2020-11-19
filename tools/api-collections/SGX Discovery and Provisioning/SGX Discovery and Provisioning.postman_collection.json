@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fe79184d-0bdc-454d-8c15-27cf75c5d30e",
+		"_postman_id": "25ac2e38-0694-47cd-9136-65de8ac1d609",
 		"name": "SGX Discovery and Provisioning",
 		"description": "For the secrets to be provisioned securely to SGX compute nodes in public clouds, the owner of the secret needs to ensure that the secrets will be protected in SGX enclaves by performing an SGX Attestation.\r\n\r\nSGX Attestation involves provisioning SGX nodes with Platform Certification Key (PCK) certificates. PCK certificates for SGX nodes are obtained by providing the node SGX data to the Intel SGX Provisioning Certificate Service (PCS), a cloud hosted service. PCS also returns SGX collateral such as CRLs, TCB information and QE Identity.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "47878c21-b62f-4628-aa92-df3a977ff2d7",
+								"id": "aa6a4231-e58f-4a9e-8d58-5cfeb786897b",
 								"exec": [
 									"pm.environment.set(\"bearerTokenScs\", pm.response.text());"
 								],
@@ -118,6 +118,109 @@
 							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjY0OGNlZjM1Mzk4ZGVjMGEwNDUwODM5NzgzNWEzMGU4M2I2YmRkYWQiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U0NTIFRMUyBDZXJ0aWZpY2F0ZTtTQU49MTAuODAuMjA3LjE1O0NFUlRUWVBFPVRMUyJ9LHsic2VydmljZSI6IlNDUyIsIm5hbWUiOiJDYWNoZU1hbmFnZXIifSx7InNlcnZpY2UiOiJTQ1MiLCJuYW1lIjoiSG9zdERhdGFVcGRhdGVyIn0seyJzZXJ2aWNlIjoiU0NTIiwibmFtZSI6Ikhvc3REYXRhUmVhZGVyIn1dLCJleHAiOjE2MDA1MDM5MTAsImlhdCI6MTYwMDMzMTA4MCwiaXNzIjoiQUFTIEpXVCBJc3N1ZXIiLCJzdWIiOiJzY3N1c2VyQHNjcyJ9.x658JBY0fgZQLPaF8R1EtJCU9sk4qW_jvBpNF3NX2zu-hDNFl6oQgkbYM7BPcRWvsttdKlTEdmhgkw_YsotWzv7_NV51xY4Wfvuys-W7nREXVN9wX8Wz_yukz31G8trf9Lla5ZX8c-w2OeyXxMw2vmoYvjtTqRH7B1LqWTapc-Ie8Q7mdP5PR3tw3BlitDiTdOSaYA719yFokuFMpiKBCqfMCVLQYN1r06Ge1h5leX2pmvHS14Gms5rfU4Z1JIMmMrzmVsozrYITn0H9-kVBFt3ctf-Px7pWYzDJuZcbbZPbKhSVwg3QWq-h3cnvCqxyaWCnAazKIl-PyXxVlXoAg66yhz95xaBq_4oHzY33aEpt3raiFzcImqU3zxsg5BoE0H0Rf54Yl1CrwKZ7HidR9Rw2BzeSFrPotQsCpE4b4GFLUJozdvTTD6fLjyAMMNgbj4s8_6NaoBNnaqeJ6y3D00S3MWNmKxE0hj9s2aUeNQxM1jDlVgahG4pvqresBItm"
 						}
 					]
+				},
+				{
+					"name": "createSagentToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "52e2cce5-4b17-48e9-aba5-663ae856e48a",
+								"exec": [
+									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{sagentUser}}\",\n    \"password\": \"{{sagentUserPass}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API \nrequests. Bearer token Authorization is not required when requesting token for Authservice \nadmin user. Authservice admin user bearer token should be provided in Authorization header \nwhen requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/jwt"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{sagentUser}}\",\n    \"password\": \"{{sagentUserPass}}\"\n}"
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 19 Nov 2020 07:35:46 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1063"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjU1MDFmOGVhY2M3ZmY4NTYwMWUxZGFiYzdlZDljYWIzMmMyYTAwMjkiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IlNDUyIsIm5hbWUiOiJIb3N0RGF0YVVwZGF0ZXIifSx7InNlcnZpY2UiOiJDTVMiLCJuYW1lIjoiQ2VydEFwcHJvdmVyIiwiY29udGV4dCI6IkNOPVNHWF9BR0VOVCBUTFMgQ2VydGlmaWNhdGU7U0FOPTEwLjEwNS4xNjcuMjM5O0NFUlRUWVBFPVRMUyJ9LHsic2VydmljZSI6IlNIVlMiLCJuYW1lIjoiSG9zdFJlZ2lzdHJhdGlvbiJ9LHsic2VydmljZSI6IlNHWF9BR0VOVCIsIm5hbWUiOiJIb3N0RGF0YVJlYWRlciJ9XSwiZXhwIjoxNjA1OTQ0MTQ2LCJpYXQiOjE2MDU3NzEzMTYsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoic2d4X2FnZW50In0.l_ITqN4d-hwc9OKAHSUO3kHxMtD2CsvHw3j3WUAQBs9dYW2roomspFQH0ZL6-s0xeig0gHbZDN3ihp_FdK-kXfwl6Psr1SuVqY3eRveh-cubgJIERZj8OG6leh9SubwqgIJTqQ5oP_fOhuH83LWxJzNQapovxrOpWkCA35terRRRObKAP9FMUWieKRcyg0w5iFoVysEeuv5SOJ91iZgIXYmzfeaeis-9kV_gkGxfrLDZOGVomj4ZOw5XtduMrJ5mRB87cLGxTmaLngdHiDg6qLUwkmuZ0YEtrYUnHQaTUkL9-1USb8NPH6gTOvZENpcyoctSiJ8R9Crl1apxu8YulCdzCRQirOHUQJ6f9Q6e8hPf-gPzBd1Cdw-LwZ0dTwZPF2UpBzoByf4iOKAxpMY1amemqllbC5YbvJpmwJRNXeqokz6hcogo8c_zMzl9IoJ9QoPoQ5mSaBaCr1py5tq9n7omAzBYZ08ywP6aMmV1DW7_xliP6VIgN4pqA0vz6yCf"
+						}
+					]
 				}
 			],
 			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
@@ -131,7 +234,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "e584d529-b779-4ba3-882e-a34af31fea3f",
+						"id": "2e65f43d-5d1b-457d-8c74-26e88d7cdff3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -141,7 +244,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b80b3a78-a10f-43ad-b296-2a0f34c8e591",
+						"id": "e1b8dde0-ad2c-45da-9e84-ae21d30d970f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -165,7 +268,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenScs}}"
+								"value": "Bearer {{bearerTokenSagent}}"
 							},
 							{
 								"key": "Content-Type",
@@ -206,7 +309,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenScs}}"
+										"value": "Bearer {{bearerTokenSagent}}"
 									},
 									{
 										"key": "Content-Type",
@@ -265,7 +368,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ce87003b-b27f-4a56-9f39-791b52ee9d2d",
+						"id": "9735ae90-0bd8-490a-b322-cc093bb95882",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -275,7 +378,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5530bf25-720f-4acb-823c-0eaadc3c3c9a",
+						"id": "3d319726-500f-411c-b13e-5c6d24645086",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -393,7 +496,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "875072d9-cc12-4564-8721-40bc04b6bb17",
+						"id": "caef846f-ebbe-4ddb-a2f3-e26cfc98a789",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -403,7 +506,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1b38e1b0-e126-4afd-ad7c-223dd744a616",
+						"id": "43fde4d6-2a75-433a-94d4-6827c19a1ef3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -565,7 +668,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2a503159-8842-4ee5-859e-09132eb0f021",
+						"id": "da051ed0-ffec-4bc1-b2b3-6bc58354bb9f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -575,139 +678,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3089cec1-7d9b-49f1-858c-57735c7cf666",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Verify TCB Status is UpToDate",
-			"item": [
-				{
-					"name": "tcbStatus",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [
-							{
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-								"key": "Authorization",
-								"value": "Bearer {{bearerTokenScs}}"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/tcbstatus?qeid={{qeid}}",
-							"protocol": "https",
-							"host": [
-								"{{scs}}"
-							],
-							"port": "{{scsPort}}",
-							"path": [
-								"scs",
-								"sgx",
-								"platforminfo",
-								"tcbstatus"
-							],
-							"query": [
-								{
-									"key": "qeid",
-									"value": "{{qeid}}",
-									"description": "Quoting Enclave ID specific to a platform."
-								}
-							]
-						},
-						"description": "This API is used by SGX Host Verification Service (HVS) to determine the TCB up-to-date status of a platform. \nA valid bearer token should be provided to authorize this REST call.\n"
-					},
-					"response": [
-						{
-							"name": "Success",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-										"key": "Authorization",
-										"value": "Bearer {{bearerTokenScs}}"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "https://{{scs}}:{{scsPort}}/scs/sgx/platforminfo/tcbstatus?qeid={{qeid}}",
-									"protocol": "https",
-									"host": [
-										"{{scs}}"
-									],
-									"port": "{{scsPort}}",
-									"path": [
-										"scs",
-										"sgx",
-										"platforminfo",
-										"tcbstatus"
-									],
-									"query": [
-										{
-											"key": "qeid",
-											"value": "{{qeid}}",
-											"description": "Quoting Enclave ID specific to a platform."
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 14 Sep 2020 08:22:09 GMT"
-								},
-								{
-									"key": "Content-Length",
-									"value": "52"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"Status\": \"true\",\n    \"Message\": \"TCB Status is UpToDate\"\n}"
-						}
-					]
-				}
-			],
-			"description": "SGX Caching Service (SCS) provides a REST Endpoint for determining TCB uptodate status. This API will be used by SGX Host Verification Service (SHVS) to make decision on the TCB level status of a platform before provisioning secrets.",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "824d2f86-a1c4-45f9-903a-112e9d82f482",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "fca90a85-628e-446b-b72f-8fabd445261a",
+						"id": "64371e97-5990-4233-a4cd-57f410898a9d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -722,7 +693,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "2d8b3ac1-30e9-4531-b460-b3f852021860",
+				"id": "f86b4ea5-7d57-41da-b855-3832ce12a596",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -732,7 +703,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "a3485762-275a-4589-b205-5db81636de1c",
+				"id": "8220b2ae-4596-46d0-9e76-b7c06870c348",
 				"type": "text/javascript",
 				"exec": [
 					""
