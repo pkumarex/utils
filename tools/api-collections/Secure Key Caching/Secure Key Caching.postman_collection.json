@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4381bc1e-6f73-42cb-a123-1857aba64546",
+		"_postman_id": "0bee59fc-5066-408d-b729-2972292108f1",
 		"name": "Secure Key Caching",
 		"description": "Key Protection is implemented by the SKC Client -- a set of libraries - which must be linked with a\ntenant workload, like Nginx, deployed in a CSP environment and the Key Broker Service (KBS)\ndeployed in the tenant's enterprise environment. The SKC Client retrieves the keys needed by the\nworkload from KBS after proving that the key can be protected in an SGX enclave.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -10,124 +10,12 @@
 			"name": "Authorization",
 			"item": [
 				{
-					"name": "createSqvsToken",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "9815a692-12b2-4cf0-a9d9-88ac342651fd",
-								"exec": [
-									"pm.environment.set(\"bearerTokenSqvs\", pm.response.text());"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/jwt"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"{{sqvsUser}}\",\r\n    \"password\": \"{{sqvsPass}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-							"protocol": "https",
-							"host": [
-								"{{aas}}"
-							],
-							"port": "{{aasPort}}",
-							"path": [
-								"aas",
-								"token"
-							]
-						},
-						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
-					},
-					"response": [
-						{
-							"name": "Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/jwt"
-									},
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"{{sqvsUser}}\",\r\n    \"password\": \"{{sqvsPass}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-									"protocol": "https",
-									"host": [
-										"{{aas}}"
-									],
-									"port": "{{aasPort}}",
-									"path": [
-										"aas",
-										"token"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "jwt",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/jwt"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 17 Sep 2020 11:12:41 GMT"
-								},
-								{
-									"key": "Content-Length",
-									"value": "934"
-								}
-							],
-							"cookie": [],
-							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6Ijc0ZGY4M2U1ZWQ1Yjc0NmVhMzUyYzU5NWY4MmIzNjUyOTAxYjg3NzgiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U1FWUyBUTFMgQ2VydGlmaWNhdGU7U0FOPTEwLjgwLjIwNy4xNTtDRVJUVFlQRT1UTFMifSx7InNlcnZpY2UiOiJTUVZTIiwibmFtZSI6IlF1b3RlVmVyaWZpZXIifV0sImV4cCI6MTYwMDUxMzk2MSwiaWF0IjoxNjAwMzQxMTMxLCJpc3MiOiJBQVMgSldUIElzc3VlciIsInN1YiI6InNxdnN1c2VyQHNxdnMifQ.Z_-iSxnYTcqwhIsQLt5kBPfNVKHNbrO2kwl_TV4g2SS80cCYWu8ZRkRxq6cdQVdugkn9AIaI_GJfFCkBugCEmBDWWJ3jk2kWwIgqbr6txKCk_3G_Z0dBdF2hogAiToJrOqejvKKscKGCP2xzBSN6MQ7lPYRykZc2_oEDnqoIpoI5w7P2fd1OhWC-nxrtgXBwcOKPJplktETHm7SI7lDsWJXRx5gaakA4VH6wMr5Qd1-FzOCPa7w3iDAhjih0M_McV7Uj-llI0NcmRNVJvWvkomYB5_NHVPM-l6XOJKeILRqCbkbg3Mgml87G7dhMMqbXTF7TiIKD4dfneLAmcg7ENHYXPnsJXENIHAjaycBthDrAHb7wrCf3llISfON9JKNFmT51Afa3NLMOPTH1p38SxIJbB_Idp33OEOUIJmeUlWXJNO9Owp9eivbBrDhuzuoNVMEdTEpRb8TE1uqWkUgWDpwyw69U7OLykG_vD2zt6KqEcOhYUr2iA5Se3Jdp5M17"
-						}
-					]
-				},
-				{
 					"name": "createKbsToken",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "7e81bc5a-8701-4020-bd10-b5b145465536",
+								"id": "430ff79e-8c59-4527-871f-37c2457b36ad",
 								"exec": [
 									"pm.environment.set(\"bearerTokenKbs\", pm.response.text());"
 								],
@@ -232,6 +120,118 @@
 							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6ImExMGFkYzJmNjA0OTg3NTRlYzExZjExNGQ0MDE3ZDI5ZDBjZmFiOWUiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IktNUyIsIm5hbWUiOiJLZXlDUlVEIn1dLCJwZXJtaXNzaW9ucyI6W3sic2VydmljZSI6IktNUyIsInJ1bGVzIjpbIio6KjoqIl19XSwiZXhwIjoxNTk5ODMwMDczLCJpYXQiOjE1OTk2NTcyNDMsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoiRVR1c2VyIn0.hNOT_2JXJ0x9xx9XUULLYtDQLFn_Z8FeyXC85_EJ5Ha5Z0yTSz_noD_c_EHE-RZYzYcncCa_0JKboQb7YuU7tO4zQEF4OsxQkHkaIvgNoxChRskY4UDSfQgJImM9YGFWF3iLAavlJPJ0K7IorCFSYajABi1try4XND0tDDo7ah8GPszLtFwpKLCb9-_C6r-_JlbNUGYy_P9gq4IgPaC7lisr46id-sCBgNd-a8Z6Pf55mcPcJVqWIay7EWirSF9qo3cZLtUJ_aHs-38z1qZXJpJklD7AVhPR-MQdwiyturDe57wUC5-XrF2UKiZ4sWSe3YNcVKrwTNiXk0FC2WC5mNOoFV7Rr294zLyrXeF_xThtViqdReT5C7SWuAvng37y52nPUL1S4tBbsH7zqYl1o8hityZAlaYVGb_0dw1eklUXkYfW-KzKcfJRt2PJ9fVE-bkBFkWPyoJv10Gt7eiufxIlJBM8bo1itPaxboOUH4BCZfXlkwICOx5T0W6CbtYo"
 						}
 					]
+				},
+				{
+					"name": "createEaToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b9f859a0-b865-4aae-8838-4ae837e89977",
+								"exec": [
+									"pm.environment.set(\"bearerTokenEa\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/jwt"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{eaUser}}\",\r\n    \"password\": \"{{eaPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+							"protocol": "https",
+							"host": [
+								"{{aas}}"
+							],
+							"port": "{{aasPort}}",
+							"path": [
+								"aas",
+								"token"
+							]
+						},
+						"description": "Creates a new bearer token that can be used in the Authorization header for other API requests. Bearer token Authorization is not required when requesting token for Authservice admin user. Authservice admin user bearer token should be provided in Authorization header when requesting bearer token for other users."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/jwt"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{eaUser}}\",\r\n    \"password\": \"{{eaPass}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
+									"protocol": "https",
+									"host": [
+										"{{aas}}"
+									],
+									"port": "{{aasPort}}",
+									"path": [
+										"aas",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "jwt",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/jwt"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 19 Nov 2020 06:27:47 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "843"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjVmMzMzMjQxZDhmNWUxMTY0OTY5MTYxOGUyNzg2NDFmNzNkMGQyNTYiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IktCUyIsIm5hbWUiOiJLZXlDUlVEIn1dLCJwZXJtaXNzaW9ucyI6W3sic2VydmljZSI6IktCUyIsInJ1bGVzIjpbIio6KjoqIl19XSwiZXhwIjoxNjA1OTQwMDY3LCJpYXQiOjE2MDU3NjcyMzcsImlzcyI6IkFBUyBKV1QgSXNzdWVyIiwic3ViIjoiRUFkbWluIn0.S5RPoX_6z9u4mHLwxqiRUxvn6q6gKgGUf5qeBc6NsP3a4aZUGDKUnGbyIasWlRpeB6LbUX-XtU6XQ2HSUDt5Fg2bvtXDJE-rs_7AsSDWDrIhuEy4IVF-IB2N3VJjn1o9GSqC8m8AZE3pQ6006R2cVst9ma3xhC4JsQIsIHvzM9I4U1Bm8LTN4CdjjFmK9h7s6_WvF8VPSSaL2rF2iCjey06Rq5gTu6QdEDCOsLTREaRPN5308_8zecJNOkxS_J6BuAFbL15fuvpA07nyzmxNJ8DepWvuH0-GmEoR6ezJHQ54C6zWNVT6uIedFKlKkUQq4jnanSMaGCBJdD6oJZIcHPvkv7Rin_vaIzmEh1_qsBvOd0-3FVJKPUn2uW0NeLB-faOXKmrlMszhTGuOGmkyEAIaf-fo69hXDRp5cN6wdMXjkqCR1GCOkZQZsCFFt9cBJvVRCJt77sq4ty8rC_gtplSIWXF5Db1sZ3DcjOapGyQoksFm2lq0j1Dtwjj1-smo"
+						}
+					]
 				}
 			],
 			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
@@ -239,7 +239,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "4d2491cd-c563-4703-a8cd-f20b62423f57",
+						"id": "7842bdff-9648-4019-a939-544f2afceb7d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -249,7 +249,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a79836ee-5d9d-48bf-a1a5-b0b0d616ade7",
+						"id": "56ec2334-ba37-47aa-82ed-ad19ce18a77a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -267,7 +267,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f4717010-0d58-4aa2-895c-1c80b8080a9c",
+						"id": "e7f324ae-ea68-4576-a01e-337c7ef49300",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -277,7 +277,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3d170e42-8acd-4f6c-8ee9-ee39b4e97894",
+						"id": "645d2bde-d04d-4c1b-942a-903960c1a9ff",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -296,7 +296,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c57231ee-160e-4d24-8a2d-9c08938fd60e",
+								"id": "86b55a34-51b8-4d62-bab5-d8e33697121d",
 								"exec": [
 									"pm.environment.set(\"keyTransferPolicyId\", pm.response.json().id)"
 								],
@@ -310,7 +310,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenKbs}}"
+								"value": "Bearer {{bearerTokenEa}}"
 							},
 							{
 								"description": "(Required) Accept header",
@@ -355,7 +355,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenKbs}}"
+										"value": "Bearer {{bearerTokenEa}}"
 									},
 									{
 										"description": "(Required) Accept header",
@@ -420,7 +420,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenKbs}}"
+								"value": "Bearer {{bearerTokenEa}}"
 							},
 							{
 								"description": "(Required) Accept header",
@@ -465,7 +465,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenKbs}}"
+										"value": "Bearer {{bearerTokenEa}}"
 									},
 									{
 										"description": "(Required) Accept header",
@@ -528,7 +528,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "dbb5b309-cce0-4482-9812-bb861f5ce130",
+						"id": "9ec6d845-034d-41fb-aa00-a788f75a3ec9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -538,7 +538,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "90b453e1-3e7f-4690-bc54-5c6b0bce48ac",
+						"id": "fccf341c-3269-4b51-98ad-8b4663041be1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -556,7 +556,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "775ba345-e631-48fb-9ca6-22bd345dd3f6",
+						"id": "a015fdd2-72d3-4a98-9a04-dbcb9af7d4ce",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -566,7 +566,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6506961b-e2c8-4b30-b4c6-67e973cc30e7",
+						"id": "fa0eecb6-6101-4c64-84ff-c2d277779644",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -585,20 +585,22 @@
 						"method": "POST",
 						"header": [
 							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerTokenKbs}}",
+								"type": "text",
+								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+							},
+							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"description": "(Required) Accept header"
 							},
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{bearerTokenSqvs}}",
 								"type": "text",
-								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+								"description": "(Required) Content-Type header"
 							}
 						],
 						"body": {
@@ -630,21 +632,23 @@
 								"method": "POST",
 								"header": [
 									{
+										"key": "Authorization",
+										"value": "Bearer {{bearerTokenKbs}}",
+										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
+										"type": "text"
+									},
+									{
 										"key": "Accept",
 										"value": "application/json",
-										"type": "text"
+										"type": "text",
+										"description": "(Required) Accept header"
 									},
 									{
 										"key": "Content-Type",
 										"name": "Content-Type",
 										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{bearerTokenSqvs}}",
-										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
-										"type": "text"
+										"type": "text",
+										"description": "(Required) Content-Type header"
 									}
 								],
 								"body": {
@@ -698,7 +702,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "151edf27-c4e3-408e-8ea6-b855ff825c40",
+						"id": "55729007-3d6f-4456-a902-28f64e5d01e5",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -708,7 +712,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "69a0a283-316e-4538-9d77-81cbe596e8a0",
+						"id": "f2edb4b9-6cbe-4f37-af33-696318fdfa62",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -723,7 +727,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "61c0327e-8be3-40c3-9a7d-5b0e9054a43b",
+				"id": "bcf8e201-6dc9-4a34-abad-9c62d8532d34",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -733,7 +737,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "e001f143-ca8d-412f-ad19-583c4db7efe9",
+				"id": "2ef446a4-a551-4198-abc0-c1b0f86c3831",
 				"type": "text/javascript",
 				"exec": [
 					""

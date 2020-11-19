@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5d934c2a-2521-4a8c-ae86-30ffe756ed0b",
+		"_postman_id": "5c7534bd-db35-4c2e-acc3-5f0a32e6a3de",
 		"name": "SGX Discovery, Provisioning and Orchestration",
 		"description": "For the secrets to be provisioned securely to SGX compute nodes in public clouds, the owner of the secret needs to ensure that the secrets will be protected in SGX enclaves by performing an SGX Attestation.\r\n\r\nSGX Attestation involves provisioning SGX nodes with Platform Certification Key (PCK) certificates. PCK certificates for SGX nodes are obtained by providing the node SGX data to the Intel SGX Provisioning Certificate Service (PCS), a cloud hosted service. PCS also returns SGX collateral such as CRLs, TCB information and QE Identity.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6acb9dfd-1e9d-48e7-8fdb-b6486231ce75",
+								"id": "c0695024-fcc7-49da-a93b-6244b783b9e5",
 								"exec": [
 									"pm.environment.set(\"bearerTokenShvs\", pm.response.text());"
 								],
@@ -120,122 +120,12 @@
 					]
 				},
 				{
-					"name": "createScsToken",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "f288e5c2-e4fc-42ff-aecc-729460ea8c71",
-								"exec": [
-									"pm.environment.set(\"bearerTokenScs\", pm.response.text());"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/jwt"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"{{scsUser}}\",\n    \"password\": \"{{scsUserPass}}\"\n}"
-						},
-						"url": {
-							"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-							"protocol": "https",
-							"host": [
-								"{{aas}}"
-							],
-							"port": "{{aasPort}}",
-							"path": [
-								"aas",
-								"token"
-							]
-						},
-						"description": "Creates a new bearer token that can be used in the Authorization header for other API \nrequests. Bearer token Authorization is not required when requesting token for Authservice \nadmin user. Authservice admin user bearer token should be provided in Authorization header \nwhen requesting bearer token for other users."
-					},
-					"response": [
-						{
-							"name": "Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/jwt"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"{{scsUser}}\",\n    \"password\": \"{{scsUserPass}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{aas}}:{{aasPort}}/aas/token",
-									"protocol": "https",
-									"host": [
-										"{{aas}}"
-									],
-									"port": "{{aasPort}}",
-									"path": [
-										"aas",
-										"token"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "jwt",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/jwt"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 17 Sep 2020 08:25:10 GMT"
-								},
-								{
-									"key": "Content-Length",
-									"value": "1040"
-								}
-							],
-							"cookie": [],
-							"body": "eyJhbGciOiJSUzM4NCIsImtpZCI6IjY0OGNlZjM1Mzk4ZGVjMGEwNDUwODM5NzgzNWEzMGU4M2I2YmRkYWQiLCJ0eXAiOiJKV1QifQ.eyJyb2xlcyI6W3sic2VydmljZSI6IkNNUyIsIm5hbWUiOiJDZXJ0QXBwcm92ZXIiLCJjb250ZXh0IjoiQ049U0NTIFRMUyBDZXJ0aWZpY2F0ZTtTQU49MTAuODAuMjA3LjE1O0NFUlRUWVBFPVRMUyJ9LHsic2VydmljZSI6IlNDUyIsIm5hbWUiOiJDYWNoZU1hbmFnZXIifSx7InNlcnZpY2UiOiJTQ1MiLCJuYW1lIjoiSG9zdERhdGFVcGRhdGVyIn0seyJzZXJ2aWNlIjoiU0NTIiwibmFtZSI6Ikhvc3REYXRhUmVhZGVyIn1dLCJleHAiOjE2MDA1MDM5MTAsImlhdCI6MTYwMDMzMTA4MCwiaXNzIjoiQUFTIEpXVCBJc3N1ZXIiLCJzdWIiOiJzY3N1c2VyQHNjcyJ9.x658JBY0fgZQLPaF8R1EtJCU9sk4qW_jvBpNF3NX2zu-hDNFl6oQgkbYM7BPcRWvsttdKlTEdmhgkw_YsotWzv7_NV51xY4Wfvuys-W7nREXVN9wX8Wz_yukz31G8trf9Lla5ZX8c-w2OeyXxMw2vmoYvjtTqRH7B1LqWTapc-Ie8Q7mdP5PR3tw3BlitDiTdOSaYA719yFokuFMpiKBCqfMCVLQYN1r06Ge1h5leX2pmvHS14Gms5rfU4Z1JIMmMrzmVsozrYITn0H9-kVBFt3ctf-Px7pWYzDJuZcbbZPbKhSVwg3QWq-h3cnvCqxyaWCnAazKIl-PyXxVlXoAg66yhz95xaBq_4oHzY33aEpt3raiFzcImqU3zxsg5BoE0H0Rf54Yl1CrwKZ7HidR9Rw2BzeSFrPotQsCpE4b4GFLUJozdvTTD6fLjyAMMNgbj4s8_6NaoBNnaqeJ6y3D00S3MWNmKxE0hj9s2aUeNQxM1jDlVgahG4pvqresBItm"
-						}
-					]
-				},
-				{
 					"name": "createSagentToken",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "aef6bb98-e165-4cc8-b036-fb1f76559274",
+								"id": "617b5fe7-d3bc-449a-9421-236607ef93eb",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
 								],
@@ -351,7 +241,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "258c9721-7769-44fc-8462-0c439eb3ba7b",
+						"id": "c5e734a9-d275-40b2-a0dd-941762dd875c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -361,7 +251,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2a8d83c0-ac84-428a-adb5-14785fc6459f",
+						"id": "c2bfec2e-fd5f-4046-aa7a-7efef6fed8b9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -385,7 +275,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenShvs}}"
+								"value": "Bearer {{bearerTokenSagent}}"
 							},
 							{
 								"key": "Content-Type",
@@ -425,7 +315,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenShvs}}"
+										"value": "Bearer {{bearerTokenSagent}}"
 									},
 									{
 										"key": "Content-Type",
@@ -490,7 +380,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "10892000-d112-4f2f-b959-8f0e4f565834",
+						"id": "8fd75344-11a2-4ca2-87ed-979fc873917c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -500,7 +390,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9f0d87dd-f598-4d62-b4b1-bfec3976b77c",
+						"id": "2b6a0083-2ecd-4de8-963d-9cb55dd88186",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -519,7 +409,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a12f768e-8084-4216-b71c-113e4cd0a7c2",
+								"id": "647c31e9-7b20-40f6-b222-3d10aef3940f",
 								"exec": [
 									"pm.environment.set(\"encppid\", pm.response.json()[\"sgx-platform-data\"][\"enc-ppid\"]);\r",
 									"pm.environment.set(\"pceid\", pm.response.json()[\"sgx-platform-data\"][\"pceid\"]);\r",
@@ -541,7 +431,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenSagent}}"
+								"value": "Bearer {{bearerTokenShvs}}"
 							},
 							{
 								"key": "Accept",
@@ -573,7 +463,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenSagent}}"
+										"value": "Bearer {{bearerTokenShvs}}"
 									},
 									{
 										"key": "Accept",
@@ -623,7 +513,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "d605c1a5-d678-4997-9a56-f20fe5987d6b",
+						"id": "7ffbc0f5-8dd3-463a-a881-6179558d3d7f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -633,7 +523,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d5d0ea08-842b-405f-b069-51ddc0b446d1",
+						"id": "86f0d6c1-361b-447c-8f28-9440ca951e68",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -644,7 +534,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Push Platform Information to SGX CS",
+			"name": "Push Platform Information to SGX SCS",
 			"item": [
 				{
 					"name": "pushPlatformInfo",
@@ -657,7 +547,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenScs}}"
+								"value": "Bearer {{bearerTokenShvs}}"
 							},
 							{
 								"key": "Content-Type",
@@ -698,7 +588,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenScs}}"
+										"value": "Bearer {{bearerTokenShvs}}"
 									},
 									{
 										"key": "Content-Type",
@@ -757,7 +647,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "96af3faa-92b1-459b-b942-4b48bbed8123",
+						"id": "ddf02f7d-8929-4960-a916-b450a56e340a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -767,7 +657,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "aaf95894-57be-4b8b-82d7-aaa13bb51029",
+						"id": "cb30d043-5bba-4af4-8ebf-eed4e245b8e1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -885,7 +775,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "027e43c1-0c5a-4d47-95c3-55ef165b082e",
+						"id": "b163d705-10b6-418c-8735-07e17961555c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -895,7 +785,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8d8b4146-1b71-4cae-90d4-4a3f2ee03cd1",
+						"id": "d0deab31-c697-4d05-8f25-f8a74e23b4c9",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1057,7 +947,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "d578b976-aa4c-46df-a2f5-aaf84696dbbf",
+						"id": "c5b9480c-361f-486c-94d1-63825fb62d8f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1067,7 +957,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "19e6f8f5-e1d9-4f32-aec0-45039f95e7f2",
+						"id": "12e3387e-d53f-463d-9244-cc855ef5884c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1091,7 +981,7 @@
 							{
 								"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 								"key": "Authorization",
-								"value": "Bearer {{bearerTokenScs}}"
+								"value": "Bearer {{bearerTokenShvs}}"
 							},
 							{
 								"key": "Accept",
@@ -1120,7 +1010,7 @@
 								}
 							]
 						},
-						"description": "This API is used by SGX Host Verification Service (HVS) to determine the TCB up-to-date status of a platform. \nA valid bearer token should be provided to authorize this REST call.\n"
+						"description": "This API is used by SGX Host Verification Service (SHVS) to determine the TCB up-to-date status of a platform. \nA valid bearer token should be provided to authorize this REST call.\n"
 					},
 					"response": [
 						{
@@ -1131,7 +1021,7 @@
 									{
 										"description": "Enter your bearer token in the format **Bearer &lt;token&gt;**",
 										"key": "Authorization",
-										"value": "Bearer {{bearerTokenScs}}"
+										"value": "Bearer {{bearerTokenShvs}}"
 									},
 									{
 										"key": "Accept",
@@ -1189,7 +1079,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "e141466b-3847-4003-b4bd-f21311e98ce0",
+						"id": "b13db835-6420-4815-9aea-e6087af216b1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1199,7 +1089,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ae0ac5c1-f28f-486b-88a2-3e0138b18313",
+						"id": "f6b3d77a-7d56-41bb-a886-0c7cd77c546b",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1220,7 +1110,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "bf49b5d0-8299-4eb6-939f-f0b0622a1116",
+								"id": "a9a66eae-0d38-4bb7-b636-cda23e3a7b34",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1230,7 +1120,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "904df7f5-aa44-451d-9354-072fe137156d",
+								"id": "a3da610a-c056-4558-8992-dcefe31cdc1a",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1249,7 +1139,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "be848836-ea37-4554-a4fd-791595b11d4d",
+								"id": "9ef16f60-b9ef-408a-b87a-3f9ac4e1b872",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1259,7 +1149,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9592164b-cf86-4f09-98a6-5ed03828f433",
+								"id": "042458b1-2360-40ee-87ed-8264cda77940",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1276,7 +1166,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "4e11d277-7459-4431-8791-ede98901dc90",
+						"id": "c7364cf5-e3bf-412b-a50d-328b5cd0af96",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1286,7 +1176,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "777e5715-31ba-4a32-bd25-a4809ee92314",
+						"id": "f3b4865c-9a4e-46a4-90aa-cdb80daf579a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1301,7 +1191,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "cfd4078f-668f-450e-8626-28668c37e116",
+				"id": "06a0ef57-8895-4da7-9512-d2733b1eb701",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1311,7 +1201,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "f06e3ac3-cdc8-4a62-a97d-171eef560f05",
+				"id": "b52d8c8a-fdf9-4a10-80be-67a2d626c036",
 				"type": "text/javascript",
 				"exec": [
 					""
