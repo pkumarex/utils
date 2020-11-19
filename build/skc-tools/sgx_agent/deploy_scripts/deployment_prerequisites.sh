@@ -18,7 +18,7 @@ then
 elif [ "$OS" == "ubuntu" ]
 then
 # UBUNTU
-       apt install -y dkms tar make jq
+       apt install -y dkms tar make jq curl
 fi
 }
 
