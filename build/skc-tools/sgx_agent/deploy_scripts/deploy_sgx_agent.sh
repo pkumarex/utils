@@ -34,7 +34,7 @@ install_dcap_driver()
 	echo "$INKERNEL_SGX"
 	echo "$SGX_DRIVER_INSTALLED"
 	if [[ "$INKERNEL_SGX" -ne 0 && "$SGX_DRIVER_INSTALLED" -ne 0 ]]; then
-		sh $SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin -prefix=$SGX_INSTALL_DIR || exit 1
+		./$SGX_AGENT_BIN/sgx_linux_x64_driver_${SGX_DRIVER_VERSION}.bin -prefix=$SGX_INSTALL_DIR || exit 1
 		echo "sgx dcap driver installed"
 	else
 		echo "found inbuilt sgx driver, skipping dcap driver installation"
