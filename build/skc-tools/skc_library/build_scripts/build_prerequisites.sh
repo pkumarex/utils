@@ -10,35 +10,24 @@ OS_FLAVOUR="$OS""$VER"
 
 install_pre_requisites()
 {
+	if [ "$OS" == "rhel" ]; then
+		dnf install -y bc wget tar git gcc-c++ make automake autoconf libtool yum-utils p11-kit-devel cppunit-devel openssl-devel
+	elif [ "$OS" == "ubuntu" ]; then
+		apt install -y build-essential ocaml ocamlbuild automake autoconf libtool cmake perl libcppunit-dev libssl-dev
+		wget http://archive.ubuntu.com/ubuntu/pool/main/libt/libtasn1-6/libtasn1-6_4.14-3_amd64.deb
+		wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/libp11-kit0_0.23.17-2_amd64.deb
+		wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/p11-kit-modules_0.23.17-2_amd64.deb
+		wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/p11-kit_0.23.17-2_amd64.deb
+		wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/libp11-kit-dev_0.23.17-2_amd64.deb
 
-if [ "$OS" == "rhel" ]
-then
-#RHEL
+		apt install -f ./libtasn1-6_4.14-3_amd64.deb
+		apt install -f ./libp11-kit0_0.23.17-2_amd64.deb
+		apt install -f ./p11-kit-modules_0.23.17-2_amd64.deb
+		apt install -f ./p11-kit_0.23.17-2_amd64.deb
+		apt install -f ./libp11-kit-dev_0.23.17-2_amd64.deb
 
-	dnf install -y bc wget tar git gcc-c++ make automake autoconf libtool yum-utils p11-kit-devel cppunit-devel openssl-devel
-
-elif [ "$OS" == "ubuntu" ]
-then
-       #UBUNTU
-       apt install -y build-essential ocaml ocamlbuild automake autoconf libtool cmake perl libcppunit-dev libssl-dev
-
-# Download P11-Kit
-       wget http://archive.ubuntu.com/ubuntu/pool/main/libt/libtasn1-6/libtasn1-6_4.14-3_amd64.deb
-       wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/libp11-kit0_0.23.17-2_amd64.deb
-       wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/p11-kit-modules_0.23.17-2_amd64.deb
-       wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/p11-kit_0.23.17-2_amd64.deb
-       wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/libp11-kit-dev_0.23.17-2_amd64.deb
-
-# Install
-       apt install -f ./libtasn1-6_4.14-3_amd64.deb
-       apt install -f ./libp11-kit0_0.23.17-2_amd64.deb
-       apt install -f ./p11-kit-modules_0.23.17-2_amd64.deb
-       apt install -f ./p11-kit_0.23.17-2_amd64.deb
-       apt install -f ./libp11-kit-dev_0.23.17-2_amd64.deb
-# Remove
-       rm -rf *.deb
-fi
-
+		rm -rf *.deb
+	fi
 }
 
 install_pre_requisites

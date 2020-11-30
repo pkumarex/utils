@@ -12,8 +12,7 @@ OS_FLAVOUR="$OS""$VER"
 install_go()
 {
 	go version > /dev/null 2>&1
-	if [ $? -ne 0 ]
-	then
+	if [ $? -ne 0 ]; then
 		echo "golang not installed. installing now"
 		wget -q --delete-after https://dl.google.com/go/$GO_VERSION.linux-amd64.tar.gz -O - | tar -xz || exit 1
 		mv -f go /usr/local
@@ -24,19 +23,12 @@ install_go()
 
 install_pre_requisites()
 {
-# Check OS and VER and Install
-if [ "$OS" == "rhel" ]
-then
-# RHEL
-	dnf install -y wget tar git gcc-c++ make curl-devel
-	dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/makeself-2.4.0-5.fc32.noarch.rpm
-
-elif [ "$OS" == "ubuntu" ]
-then
-#UBUNTU
-        apt install -y wget tar build-essential libcurl4-openssl-dev makeself
-fi
-
+	if [ "$OS" == "rhel" ]; then
+		dnf install -y wget tar git gcc-c++ make curl-devel
+		dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/makeself-2.4.0-5.fc32.noarch.rpm
+	elif [ "$OS" == "ubuntu" ]; then
+		apt install -y wget tar build-essential libcurl4-openssl-dev makeself
+	fi
 }
 
 install_pre_requisites
