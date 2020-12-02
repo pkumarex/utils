@@ -1,8 +1,8 @@
 #!/bin/bash
-SGX_DRIVER_VERSION=1.36
+SGX_DRIVER_VERSION=1.36.2
 KDIR=/lib/modules/$(uname -r)/build
 SGX_INSTALL_DIR=/opt/intel
-MP_RPM_VER=1.8.100.2-1
+MP_RPM_VER=1.9.100.3-1
 SGX_AGENT_BIN=bin
 
 cat $KDIR/.config | grep "CONFIG_INTEL_SGX=y" > /dev/null
@@ -21,8 +21,7 @@ OS_FLAVOUR="$OS""$VER"
 install_prerequisites()
 {
         source deployment_prerequisites.sh
-        if [[ $? -ne 0 ]]
-        then
+        if [[ $? -ne 0 ]]; then
                 echo "sgx agent pre-requisite package installation failed. exiting"
                 exit 1
         fi
@@ -43,52 +42,39 @@ install_dcap_driver()
 
 install_psw_qgl()
 {
-if [ "$OS" == "rhel" ]
-then
-# RHEL
-	tar -xf $SGX_AGENT_BIN/sgx_rpm_local_repo.tgz 
-	yum-config-manager --add-repo file://$PWD/sgx_rpm_local_repo
-	yum-config-manager --save --setopt=tmp_sgx_sgx_rpm_local_repo.gpgcheck=0
-	dnf install -y --nogpgcheck libsgx-dcap-ql || exit 1
-	rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
-elif [ "$OS" == "ubuntu" ]
-then
-# UBUNTU
-        echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/intel-sgx.list
-        wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | sudo apt-key add -
-        apt update
-        apt install -y libsgx-dcap-ql || exit 1
-fi
+	if [ "$OS" == "rhel" ]; then
+		tar -xf $SGX_AGENT_BIN/sgx_rpm_local_repo.tgz
+		yum-config-manager --add-repo file://$PWD/sgx_rpm_local_repo
+		yum-config-manager --save --setopt=tmp_sgx_sgx_rpm_local_repo.gpgcheck=0
+		dnf install -y --nogpgcheck libsgx-dcap-ql || exit 1
+		rm -rf sgx_rpm_local_repo /etc/yum.repos.d/*sgx_rpm_local_repo.repo
+	elif [ "$OS" == "ubuntu" ]; then
+		echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/intel-sgx.list
+		wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | sudo apt-key add -
+		apt update
+		apt install -y libsgx-dcap-ql || exit 1
+	fi
 }
 	
 install_multipackage_agent_rpm()
 {
-if [ "$OS" == "rhel" ]
-then
-# RHEL
-	rpm -ivh $SGX_AGENT_BIN/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm
-elif [ "$OS" == "ubuntu" ]
-then
-# UBUNTU
-       apt install libsgx-ra-uefi
-fi
+	if [ "$OS" == "rhel" ]; then
+		rpm -ivh $SGX_AGENT_BIN/libsgx-ra-uefi-$MP_RPM_VER.el8.x86_64.rpm
+	elif [ "$OS" == "ubuntu" ]; then
+		apt install -y libsgx-ra-uefi
+	fi
 }
 
 install_pckretrieval_tool()
 {
-if [ "$OS" == "rhel" ]
-then
-#RHEL
-	dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
-elif [ "$OS" == "ubuntu" ]
-then
-#UBUNTU
-       apt install -y msr-tools
-	modprobe msr
-fi
+	if [ "$OS" == "rhel" ]; then
+		dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
+	elif [ "$OS" == "ubuntu" ]; then
+		apt install -y msr-tools
+		modprobe msr
+	fi
 	\cp -pf $SGX_AGENT_BIN/libdcap_quoteprov.so.1 $SGX_AGENT_BIN/pck_id_retrieval_tool_enclave.signed.so /usr/sbin/
 	\cp -pf $SGX_AGENT_BIN/PCKIDRetrievalTool /usr/sbin/
-
 }
 
 install_sgx_agent() { 
@@ -109,7 +95,7 @@ install_sgx_agent() {
 	sed -i "s/^\(SGX_AGENT_PASSWORD\s*=\s*\).*\$/\1$AGENT_PASSWORD/" ~/sgx_agent.env
 	
 	./sgx_agent_create_roles.sh
-	if [ $? -ne 0 ];then
+	if [ $? -ne 0 ]; then
 		echo "sgx_agent user/role creation failed. exiting"
 		exit 1
 	fi

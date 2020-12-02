@@ -13,8 +13,7 @@ OS_FLAVOUR="$OS""$VER"
 install_prerequisites()
 {
 	source build_prerequisites.sh	
-	if [ $? -ne 0 ]
-	then
+	if [ $? -ne 0 ]; then
 		"Pre-build step failed"
 		exit 1
 	fi
@@ -81,7 +80,6 @@ rm -rf $SKCLIB_DIR
 
 if [ "$OS" == "rhel" ]
 then
-# RHEL
   rm -f /etc/yum.repos.d/*sgx_rpm_local_repo.repo
 fi
 
