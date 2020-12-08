@@ -335,7 +335,7 @@
 - name: ISECL - SETUP | Install CSP services for sgx-orchestration/sgx-attestation usecase
   include: "{{ item }}"  
   loop:
-      - install_shub.yml
+      - install_ihub.yml
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])

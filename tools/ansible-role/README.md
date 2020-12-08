@@ -871,16 +871,6 @@ The description for default variables under `defaults/main.yml` for each service
 | sgxdep_installer_file_name             | The name of the binary installer as per release tag for SKC Library         | no               | no                     | no                        | no                                        | no                                                | No     | No    | Yes    |
 | sgxdep_installer_file_src              | The binary installer file source for SKC Library | no               | no                     | no                        | no                                        | no                                                           | No     | No    | Yes    |
 
-**SKC Integration Hub**
-
-| Default variable (defaults/main.yml) | Description                                                  | Host Attestation | Application  Integrity | Data Fencing & Asset Tags | Launch Time Protection - VM Confidentiality | Launch Time Protection - Container Confidentiality | Secure Key Caching | SGX Orchestration |SGX Attestation |
-| ------------------------------------ | ------------------------------------------------------------ | ---------------- | ---------------------- | ------------------------- | ------------------------------------------ | -------------------------------------------------- | ------------------- | ------------------|--------------- |
-| shub_installer_file_name               | The name of the binary installer as per release tag for SKC Integration Hub         | no               | no                     | no                        | no                                        | no                                                | No     | Yes    | Yes    |
-| shub_installer_file_src              | The binary installer file source for SKC Integration Hub | no               | no                     | no                        | no                                        | no                                                           | No     | Yes    | Yes    |
-| shub_http_port               | The http port for running the SKC Integration Hub        | no               | no                     | no                        | no                                        | no                                                | No     | Yes    | Yes    |
-| shub_https_port             | The https port for running the SKC Integration Hub | no               | no                     | no                        | no                                        | no                                                           | No     | Yes    | Yes    |
-
-
 
 **Other Variables**
 
