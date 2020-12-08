@@ -29,7 +29,7 @@ install_pre_requisites()
 	elif [[ "$OS" == "ubuntu" && "$VER" == "18.04" ]]; then
 		apt install -y wget tar build-essential libcurl4-openssl-dev makeself
 	else
-		echo "Unsupported OS. Please use Rhel8.1/8.2 or Ubuntu 18.04"
+		echo "Unsupported OS. Please use RHEL 8.1/8.2 or Ubuntu 18.04"
 		exit 1
 	fi
 }
