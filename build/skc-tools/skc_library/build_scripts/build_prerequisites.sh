@@ -28,7 +28,7 @@ install_pre_requisites()
 
 		rm -rf *.deb
 	else
-		echo "Unsupported OS. Please use Rhel8.1/8.2 or Ubuntu 18.04"
+		echo "Unsupported OS. Please use RHEL 8.1/8.2 or Ubuntu 18.04"
 		exit 1
 	fi
 }

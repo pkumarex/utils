@@ -34,7 +34,7 @@ install_pre_requisites()
 		ln -sf /usr/lib/x86_64-linux-gnu/engines-1.1/pkcs11.so /usr/lib/x86_64-linux-gnu/engines-1.1/libpkcs11.so
 		ln -sf /usr/lib/libjsoncpp.so /usr/lib/libjsoncpp.so.0
 	else
-		echo "Unsupported OS. Please use Rhel8.1/8.2 or Ubuntu 18.04"
+		echo "Unsupported OS. Please use RHEL 8.1/8.2 or Ubuntu 18.04"
 		exit 1
 	fi
 }
