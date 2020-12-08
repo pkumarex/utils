@@ -10,9 +10,9 @@ OS_FLAVOUR="$OS""$VER"
 
 install_pre_requisites()
 {
-	if [ "$OS" == "rhel" ]; then
+	if [[ "$OS" == "rhel" && "$VER" == "8.1" || "$VER" == "8.2" ]]; then
 		dnf install -y bc wget tar git gcc-c++ make automake autoconf libtool yum-utils p11-kit-devel cppunit-devel openssl-devel
-	elif [ "$OS" == "ubuntu" ]; then
+	elif [[ "$OS" == "ubuntu" && "$VER" == "18.04" ]]; then
 		apt install -y build-essential ocaml ocamlbuild automake autoconf libtool cmake perl libcppunit-dev libssl-dev
 		wget http://archive.ubuntu.com/ubuntu/pool/main/libt/libtasn1-6/libtasn1-6_4.14-3_amd64.deb
 		wget http://archive.ubuntu.com/ubuntu/pool/main/p/p11-kit/libp11-kit0_0.23.17-2_amd64.deb
@@ -27,6 +27,9 @@ install_pre_requisites()
 		apt install -f ./libp11-kit-dev_0.23.17-2_amd64.deb
 
 		rm -rf *.deb
+	else
+		echo "Unsupported OS. Please use Rhel8.1/8.2 or Ubuntu 18.04"
+		exit 1
 	fi
 }
 
