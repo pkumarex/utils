@@ -1,4 +1,11 @@
 #!/bin/bash
+
+# Check OS and VERSION
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+
 HOME_DIR=~/
 SKC_BINARY_DIR=$HOME_DIR/binaries
 
@@ -28,7 +35,13 @@ fi
 ############## Install pre-req
 which jq &> /dev/null 
 if [ $? -ne 0 ]; then
+if [ "$OS" == "rhel" ]
+then	
   yum install -y jq
+elif [ "$OS" == "ubuntu" ]
+then
+  apt install -y jq
+fi
 fi
 
 echo "################ Uninstalling CMS....  #################"
