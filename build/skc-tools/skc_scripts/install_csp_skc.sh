@@ -5,6 +5,8 @@ OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
 temp="${OS%\"}"
 temp="${temp#\"}"
 OS="$temp"
+VER=$(cat /etc/os-release | grep ^VERSION_ID | tr -d 'VERSION_ID="')
+OS_FLAVOUR="$OS""$VER"
 
 HOME_DIR=~/
 SKC_BINARY_DIR=$HOME_DIR/binaries
@@ -30,12 +32,13 @@ if [ -f ./csp_skc.conf ]; then
     if [ -n "$env_file_exports" ]; then eval export $env_file_exports; fi
 fi
 
-if [ "$OS" == "rhel" ]
-then
-yum install -y jq
-elif [ "$OS" == "ubuntu" ]
-then
-apt install -y jq
+if [[ "$OS" == "rhel" && "$VER" == "8.1" || "$VER" == "8.2" ]]; then
+    dnf install -y jq
+elif [[ "$OS" == "ubuntu" && "$VER" == "18.04" ]]; then
+    apt install -y jq
+else
+    echo "Unsupported OS. Please use RHEL 8.1/8.2 or Ubuntu 18.04"
+    exit 1
 fi
 
 echo "################ Uninstalling CMS....  #################"
