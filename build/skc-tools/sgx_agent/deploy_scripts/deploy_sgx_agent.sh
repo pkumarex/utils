@@ -67,12 +67,6 @@ install_multipackage_agent_rpm()
 
 install_pckretrieval_tool()
 {
-	if [ "$OS" == "rhel" ]; then
-		dnf install -y https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Everything/x86_64/os/Packages/m/msr-tools-1.3-13.fc32.x86_64.rpm
-	elif [ "$OS" == "ubuntu" ]; then
-		apt install -y msr-tools
-		modprobe msr
-	fi
 	\cp -pf $SGX_AGENT_BIN/libdcap_quoteprov.so.1 $SGX_AGENT_BIN/pck_id_retrieval_tool_enclave.signed.so /usr/sbin/
 	\cp -pf $SGX_AGENT_BIN/PCKIDRetrievalTool /usr/sbin/
 }

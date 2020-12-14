@@ -48,11 +48,6 @@ type PlatformResponse struct {
 	PData   Paltform_Data      `json:"sgx-platform-data"`
 }
 
-var (
-	flcEnabledCmd      = []string{"rdmsr", "-ax", "0x3A"} ///MSR.IA32_Feature_Control register tells availability of SGX
-	pckIDRetrievalInfo = []string{"PCKIDRetrievalTool", "-f", "/opt/pckData"}
-)
-
 type SCSPushResponse struct {
 	Status  string `json:"Status"`
 	Message string `json:"Message"`
