@@ -6,11 +6,11 @@ all: clean $(TARGETS) intel-secl
 	cp intel-secl/deployments/installer/*.sh binaries/
 	cp trust-agent/out/*.bin binaries/
 
+intel-secl:
+	cd $@ && make cms-installer && make authservice-installer && make aas-manager && make hvs-installer && make ihub-installer
+
 clean: $(patsubst %, %-clean, $(TARGETS))
 	rm -rf binaries/
-
-intel-secl:
-	cd $@ && make cms-installer && make aas-installer && make hvs-installer && make ihub-installer
 
 $(TARGETS):
 	cd $@ && make installer
