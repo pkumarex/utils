@@ -1,5 +1,5 @@
 TARGETS = sgx-caching-service sgx-verification-service sgx-hvs k8s-extensions
-COMMON_TARGETS = aas cms ihub kbs
+COMMON_TARGETS = authservice cms ihub kbs
 
 all: clean $(COMMON_TARGETS) $(TARGETS) sgx_agent skc_library
 	mkdir -p binaries/env
