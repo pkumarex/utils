@@ -39,7 +39,7 @@ $(TARGETS):
 	cd $@ && make installer
 
 $(COMMON_TARGETS):
-	cd intel-secl && make $@-installer
+	cd intel-secl && make $@-installer && make aas-manager
 
 %-clean:
 	cd $* && make clean
