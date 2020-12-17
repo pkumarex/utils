@@ -56,6 +56,11 @@ fi
 KBS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
 echo "KBS Token $KBS_TOKEN"
 
+AAS_URL=https://$AAS_IP:8444/aas
+CMS_URL=https://$CMS_IP:8445/cms/v1/
+CMS_TLS_SHA=`cat /etc/cms/config.yml | grep tls-cert-digest |  cut -d' ' -f2`
+
+
 pushd $PWD
 echo "################ Update KBS env....  #################"
 sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_IP/" ~/kbs.env
