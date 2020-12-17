@@ -99,10 +99,10 @@ popd
 pushd $PWD
 cd $SKC_BINARY_DIR
 echo "################ Installing CMS....  #################"
-AAS_URL=https://$AAS_IP:8444/aas
-sed -i "s/^\(AAS_TLS_SAN\s*=\s*\).*\$/\1$AAS_IP/" ~/cms.env
+AAS_URL=https://$SYSTEM_IP:8444/aas
+sed -i "s/^\(AAS_TLS_SAN\s*=\s*\).*\$/\1$SYSTEM_IP/" ~/cms.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/cms.env
-sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$CMS_IP/" ~/cms.env
+sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/" ~/cms.env
 
 ./cms-*.bin || exit 1
 if [ $? -ne 0 ]; then
@@ -114,17 +114,17 @@ echo "################ Installed CMS....  #################"
 echo "################ Installing AuthService....  #################"
 
 echo "################ Copy CMS token to AuthService....  #################"
-export AAS_TLS_SAN=$AAS_IP
+export AAS_TLS_SAN=$SYSTEM_IP
 CMS_TOKEN=`cms setup cms_auth_token --force | grep 'JWT Token:' | awk '{print $3}'`
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$CMS_TOKEN/"  ~/authservice.env
 
 CMS_TLS_SHA=`cms tlscertsha384`
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/"  ~/authservice.env
 
-CMS_URL=https://$CMS_IP:8445/cms/v1/
+CMS_URL=https://$SYSTEM_IP:8445/cms/v1/
 sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@"  ~/authservice.env
 
-sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$AAS_IP/"  ~/authservice.env
+sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/"  ~/authservice.env
 sed -i "s/^\(AAS_DB_NAME\s*=\s*\).*\$/\1$AAS_DB_NAME/"  ~/authservice.env
 sed -i "s/^\(AAS_DB_USERNAME\s*=\s*\).*\$/\1$AAS_DB_USERNAME/"  ~/authservice.env
 sed -i "s/^\(AAS_DB_PASSWORD\s*=\s*\).*\$/\1$AAS_DB_PASSWORD/"  ~/authservice.env
@@ -137,68 +137,68 @@ fi
 echo "################ Installed AuthService....  #################"
 
 echo "################ Create user and role on AuthService....  #################"
-TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -d '{"username": "admin@aas", "password": "aasAdminPass" }'`
+TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -d '{"username": "admin@aas", "password": "aasAdminPass" }'`
 
 if [ $? -ne 0 ]; then
   echo "############ Could not get TOKEN from AuthService "
   exit 1
 fi
 
-USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@aas -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+USER_ID=`curl --noproxy "*" -k https://$SYSTEM_IP:8444/aas/users?name=admin@aas -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Got admin user ID $USER_ID"
 
 # SGX Caching Service User and Roles
 
-SCS_USER=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "scsuser@scs","password": "scspassword"}'`
-SCS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=scsuser@scs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+SCS_USER=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "scsuser@scs","password": "scspassword"}'`
+SCS_USER_ID=`curl --noproxy "*" -k https://$SYSTEM_IP:8444/aas/users?name=scsuser@scs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created SCS User with user ID $SCS_USER_ID"
-SCS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=SCS TLS Certificate;SAN='$SCS_IP';certType=TLS"}' | jq -r ".role_id"`
+SCS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=SCS TLS Certificate;SAN='$SYSTEM_IP';certType=TLS"}' | jq -r ".role_id"`
 echo "Created SCS TLS cert role with ID $SCS_ROLE_ID1"
-SCS_ROLE_ID2=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SCS","name": "CacheManager","context": ""}' | jq -r ".role_id"`
+SCS_ROLE_ID2=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SCS","name": "CacheManager","context": ""}' | jq -r ".role_id"`
 echo "Created SCS CacheManager role with ID $SCS_ROLE_ID2"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$SCS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SCS_ROLE_ID1"'", "'"$SCS_ROLE_ID2"'"]}'
+  curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/users/$SCS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SCS_ROLE_ID1"'", "'"$SCS_ROLE_ID2"'"]}'
 fi
 
-SCS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "scsuser@scs","password": "scspassword"}'`
+SCS_TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "scsuser@scs","password": "scspassword"}'`
 echo "SCS Token $SCS_TOKEN"
 
 # SGX Quote Verification Service User and Roles
 
-SQVS_USER=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "sqvsuser@sqvs","password": "sqvspassword"}'`
-SQVS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=sqvsuser@sqvs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+SQVS_USER=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "sqvsuser@sqvs","password": "sqvspassword"}'`
+SQVS_USER_ID=`curl --noproxy "*" -k https://$SYSTEM_IP:8444/aas/users?name=sqvsuser@sqvs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created SQVS User with user ID $SQVS_USER_ID"
-SQVS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=SQVS TLS Certificate;SAN='$SQVS_IP';certType=TLS"}' | jq -r ".role_id"`
+SQVS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=SQVS TLS Certificate;SAN='$SYSTEM_IP';certType=TLS"}' | jq -r ".role_id"`
 echo "Created SQVS TLS cert role with ID $SQVS_ROLE_ID1"
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users/$SQVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SQVS_ROLE_ID1"'"]}'
+  curl --noproxy "*" -k  -X POST https://$SYSTEM_IP:8444/aas/users/$SQVS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$SQVS_ROLE_ID1"'"]}'
 fi
 
-SQVS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "sqvsuser@sqvs","password": "sqvspassword"}'`
+SQVS_TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "sqvsuser@sqvs","password": "sqvspassword"}'`
 echo "SQVS Token $SQVS_TOKEN"
 
 # KBS User and Roles
 
-KBS_USER=`curl --noproxy "*" -k  -X POST https://$AAS_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
-KBS_USER_ID=`curl --noproxy "*" -k https://$AAS_IP:8444/aas/users?name=admin@kbs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
+KBS_USER=`curl --noproxy "*" -k  -X POST https://$SYSTEM_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
+KBS_USER_ID=`curl --noproxy "*" -k https://$SYSTEM_IP:8444/aas/users?name=admin@kbs -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created KBS User with user ID $KBS_USER_ID"
-KBS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KBS TLS Certificate;SAN='$KBS_IP';certType=TLS"}' | jq -r ".role_id"`
+KBS_ROLE_ID1=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "CMS","name": "CertApprover","context": "CN=KBS TLS Certificate;SAN='$KBS_DOMAIN';certType=TLS"}' | jq -r ".role_id"`
 echo "Created KBS TLS cert role with ID $KBS_ROLE_ID1"
-KBS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$AAS_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
+KBS_ROLE_ID2=`curl --noproxy "*" -k -X GET https://$SYSTEM_IP:8444/aas/roles?name=Administrator -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].role_id'`
 echo "Retrieved KBS Administrator role with ID $KBS_ROLE_ID2"
-KBS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
+KBS_ROLE_ID3=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"service": "SQVS","name": "QuoteVerifier","context": ""}' | jq -r ".role_id"`
 
 if [ $? -eq 0 ]; then
-  curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/users/$KBS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KBS_ROLE_ID1"'", "'"$KBS_ROLE_ID2"'", "'"$KBS_ROLE_ID3"'"]}'
+  curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/users/$KBS_USER_ID/roles -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"role_ids": ["'"$KBS_ROLE_ID1"'", "'"$KBS_ROLE_ID2"'", "'"$KBS_ROLE_ID3"'"]}'
 fi
 
-KBS_TOKEN=`curl --noproxy "*" -k -X POST https://$AAS_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
+KBS_TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@kbs","password": "kbsAdminPass"}'`
 echo "KBS Token $KBS_TOKEN"
 
 echo "################ Update SCS env....  #################"
-sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SCS_IP/"  ~/scs.env
+sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/"  ~/scs.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$SCS_TOKEN/"  ~/scs.env
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/scs.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/scs.env
@@ -218,12 +218,12 @@ fi
 echo "################ Installed SCS....  #################"
 
 echo "################ Update SQVS env....  #################"
-sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SQVS_IP/"  ~/sqvs.env
+sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/"  ~/sqvs.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$SQVS_TOKEN/"  ~/sqvs.env
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/sqvs.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/sqvs.env
 sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/sqvs.env
-SCS_URL=https://$SCS_IP:9000/scs/sgx/certification/v1
+SCS_URL=https://$SYSTEM_IP:9000/scs/sgx/certification/v1
 sed -i "s@^\(SCS_BASE_URL\s*=\s*\).*\$@\1$SCS_URL@" ~/sqvs.env
 
 echo "################ Installing SQVS....  #################"
@@ -235,12 +235,12 @@ fi
 echo "################ Installed SQVS....  #################"
 
 echo "################ Update KBS env....  #################"
-sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_IP/" ~/kbs.env
+sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_DOMAIN/" ~/kbs.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KBS_TOKEN/" ~/kbs.env
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kbs.env
 sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
 sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kbs.env
-SQVS_URL=https://$SQVS_IP:12000/svs/v1
+SQVS_URL=https://$SYSTEM_IP:12000/svs/v1
 sed -i "s@^\(SQVS_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kbs.env
 echo "################ Installing KBS....  #################"
 ./kbs-*.bin || exit 1
