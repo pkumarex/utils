@@ -290,7 +290,7 @@
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'csp')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
@@ -309,7 +309,7 @@
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'csp')
       - (setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
@@ -326,7 +326,7 @@
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'csp')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
@@ -339,7 +339,7 @@
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'csp')
       - (setup == 'sgx-orchestration' or setup == 'sgx-attestation') 
 
@@ -356,7 +356,7 @@
   when: 
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'csp')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
@@ -383,7 +383,7 @@
   when: 
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
@@ -408,7 +408,7 @@
   when: 
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
@@ -426,7 +426,7 @@
   when: 
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
@@ -451,7 +451,7 @@
   when:
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'sgx-attestation')
 
@@ -474,7 +474,7 @@
   when:
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'sgx-attestation')
 
@@ -491,7 +491,7 @@
   when:
       - "'Enterprise' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Enterprise'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'enterprise')
       - (setup == 'sgx-attestation')
 
@@ -510,7 +510,7 @@
   when: 
      - "'Node' in groups"
      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
-     - ansible_os_family == 'RedHat'
+     - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
      - (isecl_role == 'node')
      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
@@ -524,7 +524,7 @@
   when: 
       - "'Node' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'node')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
@@ -542,7 +542,7 @@
   when:
      - "'Node' in groups"
      - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
-     - ansible_os_family == 'RedHat'
+     - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
      - (isecl_role == 'node')
      - ( setup == 'sgx-attestation')
 
@@ -556,7 +556,7 @@
   when:
       - "'Node' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Node'])
-      - ansible_os_family == 'RedHat'
+      - (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian')
       - (isecl_role == 'node')
       - (setup == 'sgx-attestation')
 

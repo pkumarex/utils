@@ -1,40 +1,45 @@
 ---
-- name: ISECL - SKC LIBRARY | Create tmp directory
+- name: ISECL - SKC LIBRARY | Create installation directory
   file:
-    path: "/tmp/{{skclib_installer_name}}"
+    path: "/root/{{skclib_installer_name}}"
     state: directory   
 
 - name: ISECL - SKC LIBRARY | Copy tar bundle and other files
-  copy: 
-    src: "{{skclib_installer_file_src}}/"
-    dest: "/tmp/{{skclib_installer_name}}"
+  copy:
+    src: "{{skclib_installer_file_src}}/{{item}}"
+    dest: "/root/{{skclib_installer_name}}"
     mode: "u+x"
+  loop:
+    - skc_library.tar
+    - skc_library.sha2
+    - skclib_untar.sh
 
 - name: ISECL - SKC LIBRARY | Untar the tar bundle
   shell: bash -x skclib_untar.sh
   args:
-    chdir: /tmp/{{skclib_installer_name}}
+    chdir: /root/{{skclib_installer_name}}
 
 - name: ISECL - SKC LIBRARY | Copy configuration file
   template:
     src: "skc_library.conf.j2"
-    dest: "/tmp/{{skclib_installer_name}}/skc_library.conf"
+    dest: "/root/{{skclib_installer_name}}/skc_library.conf"
 
 - name: ISECL - SKC LIBRARY | Update aas_admin_username
   lineinfile:
-    dest: "/tmp/{{skclib_installer_name}}/skc_library_create_roles.sh"
+    dest: "/root/{{skclib_installer_name}}/skc_library_create_roles.sh"
     regexp: '"username": "admin",'
     line: '"username": "{{ aas_admin_username }}",'
     backrefs: yes
 
 - name: ISECL - SKC LIBRARY | Update aas_admin_password
   lineinfile:
-    dest: "/tmp/{{skclib_installer_name}}/skc_library_create_roles.sh"
+    dest: "/root/{{skclib_installer_name}}/skc_library_create_roles.sh"
     regexp: '"password": "password"'
     line: '"password": "{{ aas_admin_password }}"'
     backrefs: yes
 
 - name: ISECL - SKC LIBRARY | Deploy SKC LIB
-  shell: "set -o pipefail && ./deploy_skc_library.sh 2>&1 | tee /root/skc-library-installer.log"  
+  shell: "set -o pipefail && ./deploy_skc_library.sh 2>&1 | tee /root/skc_library-install.log"  
   args:
-    chdir: /tmp/{{skclib_installer_name}}
+    chdir: /root/{{skclib_installer_name}}
+    executable: /bin/bash

@@ -90,4 +90,10 @@
     name: sqvs
     state: started
   listen: start sqvs   
-  
+
+- name: ISECL - SGX AGENT | Start SGX Agent
+  service:
+    name: sgx_agent
+    state: started
+  listen: start sgx_agent
+ 

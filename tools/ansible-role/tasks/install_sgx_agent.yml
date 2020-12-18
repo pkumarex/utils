@@ -1,41 +1,54 @@
 ---
-- name: ISECL - SGX AGENT | Create tmp directory
+- name: ISECL - SGX AGENT | Create installation directory
   file:
-    path: "/tmp/{{sgxagent_installer_name}}"
+    path: "/root/{{sgxagent_installer_name}}"
     state: directory     
             
 - name: ISECL - SGX AGENT | Copy tar bundle  and other files
-  copy: 
-    src: "{{sgxagent_installer_file_src}}/"
-    dest: "/tmp/{{sgxagent_installer_name}}"
+  copy:
+    src: "{{sgxagent_installer_file_src}}/{{item}}"
+    dest: "/root/{{sgxagent_installer_name}}"
     mode: "u+x"
+  loop:
+    - sgx_agent.tar
+    - sgx_agent.sha2
+    - agent_untar.sh
 
 - name: ISECL - SGX AGENT | Untar the tar bundle
   shell: bash -x agent_untar.sh
   args:
-    chdir: /tmp/{{sgxagent_installer_name}}
+    chdir: /root/{{sgxagent_installer_name}}
 
 - name: ISECL - SGX AGENT | Copy configuration file
   template:
     src: "agent.conf.j2"
-    dest: "/tmp/{{sgxagent_installer_name}}/agent.conf"
+    dest: "/root/{{sgxagent_installer_name}}/agent.conf"
 
 - name: ISECL - SGX AGENT | Update aas_admin_username
   lineinfile:
-    dest: "/tmp/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
+    dest: "/root/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
     regexp: '"username": "admin",'
     line: '"username": "{{ aas_admin_username }}",'
     backrefs: yes
 
 - name: ISECL - SGX AGENT | Update aas_admin_password
   lineinfile:
-    dest: "/tmp/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
+    dest: "/root/{{sgxagent_installer_name}}/sgx_agent_create_roles.sh"
     regexp: '"password": "password"'
     line: '"password": "{{ aas_admin_password }}"'
     backrefs: yes
 
 - name: ISECL - SGX AGENT | Deploy SGX Agent
-  shell: "set -o pipefail && ./deploy_sgx_agent.sh 2>&1 | tee /root/sgx-agent-installer.log"
+  shell: "set -o pipefail && ./deploy_sgx_agent.sh 2>&1 | tee /root/sgx_agent-install.log"
   args:
-    chdir: /tmp/{{sgxagent_installer_name}}
+    chdir: /root/{{sgxagent_installer_name}}
     stdin: yes
+    executable: /bin/bash
+    creates: /opt/sgx_agent/bin/sgx_agent
+  notify: start sgx_agent
+
+- name: ISECL - SGX AGENT | Verify successful installation of SGX Agent
+  shell: grep 'Installation completed successfully!' /root/sgx_agent-install.log
+  register: successful_install
+  failed_when: "'Installation completed successfully!' not in successful_install.stdout"
+

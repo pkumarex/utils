@@ -3,21 +3,21 @@
   get_url:
     url: "{{ postgres_db_rpm }}"
     dest: /root/
-
+  when: ansible_os_family == 'RedHat'
 
 - name: ISECL - BOOTSTRAP DB | Install postgresql RPM file
   dnf:
     name: "{{ postgres_rpm_name }}"
     state: present
     disable_gpg_check: true
-
+  when: ansible_os_family == 'RedHat'
 
 - name: ISECL - BOOTSTRAP DB | Disable postgresql module
   shell: dnf module disable -y postgresql
   args:
     chdir: /root
     executable: /bin/bash
-
+  when: ansible_os_family == 'RedHat'
 
 - name: ISECL - BOOTSTRAP DB | Copy postgresdb installer script
   copy:
@@ -60,7 +60,7 @@
   args:
     chdir: /root
     executable: /bin/bash
-
+  when: setup != 'secure-key-caching' and setup != 'sgx-orchestration' and setup != 'sgx-attestation'
 
 - name: ISECL - BOOTSTRAP DB | Create DB for Workload Service
   shell: ./create_db.sh {{ wls_db_name }} {{ wls_db_user }} {{ wls_db_password }}
