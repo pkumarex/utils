@@ -19,8 +19,7 @@
   
 - name: ISECL - CRIO | Install cri-o runtime
   dnf: 
-    name: "{{item}}"
-  with_items: 
+    name:  
       - cri-o-1.17.5-4.el8.x86_64.rpm
       - golang-github-cpuguy83-go-md2man-1.0.7-13.el8.x86_64.rpm
       - golang-github-cpuguy83-go-md2man-debuginfo-1.0.7-13.el8.x86_64.rpm
