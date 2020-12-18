@@ -7,12 +7,25 @@
   loop_control:
     loop_var: repo_name
 
-
+- name: ISECL - CRIO | Download cri-o rpms
+  get_url:
+    url: "{{item}}"
+    dest: /root
+  with_items:
+      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/cri-o-1.17.5-4.el8.x86_64.rpm
+      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-1.0.7-13.el8.x86_64.rpm
+      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-debuginfo-1.0.7-13.el8.x86_64.rpm
+      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-debugsource-1.0.7-13.el8.x86_64.rpm
+  
 - name: ISECL - CRIO | Install cri-o runtime
-  dnf:
-    name: cri-o
-    state: present
-
+  dnf: 
+    name: "{{item}}"
+  with_items: 
+      - cri-o-1.17.5-4.el8.x86_64.rpm
+      - golang-github-cpuguy83-go-md2man-1.0.7-13.el8.x86_64.rpm
+      - golang-github-cpuguy83-go-md2man-debuginfo-1.0.7-13.el8.x86_64.rpm
+      - golang-github-cpuguy83-go-md2man-debugsource-1.0.7-13.el8.x86_64.rpm
+  
 
 - name: ISECL - CRIO | Create hooks.d directory
   file:
