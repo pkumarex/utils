@@ -269,7 +269,7 @@
       - setup == 'workload-conf-vm'
       
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP PREREQUISITES | Set required CSP facts for secure-key-caching/sgx-orchestration/sgx-attestation usecase
   set_fact:
     cms: "{{ ansible_default_ipv4.address }}"
@@ -295,7 +295,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
+# os: Redhat/Ubuntu and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP PREREQUISITES | Set required CSP facts for sgx-orchestration/sgx-attestation usecase
   set_fact:
     ihub: "{{ ansible_default_ipv4.address }}"
@@ -314,7 +314,7 @@
       - (setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP | Install CSP services for secure-key-caching/sgx-orchestration/sgx-attestation usecase
   include: "{{ item }}"
   loop:
@@ -331,7 +331,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
+# os: Redhat/Ubuntu and setup: sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP | Install CSP services for sgx-orchestration/sgx-attestation usecase
   include: "{{ item }}"  
   loop:
@@ -344,7 +344,7 @@
       - (setup == 'sgx-orchestration' or setup == 'sgx-attestation') 
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration/sgx-attestation and isecl_role: csp
 - name: ISECL - SETUP | Set fact for CMS TLS certificate
   set_fact:
     cmstlscertsha384_csp: "{{ cms_tlscertsha384 }}"
@@ -361,7 +361,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration' or setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration  and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration  and isecl_role: enterprise
 - name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for secure-key-caching/sgx-orchestration usecase
   set_fact:
     cms: "{{ ansible_default_ipv4.address }}"
@@ -388,7 +388,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration and isecl_role: enterprise
 - name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for secure-key-caching/sgx-orchestration usecase
   set_fact:
     cms_enterprise: "{{ ansible_default_ipv4.address }}"
@@ -413,7 +413,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration and isecl_role: enterprise
 - name: ISECL - SETUP | Install Enterprise services for secure-key-caching/sgx-orchestration usecase
   include: "{{ item }}"
   loop:
@@ -431,7 +431,7 @@
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
 
-# os: Redhat and setup: sgx-attestation  and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: sgx-attestation  and isecl_role: enterprise
 - name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for sgx-attestation usecase
   set_fact:
     cms: "{{ ansible_default_ipv4.address }}"
@@ -456,7 +456,7 @@
       - (setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-attestation and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: sgx-attestation and isecl_role: enterprise
 - name: ISECL - SETUP PREREQUISITES | Set required Enterprise facts for sgx-attestation usecase
   set_fact:
     cms_enterprise: "{{ ansible_default_ipv4.address }}"
@@ -479,7 +479,7 @@
       - (setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-attestation and isecl_role: enterprise
+# os: Redhat/Ubuntu and setup: sgx-attestation and isecl_role: enterprise
 - name: ISECL - SETUP | Install Enterprise services for sgx-attestation usecase
   include: "{{ item }}"
   loop:
@@ -496,7 +496,7 @@
       - (setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: node
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration and isecl_role: node
 - name: ISECL - SETUP PREREQUISITES | Set required Node facts for secure-key-caching/sgx-orchestration usecase
   set_fact:
     sgx_agent: "{{ ansible_default_ipv4.address }}"
@@ -515,7 +515,7 @@
      - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
 
-# os: Redhat and setup: secure-key-caching/sgx-orchestration and isecl_role: node
+# os: Redhat/Ubuntu and setup: secure-key-caching/sgx-orchestration and isecl_role: node
 - name: ISECL - SETUP | Install Node services for secure-key-caching/sgx-orchestration usecase
   include: "{{ item }}"
   loop:
@@ -528,7 +528,7 @@
       - (isecl_role == 'node')
       - (setup == 'secure-key-caching' or setup == 'sgx-orchestration')
 
-# os: Redhat and setup: sgx-attestation and isecl_role: node
+# os: Redhat/Ubuntu and setup: sgx-attestation and isecl_role: node
 - name: ISECL - SETUP PREREQUISITES | Set required Node facts for sgx-attestation usecase
   set_fact:
     sgx_agent: "{{ ansible_default_ipv4.address }}"
@@ -547,7 +547,7 @@
      - ( setup == 'sgx-attestation')
 
 
-# os: Redhat and setup: sgx-attestation and isecl_role: node
+# os: Redhat/Ubuntu and setup: sgx-attestation and isecl_role: node
 - name: ISECL - SETUP | Install Node services for sgx-attestation usecase
   include: "{{ item }}"
   loop:
