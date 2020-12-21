@@ -66,7 +66,7 @@ echo "################ Update KBS env....  #################"
 sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$KBS_DOMAIN/" ~/kbs.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$KBS_TOKEN/" ~/kbs.env
 sed -i "s/^\(CMS_TLS_CERT_SHA384\s*=\s*\).*\$/\1$CMS_TLS_SHA/" ~/kbs.env
-sed -i "s@^\(AAS_BASE_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
+sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
 sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kbs.env
 sed -i "s@^\(SKC_CHALLENGE_TYPE\s*=\s*\).*\$@\1$SKC_CHALLENGE_TYPE@" ~/kbs.env
 sed -i "s@^\(ENDPOINT_URL\s*=\s*\).*\$@\1$ENDPOINT_URL@" ~/kbs.env
