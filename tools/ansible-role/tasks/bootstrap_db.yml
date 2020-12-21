@@ -19,14 +19,14 @@
     executable: /bin/bash
   when: ansible_os_family == 'RedHat'
 
-- name: ISECL - BOOTSTRAP DB | Add postgres repo
+- name: ISECL - BOOTSTRAP DB | Add postgresql repo
   shell: sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
   args:
     chdir: /root
     executable: /bin/bash
   when: ansible_os_family == 'Debian'
 
-- name: ISECL - BOOTSTRAP DB | Import postgres repo signing key
+- name: ISECL - BOOTSTRAP DB | Import postgresql repo signing key
   apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
   when: ansible_os_family == 'Debian'
 
