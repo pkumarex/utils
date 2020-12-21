@@ -5,18 +5,17 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 
 ## Use Case Collections
 
-| Use case               | Sub-Usecase                           | API Collection      |
-| ---------------------- | ------------------------------------- | --------------------|
-| Foundational Security  | Host Attestation                      | ✔️                  |
-|                        | Data Fencing  with Asset Tags         | ✔️                  |
-|                        | Trusted Workload Placement            | ✔️(Kubernetes Only) |
-|                        | Application Integrity                 | ✔️                  |
-| Launch Time Protection | VM Confidentiality                    | ❌                  |
-|  | Container Confidentiality with Docker Runtime | ✔️ |
-|  | Container Confidentiality with CRIO Runtime | ✔️ |
-| Secure Key Caching |  | ✔️ |
-| Security Aware Orchestration |  | ✔️(Kubernetes Only) |
+| Use case               | Sub-Usecase                                   | API Collection     |
+| ---------------------- | --------------------------------------------- | ------------------ |
+| Foundational Security  | Host Attestation(RHEL & VMWARE)                              | ✔️                  |
+|                        | Data Fencing  with Asset Tags(RHEL & VMWARE)                 | ✔️                  |
+|                        | Trusted Workload Placement (VM & Containers)  | ✔️ |
+|                        | Application Integrity                         | ✔️                  |
+| Launch Time Protection | VM Confidentiality                            | ✔️                  |
+|                        | Container Confidentiality with Docker Runtime | ✔️                  |
+|                        | Container Confidentiality with CRIO Runtime   | ✔️                  |
 
+> **Note: ** `Foundational Security - Host Attestation` is a pre-requisite for all usecases beyond Host Attestation. E.g: For working with `Launch Time Protection - VM Confidentiality` , Host Attestation flow must be run as a pre-req before trying VM Confidentiality
 
 ## Requirements
 
@@ -24,8 +23,6 @@ One click Postman API Collections for Intel® SecL-DC use-cases.
 * [Quick Start Guide - Foundational & Workload Security](https://github.com/intel-secl/docs/blob/master/quick-start-guides/Quick%20Start%20Guide%20-%20Intel%C2%AE%20Security%20Libraries%20-%20Foundational%20%26%20Workload%20Security.md)
 * [Quick Start Guide - Secure Key Caching](https://github.com/intel-secl/docs/blob/master/quick-start-guides/Quick%20Start%20Guide%20-%20Intel%C2%AE%20Security%20Libraries%20-%20Secure%20Key%20Caching.md)
 * Postman client [downloaded](https://www.postman.com/downloads/) and Installed or accessible via web
-
-
 
 ## Using the API Collections
 
