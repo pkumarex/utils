@@ -1,11 +1,17 @@
 ---
 # The below additional vars are documented in Readme.md under Role Variables
 
-# The RPM download URL for postgresql
+# The RPM download URL for postgresql on RHEL OS
 postgres_db_rpm: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 
-# The postgresql RPM  file name
+# The postgresql RPM  file name for RHEL OS
 postgres_rpm_name: pgdg-redhat-repo-latest.noarch.rpm
+
+# The apt repo for postgresql on Ubuntu OS
+postgres_db_apt_repo: https://apt.postgresql.org/pub/repos/apt
+
+# The apt repo signing key for postgresql on Ubuntu OS
+postgres_db_apt_repo_signing_key: https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
 #Below variables are required to be modified by user if running behind proxy
 

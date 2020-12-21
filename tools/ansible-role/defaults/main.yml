@@ -24,6 +24,9 @@ isecl_pgdb_installer_file_src: "{{binaries_path}}/install_pgdb.sh"
 # The shell script file src for creating DB tables for services
 isecl_pgdb_create_db_file_src: "{{binaries_path}}/create_db.sh"
 
+# The repo list for pgdb on Ubuntu
+isecl_pgdb_repo_list: "/etc/apt/sources.list.d/pgdg.list"
+
 # The port to be used by postgres DB
 isecl_pgdb_port: 5432
 
