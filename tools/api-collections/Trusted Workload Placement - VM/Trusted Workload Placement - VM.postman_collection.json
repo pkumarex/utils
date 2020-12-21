@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "b404e1cf-6f10-4a38-b2e7-6c09e86c70cf",
+		"_postman_id": "90900e29-d923-44f6-a65e-3cddd6dd4cc9",
 		"name": "Trusted Workload Placement - VM",
-		"description": "Starting in the Rocky release, OpenStack can now use \"Traits\" to provide qualitative data about Nova Compute hosts, and to establish Trait requirements for VM instances. The updated scheduler will place VMs\r\nrequiring a given Trait on Nova Compute nodes that meet the Trait requirements.\r\n\r\nIntel SecL-DC uses the Integration Hub to continually push platform integrity and Asset Tag information to the OpenStack Traits resources.  This means the OpenStack scheduler natively supports workload scheduling incorporating Intel SecL-DC security attributes, including attestation report Trust status and Asset Tags. The OpenStack Placement Service will automatically attempt to place images with Trait requirements on compute nodes that have those Traits.\r\n\r\n> ***NOTE***:  *This control only applies to instances launched using the\r\n> OpenStack scheduler, and the Traits functions will not affect\r\n> manually-launched instances where a specific Compute Node is defined\r\n> (since this does not use the scheduler at all). Intel SecL-DC uses\r\n> existing OpenStack interfaces and does not modify OpenStack code.  The\r\n> datacenter owner or OpenStack administrator is responsible for the\r\n> security of the OpenStack workload scheduling process in general, and\r\n> Intel recommends following published OpenStack security best\r\n> practices.*",
+		"description": "Starting in the Rocky release, OpenStack can now use \"Traits\" to provide qualitative data about Nova Compute hosts, and to establish Trait requirements for VM instances. The updated scheduler will place VMs\nrequiring a given Trait on Nova Compute nodes that meet the Trait requirements. Currently supported Openstack release for Intel SecL-DC is Openstack Ussuri. \n\nIntel SecL-DC uses the Integration Hub to continually push platform integrity and Asset Tag information to the OpenStack Traits resources.  This means the OpenStack scheduler natively supports workload scheduling incorporating Intel SecL-DC security attributes, including attestation report Trust status and Asset Tags. The OpenStack Placement Service will automatically attempt to place images with Trait requirements on compute nodes that have those Traits.\n\n> ***NOTE***:  *This control only applies to instances launched using the\n> OpenStack scheduler, and the Traits functions will not affect\n> manually-launched instances where a specific Compute Node is defined\n> (since this does not use the scheduler at all). Intel SecL-DC uses\n> existing OpenStack interfaces and does not modify OpenStack code.  The\n> datacenter owner or OpenStack administrator is responsible for the\n> security of the OpenStack workload scheduling process in general, and\n> Intel recommends following published OpenStack security best\n> practices.*",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5c5a7484-6e50-4f87-86d6-d2bf4d041ee0",
+								"id": "21f45680-4b3b-482f-9cf2-75b7668e4bd8",
 								"exec": [
 									"pm.environment.set(\"bearerToken\", pm.response.text());"
 								],
@@ -128,7 +128,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "80c2ef73-d7c2-4918-a49b-f88cf59f3773",
+						"id": "8aa4271c-bf80-46e1-addd-0f6e5b22fd6f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -138,7 +138,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fa330c44-4786-4aa9-9564-1c17d1ade330",
+						"id": "4334f01f-a65f-410e-bba4-7c80567c55f3",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -157,7 +157,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "486c9e64-8b46-45ba-bdce-431e0b481f84",
+								"id": "a2661b3e-498d-4c07-bd73-2a82bd10d65e",
 								"exec": [
 									"var report=pm.response.json()\r",
 									"pm.environment.set(\"hostId\", report.reports[0].host_id)"
@@ -168,7 +168,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9ed007c0-c603-4f48-8e64-16b2f994160a",
+								"id": "524f3ddc-f716-41cd-b020-41b4396ce341",
 								"exec": [
 									""
 								],
@@ -384,7 +384,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c7c4bba1-adab-4c04-b948-603f49ba5a6c",
+						"id": "06c95cc3-9829-4861-ab62-831488d0ab8b",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -394,7 +394,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b22d23cf-2507-42c1-b2d9-0cb546651e4c",
+						"id": "f9662595-8eb6-49ff-b232-a240bd060bda",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -412,7 +412,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "7de62669-93c2-4f1e-8c03-b4b91ae2284d",
+						"id": "df0d562a-4502-4153-aa27-33187c454306",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -422,7 +422,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "51f72241-71d4-4102-b0a3-85a4215c8445",
+						"id": "b8f27b60-7a8d-4fed-b37a-584b66934b45",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -443,7 +443,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "75f9eb06-afa0-45bf-aff3-5aa7b7768f78",
+				"id": "1a2c10e3-dd14-42ef-b2f7-cf92bf68b6c8",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -453,7 +453,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "845ed8ee-6c3b-401d-a9df-3e6361cebe06",
+				"id": "c00abd96-777b-4328-9660-3baf4d66f87c",
 				"type": "text/javascript",
 				"exec": [
 					""
