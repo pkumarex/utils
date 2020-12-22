@@ -74,8 +74,8 @@
       - setup == 'data-fencing'
 
 
-# os: Redhat and setup: trusted-workload-placement-containers and isecl_role: csp
-- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for trusted-workload-placement-containers usecase
+# os: Redhat and setup: trusted-workload-placement-containers and trusted-workload-placement-vm and isecl_role: csp
+- name: ISECL - SETUP PREREQUISITES | Set required CSP facts for trusted-workload-placement-containers,trusted-workload-placement-vm usecase
   set_fact:
     cms: "{{ ansible_default_ipv4.address }}"
     cms_hostname: "{{ ansible_fqdn }}"
@@ -92,11 +92,11 @@
       - "'CSP' in groups"
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - isecl_role == 'csp'
-      - setup == 'trusted-workload-placement-containers'
+      - setup == 'trusted-workload-placement-containers' or setup == 'trusted-workload-placement-vm'
 
 
-# os: Redhat and setup: trusted-workload-placement-containers and isecl_role: csp
-- name: ISECL - SETUP | Install CSP services for trusted-workload-placement-containers usecase
+# os: Redhat and setup: trusted-workload-placement-containers and trusted-workload-placement-vm and isecl_role: csp
+- name: ISECL - SETUP | Install CSP services for trusted-workload-placement-containers,trusted-workload-placement-vm usecase
   include: "{{ item }}"
   loop:
       - install_cms.yml
@@ -110,7 +110,7 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['CSP'])
       - ansible_os_family == 'RedHat'
       - isecl_role == 'csp'
-      - setup == 'trusted-workload-placement-containers'
+      - setup == 'trusted-workload-placement-containers' or setup == 'trusted-workload-placement-vm'
 
 
 # os: Redhat and setup: workload-conf-vm/workload-conf-containers-docker and isecl_role: csp
@@ -226,7 +226,7 @@
       - (ansible_default_ipv4.address or ansible_fqdn in groups['Node']) 
       - ansible_os_family == 'RedHat' 
       - isecl_role == 'node'
-      - (setup == 'host-attestation' or setup == 'application-integrity' or setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio' or setup == 'trusted-workload-placement-containers' or setup == 'data-fencing') 
+      - (setup == 'host-attestation' or setup == 'application-integrity' or setup == 'workload-conf-vm' or setup == 'workload-conf-containers-docker' or setup == 'workload-conf-containers-crio' or setup == 'trusted-workload-placement-containers' or setup == 'trusted-workload-placement-vm' or setup == 'data-fencing') 
 
 
 # os: Redhat and setup: workload-conf-containers-docker and isecl_role: node

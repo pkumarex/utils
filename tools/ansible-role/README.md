@@ -135,6 +135,7 @@ The following usecases are supported and the respective variables can be provide
 | Host Attestation                                   | `setup: host-attestation` in playbook or via `--extra-vars` as `setup=host-attestation` in CLI |
 | Application Integrity                              | `setup: application-integrity` in playbook or via `--extra-vars` as `setup=application-integrity` in CLI |
 | Data Fencing & Asset Tags                          | `setup: data-fencing` in playbook or via `--extra-vars` as `setup=data-fencing` in CLI |
+| Trusted Workload Placement - VM            | `setup: trusted-workload-placement-vm` in playbook or via `--extra-vars` as `setup=trusted-workload-placement-vm` in CLI |
 | Trusted Workload Placement - Containers            | `setup: trusted-workload-placement-containers` in playbook or via `--extra-vars` as `setup=trusted-workload-placement-containers` in CLI |
 | Launch Time Protection - VM Confidentiality        | `setup: workload-conf-vm` in playbook or via `--extra-vars` as `setup=workload-conf-vm` in CLI |
 | Launch Time Protection - Container Confidentiality with Docker Runtime | `setup: workload-conf-containers-docker` in playbook or via `--extra-vars` as `setup=workload-conf-containers-docker`in CLI |
@@ -175,6 +176,20 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 5. Host Verification Service
 6. Trust Agent
 
+**Trusted Workload Placement - VM**
+
+1. Certificate Management Service
+2. Bootstrap Database (scripts)
+3. Authentication & Authorization Service
+4. Populate Users (scripts)
+5. Host Verification Service
+6. Integration Hub
+7. Trust Agent
+> **Note**: `Trusted Workload Placement - VM` requires orchestrators `Openstack` and `integration-hub` to be configured to talk to Openstack. 
+    The playbook will place the `integration-hub` installer and configure the env except for `Openstack` configuration in the `ihub.env`. 
+    Once `Openstack` is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
+    Please refer product guide for supported versions of Openstack and installation of `integration-hub`<br>
+
 **Trusted Workload Placement - Containers**
 
 1. Certificate Management Service
@@ -184,10 +199,10 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 5. Host Verification Service
 6. Integration Hub
 7. Trust Agent
-> **Note**: `Trusted Workload Placement - Containers` requires orchestrators `openstack/kubernetes` and `integration-hub` to be configured to talk to these orchestrators. 
-    The playbook will place the `integration-hub` installer and configure the env except for `openstack/kubernetes` configuration in the `ihub.env`. 
-    Once `openstack/kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
-    Please refer product guide for supported versions of orchestrators and installation of `integration-hub`<br>
+> **Note**: `Trusted Workload Placement - Containers` requires orchestrator `Kubernetes` and `integration-hub` to be configured to talk to Kubernetes. 
+    The playbook will place the `integration-hub` installer and configure the env except for `kubernetes` configuration in the `ihub.env`. 
+    Once `kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
+    Please refer product guide for supported versions of Kubernetes and installation of `integration-hub`<br>
 
 **Launch Time Protection - VM Confidentiality**
 
@@ -201,10 +216,10 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 8. Workload Policy Manager
 9. Trust Agent
 10. Workload Agent
-> **Note**: `VM Confidentiality` requires `openstack` orchestrator .In addition to this, it also requires the installation of `integration-hub` to talk to the orchestrator. 
-    The playbook will place the `integration-hub` installer and configure the env except for `openstack/kubernetes` configuration in the `ihub.env`.  
-    Once `openstack`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
-    Please refer product guide for supported versions of orchestrator and setup details for installing `integration-hub` <br>
+> **Note**: `Trusted Workload Placement - VM` requires orchestrators `Openstack` and `integration-hub` to be configured to talk to Openstack. 
+    The playbook will place the `integration-hub` installer and configure the env except for `Openstack` configuration in the `ihub.env`. 
+    Once `Openstack` is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
+    Please refer product guide for supported versions of Openstack and installation of `integration-hub`<br>
 
 **Launch Time Protection - Container Confidentiality with Docker Runtime**
 
@@ -219,10 +234,10 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 9. Docker(runtime)
 10.  Trust Agent
 11. Workload Agent
-> **Note**: `Launch Time Protection - Container Confidentiality with Docker Runtime` requires `kubernetes` orchestrator .
+> **Note**: `Launch Time Protection - Container Confidentiality with Docker Runtime` requires `Kubernetes` orchestrator .
     In addition to this, it also requires the installation of `integration-hub` to talk to the orchestrator. 
     The playbook will place the `integration-hub` installer and configure the env except for `kubernetes` configuration in the `ihub.env`.  
-    Once `kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed.
+    Once `Kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed.
     Please refer product guide for supported versions of orchestrator and setup details for installing `integration-hub` 
 
 > **Note:** In addition to this `isecl-k8s-extensions` need to be installed on Kubernetes master. 
@@ -243,10 +258,10 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 11. Trust Agent
 12. Crio(Runtime)
 13. Workload Agent
-> **Note**: `Launch Time Protection - Container Confidentiality with CRIO Runtime` requires `kubernetes` orchestrator .
+> **Note**: `Launch Time Protection - Container Confidentiality with CRIO Runtime` requires `Kubernetes` orchestrator .
     In addition to this, it also requires the installation of `integration-hub` to talk to the orchestrator. 
     The playbook will place the `integration-hub` installer and configure the env except for `kubernetes` configuration in the `ihub.env`.  
-    Once `kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
+    Once `Kubernetes`  is installed and running, `ihub.env` can be updated for `tenant` configuration and installed. 
 
 > **Note:** In addition to this `isecl-k8s-extensions` need to be installed on Kubernetes master. 
     Please refer product guide for supported versions of orchestrator and setup details for installing `isecl-k8s-extensions`<br>
