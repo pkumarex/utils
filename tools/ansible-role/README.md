@@ -41,8 +41,8 @@ This role requires the following as pre-requisites:
      * `RHEL 8.3` OS
      * Repositories to be enabled are `rhel-8-for-x86_64-appstream-rpms` and `rhel-8-for-x86_64-baseos-rpms`<br>
    * **Secure Key Caching**
-     * `RHEL 8.2` OS
-     * Repositories to be enabled are `rhel-8-for-x86_64-appstream-rpms` and `rhel-8-for-x86_64-baseos-rpms` and `codeready-builder-for-rhel-8-x86_64-rpms`<br>
+     * `RHEL 8.2` OS / `Ubuntu 18.04` OS
+     * Repositories to be enabled for RHEL OS are `rhel-8-for-x86_64-appstream-rpms` and `rhel-8-for-x86_64-baseos-rpms` and `codeready-builder-for-rhel-8-x86_64-rpms`<br>
 
 3. **User Access**<br>
    Ansible should be able to talk to the remote machines using the `root` user and the Intel® SecL-DC services need to be installed as `root` user as well<br>
@@ -61,7 +61,7 @@ This role requires the following as pre-requisites:
    b. **Secure Key Caching, SGX Attestation and SGX Orchestration Usecases**
       * Supported Hardware: Intel® Xeon® SP products those support SGX
       * BIOS Requirements: Intel® SGX-TEM BIOS requirements are outlined in the latest Intel® SGX Platforms BIOS Writer's Guide, Intel® SGX should be enabled in BIOS menu (Intel® SGX is Disabled by default on Ice Lake), Intel® SGX BIOS requirements include exposing Flexible Launch Control menu.
-      * OS Requirements (Intel® SGX does not supported on 32-bit OS): Linux RHEL 8.2<br>
+      * OS Requirements (Intel® SGX does not supported on 32-bit OS): Linux RHEL 8.2 / Linux Ubuntu 18.04<br>
 
 Dependencies
 ------------
@@ -70,8 +70,8 @@ None
 
 
 
-Usecase and Playbook Support
-----------------------------
+Usecase and Playbook Support on RHEL
+------------------------------------
 
 | Usecase                                            | Playbook Support |
 | -------------------------------------------------- | ---------------- |
@@ -87,6 +87,12 @@ Usecase and Playbook Support
 | SGX Attestation                                    | Yes(partial*)    |
    > **Note:** *partial means orchestrator installation is not bundled with the role and need to be done independently. Also, components dependent on the orchestrator like `isecl-k8s-extensions` and `integration-hub` are installed either partially or not installed
 
+Usecase and Playbook Support on Ubuntu
+--------------------------------------
+
+| Usecase                                            | Playbook Support |
+| -------------------------------------------------- | ---------------- |
+| Secure Key Caching                                 | Yes              |
 
 
 Supported Deployment Model
@@ -101,8 +107,8 @@ Supported Deployment Model
 
 
 
-Packages & Repos Installed by Role
-----------------------------------
+Packages & Repos Installed by Role on RHEL
+------------------------------------------
 
 * tar
 * dnf-plugins-core
@@ -123,6 +129,11 @@ The below is installed for only `Launch Time Protection - Container Confidential
 * crio
 > **Note** : As part of CRIO installation,  this role would also configure crio runtime to work with Intel® SecL-DC
 
+Repo & Key Installed by Role on Ubuntu
+--------------------------------------------
+
+* https://apt.postgresql.org/pub/repos/apt
+* https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
 
 Supported Usecases and  Corresponding Components
@@ -319,6 +330,7 @@ Example Inventory and Vars
 
 In order to deploy Intel® SecL-DC binaries, the following inventory can be used and the required inventory vars as below need to be set. The below example inventory can be created under `/etc/ansible/hosts`
 
+On RHEL:
 ```
 [CSP]
 <machine1_ip/hostname>
@@ -342,6 +354,33 @@ ansible_password=<password>
 [Node:vars]
 isecl_role=node
 ansible_user=root
+ansible_password=<password>
+```
+
+On Ubuntu:
+```
+[CSP]
+<machine1_ip/hostname>
+
+[Enterprise]
+<machine2_ip/hostname>
+
+[Node]
+<machine3_ip/hostname>
+
+[CSP:vars]
+isecl_role=csp
+ansible_user=<ubuntu_user>
+ansible_password=<password>
+
+[Enterprise:vars]
+isecl_role=enterprise
+ansible_user=<ubuntu_user>
+ansible_password=<password>
+
+[Node:vars]
+isecl_role=node
+ansible_user=<ubuntu_user>
 ansible_password=<password>
 ```
 
@@ -425,8 +464,12 @@ Playbook
 
 and
 
-```shell
+```shell (on RHEL)
 ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to>
+```
+
+```shell (on Ubuntu)
+ansible-playbook <playbook-name> --extra-vars setup=<setup var from supported usecases> --extra-vars binaries_path=<path where built binaries are copied to> --extra-vars "ansible_sudo_pass=<password>"
 ```
 
 > **Note:** Update the `roles_path` under `ansible.cfg` to point to the cloned repository so that the role can be read by Ansible
@@ -656,7 +699,7 @@ Default Port: `none`<br>
 
 **SGX Agent**<br>
 
-Installation log file: `/root/sgx-agent-installer.log`<br>
+Installation log file: `/root/sgx_agent-install.log`<br>
 Service files: `/opt/sgx_agent`<br>
 Configuration files: `/etc/sgx_agent`<br>
 Log files: `/var/log/sgx_agent`<br>
@@ -665,7 +708,7 @@ Default Port: `none`<br>
 
 **SKC Library**<br>
 
-Installation log file: `/root/skc-library-installer.log`<br>
+Installation log file: `/root/skc_library-install.log`<br>
 Service files: `/opt/skc`<br>
 Configuration files: `none`<br>
 Log files: `none`<br>
@@ -706,6 +749,7 @@ The description for default variables under `defaults/main.yml` for each service
 | ------------------------------------ | ------------------------------------------------------------ | ---------------- | ---------------------- | ------------------------- | ------------------------------------------ | -------------------------------------------------- | ------------------- | ----------------- | --------------- |
 | isecl_pgdb_installer_file_src        | The shell script file src for installing postgres DB         | yes              | yes                    | yes                       | yes                                        | yes                                                | Yes     | Yes    | Yes   |
 | isecl_pgdb_create_db_file_src        | The shell script file src for creating DB tables for services | yes              | yes                    | yes                       | yes                                        | yes                                                | Yes     | Yes    | Yes   |
+| isecl_pgdb_repo_list                 | The repo list for postgres DB on Ubuntu                       | no              | no                    | no                       | no                                        | no                                                | Yes     | no    | no   |
 | isecl_pgdb_port                      | The port to be used by postgres DB                           | yes              | yes                    | yes                       | yes                                        | yes                                                | Yes     | Yes    | Yes   |
 | isecl_pgdb_save_db_install_log       | Save postgres DB install logs [true/false]                   | yes              | yes                    | yes                       | yes                                        | yes                                                | Yes     | Yes    | Yes   |
 | aas_db_name                          | The db name for Authentication and Authorization Service     | yes              | yes                    | yes                       | yes                                        | yes                                                | Yes     | Yes    | Yes   |
@@ -917,13 +961,15 @@ The description for default variables under `defaults/main.yml` for each service
 
 **Other Variables**
 
-| variable(vars/main.yml) | Description                                                  | Host Attestation | Application  Integrity | Data Fencing & Asset Tags | Launch Time Protection - VM Confidentiality | Launch Time Protection - Container Confidentiality |
-| ----------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ------------------------- | ------------------------------------------- | -------------------------------------------------- |
-| postgres_db_rpm         | The RPM download URL for postgresql                          | yes              | yes                    | yes                       | yes                                         | yes                                                |
-| postgres_rpm_name       | The postgresql RPM  file name                                | yes              | yes                    | yes                       | yes                                         | yes                                                |
-| http_proxy              | The http_proxy for setting up Intel® SecL-DC libraries       | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               |
-| https_proxy             | The http_proxy for setting up Intel® SecL-DC libraries       | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               |
-| no_proxy                | The no_proxy (comma separated) for setting up Intel® SecL-DC libraries | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               |
+| variable(vars/main.yml) | Description                                                  | Host Attestation | Application  Integrity | Data Fencing & Asset Tags | Launch Time Protection - VM Confidentiality | Launch Time Protection - Container Confidentiality | Secure Key Caching | SGX Orchestration | SGX Attestation |
+| ----------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ------------------------- | ------------------------------------------- | -------------------------------------------------- | ------------------- | ------------------|---------------- |
+| postgres_db_rpm         | The RPM download URL for postgresql                          | yes              | yes                    | yes                       | yes                                         | yes                                                | yes                 | yes               | yes             |
+| postgres_rpm_name       | The postgresql RPM  file name                                | yes              | yes                    | yes                       | yes                                         | yes                                                | yes                 | yes               | yes             |
+| postgres_db_apt_repo    | The apt repo for postgresql on Ubuntu OS                     | no               | no                     | no                        | no                                          | no                                                 | yes                 | no               | no             |
+| postgres_db_apt_repo_signing_key       | The apt repo signing key for postgresql on Ubuntu OS                                | no              | no                    | no                       | no                                         | no                                                | yes                 | no               | no             |
+| http_proxy              | The http_proxy for setting up Intel® SecL-DC libraries       | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               | yes                 | yes               | yes             |
+| https_proxy             | The http_proxy for setting up Intel® SecL-DC libraries       | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               | yes                 | yes               | yes             |
+| no_proxy                | The no_proxy (comma separated) for setting up Intel® SecL-DC libraries | yes*             | yes*                   | yes*                      | yes*                                        | yes*                                               | yes                 | yes               | yes             |
 
 > **Note:** `*` required only if running behind a proxy
 
