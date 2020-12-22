@@ -38,7 +38,7 @@ This role requires the following as pre-requisites:
 2. **Repositories and OS**<br>
 
    * **Foundational and Workload Security Usecases**
-     * `RHEL 8.2` OS
+     * `RHEL 8.3` OS
      * Repositories to be enabled are `rhel-8-for-x86_64-appstream-rpms` and `rhel-8-for-x86_64-baseos-rpms`<br>
    * **Secure Key Caching**
      * `RHEL 8.2` OS
@@ -52,7 +52,7 @@ This role requires the following as pre-requisites:
    a. **Foundational and Workload Security Usecases**
       * Intel® SecL-DC supports and uses a variety of Intel security features, but there are some key requirements to consider before beginning an installation. Most important among these is the Root of Trust configuration. This involves deciding what combination of TXT, Boot Guard, tboot, and UEFI Secure Boot to enable on platforms that will be attested using Intel® SecL.
 
-        > **Note:** At least one "Static Root of Trust" mechanism must be used (TXT and/or BtG). For Legacy BIOS systems, tboot must be used. For UEFI mode systems, UEFI SecureBoot must be used* Use the chart below for a guide to acceptable configuration options. 
+        > **Note:** At least one "Static Root of Trust" mechanism must be used (TXT and/or BtG). For Legacy BIOS systems, tboot must be used. For UEFI mode systems, UEFI SecureBoot must be used* Use the chart below for a guide to acceptable configuration options.Only dTPM is supported on Intel® SecL-DC platform hardware.  
 
         ![hardware-options](./images/trusted-boot-options.PNG)
 
@@ -302,9 +302,7 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 Example Inventory and Vars
 --------------------------
 
-In order to deploy Intel® SecL-DC binaries for the supported deployment models , the following inventory can be used and the required inventory vars as below need to be set. The below example inventory can be created under `/etc/ansible/hosts`
-
-**Deployment Model - 2 VM and 1 Compute Node**
+In order to deploy Intel® SecL-DC binaries, the following inventory can be used and the required inventory vars as below need to be set. The below example inventory can be created under `/etc/ansible/hosts`
 
 ```
 [CSP]
@@ -332,7 +330,10 @@ ansible_user=root
 ansible_password=<password>
 ```
 
-
+> **Note:** Ansible requires `ssh` and `root` user access to remote machines. The following command can be used to ensure ansible can connect to remote machines with host key check `
+  ```shell
+  ssh-keyscan -H <ip_address> >> /root/.ssh/known_hosts
+  ```
 
 Using the Role in Ansible
 -------------------------
