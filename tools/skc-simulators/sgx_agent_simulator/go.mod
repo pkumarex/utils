@@ -1,7 +1,5 @@
 module intel/isecl/sgx_agent/v3
 
-go 1.14
-
 require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/handlers v1.4.0
@@ -17,6 +15,6 @@ require (
 )
 
 replace (
-	intel/isecl/lib/common/v3 => gitlab.devtools.intel.com/sst/isecl/lib/common.git/v3 v3.2.1-0.20201210093129-f69e25a42d47
-	intel/isecl/lib/clients/v3 => gitlab.devtools.intel.com/sst/isecl/lib/clients.git/v3 v3.2.1-0.20201210093740-034189f165d8
+	intel/isecl/lib/common/v3 => github.com/intel-secl/common/v3 v3.3.0
+	intel/isecl/lib/clients/v3 => github.com/intel-secl/clients/v3 v3.3.0
 )
