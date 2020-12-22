@@ -315,7 +315,7 @@ scs_admin_username: scsuser@scs
 scs_admin_password: scspassword
 
 # The name of the binary installer as per the release tag for SGX Caching Service
-scs_installer_name: scs-v3.2.0.bin
+scs_installer_name: scs-v3.3.0.bin
 
 # The binary installer file source for SGX Caching Service
 scs_installer_file_src: "{{binaries_path}}/{{scs_installer_name}}"
@@ -339,7 +339,7 @@ shvs_admin_username: shvsuser@shvs
 shvs_admin_password: shvspassword
 
 # The name of the binary installer as per the release tag for SGX Host Verification Service
-shvs_installer_name: shvs-v3.2.0.bin
+shvs_installer_name: shvs-v3.3.0.bin
 
 # The binary installer file source for SGX Host Verification Service
 shvs_installer_file_src: "{{binaries_path}}/{{shvs_installer_name}}"
@@ -357,7 +357,7 @@ sqvs_admin_username: sqvsuser@sqvs
 sqvs_admin_password: sqvspassword
 
 # The name of the binary installer as per the release tag for SGX Quote Verification Service
-sqvs_installer_name: sqvs-v3.2.0.bin
+sqvs_installer_name: sqvs-v3.3.0.bin
 
 # The binary installer file source for SGX Quote Verification Service
 sqvs_installer_file_src:  "{{binaries_path}}/{{sqvs_installer_name}}"
