@@ -1,12 +1,4 @@
 ---
-- name: ISECL - CRIO | Configure cri-o repo
-  shell: dnf config-manager --add-repo {{repo_name}}
-  with_items: 
-      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-      - https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{crio_version}}/CentOS_8/devel:kubic:libcontainers:stable:cri-o:{{crio_version}}.repo
-  loop_control:
-    loop_var: repo_name
-
 - name: ISECL - CRIO | Download cri-o rpms
   get_url:
     url: "{{item}}"

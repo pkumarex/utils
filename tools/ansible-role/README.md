@@ -114,8 +114,10 @@ The below is installed for only `Launch Time Protection - Container Confidential
 
 
 The below is installed for only `Launch Time Protection - Container Confidentiality with CRIO Runtime` Usecase on Enterprise and Compute Node
-* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.16/CentOS_8/devel:kubic:libcontainers:stable:cri-o:1.16.repo
+* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/cri-o-1.17.5-4.el8.x86_64.rpm
+* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-1.0.7-13.el8.x86_64.rpm
+* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-debuginfo-1.0.7-13.el8.x86_64.rpm
+* https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.17/CentOS_8/x86_64/golang-github-cpuguy83-go-md2man-debugsource-1.0.7-13.el8.x86_64.rpm 
 * docker-ce-19.03.13
 * skopeo
 * crio
@@ -300,7 +302,7 @@ The ISecL services and scripts required w.r.t each use case is as follows. The b
 Example Inventory and Vars
 --------------------------
 
-In order to deploy Intel® SecL-DC binaries for the supported deployment models , the following inventory can be used and the required inventory vars as below need to be set 
+In order to deploy Intel® SecL-DC binaries for the supported deployment models , the following inventory can be used and the required inventory vars as below need to be set. The below example inventory can be created under `/etc/ansible/hosts`
 
 **Deployment Model - 2 VM and 1 Compute Node**
 
@@ -357,7 +359,7 @@ cd tools/ansible-role
 Example Playbook and CLI
 ------------------------
 
-The following are playbook and CLI example for deploying Intel® SecL-DC binaries based on the supported deployment models and usecases.
+The following are playbook and CLI example for deploying Intel® SecL-DC binaries based on the supported deployment models and usecases. The below example playbooks can be created as `site-bin-isecl.yml`
 
 > **Note:** If running behind a proxy, update the proxy variables under `vars/main.yml` and run as below
 
