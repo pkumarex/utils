@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5c7534bd-db35-4c2e-acc3-5f0a32e6a3de",
+		"_postman_id": "91fcd9f8-6658-44f1-b9be-6c062a85413a",
 		"name": "SGX Discovery, Provisioning and Orchestration",
 		"description": "For the secrets to be provisioned securely to SGX compute nodes in public clouds, the owner of the secret needs to ensure that the secrets will be protected in SGX enclaves by performing an SGX Attestation.\r\n\r\nSGX Attestation involves provisioning SGX nodes with Platform Certification Key (PCK) certificates. PCK certificates for SGX nodes are obtained by providing the node SGX data to the Intel SGX Provisioning Certificate Service (PCS), a cloud hosted service. PCS also returns SGX collateral such as CRLs, TCB information and QE Identity.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -15,7 +15,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c0695024-fcc7-49da-a93b-6244b783b9e5",
 								"exec": [
 									"pm.environment.set(\"bearerTokenShvs\", pm.response.text());"
 								],
@@ -125,7 +124,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "617b5fe7-d3bc-449a-9421-236607ef93eb",
 								"exec": [
 									"pm.environment.set(\"bearerTokenSagent\", pm.response.text());"
 								],
@@ -230,8 +228,7 @@
 					]
 				}
 			],
-			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for.",
-			"protocolProfileBehavior": {}
+			"description": "To make an API request to an Intel® SecL-DC service, an authentication\r\ntoken is now required. API requests must now include an Authorization\r\nheader with an appropriate token:\r\n\r\n```\r\nAuthorization: Bearer <token>\r\n```\r\n\r\nThe token is issued by the AAS and will expire after a set amount of time.\r\nThis token may be used with any Intel® SecL-DC service, and will carry the\r\nappropriate permissions for the role(s) assigned to the account the token was\r\ngenerated for."
 		},
 		{
 			"name": "Verify Services",
@@ -241,7 +238,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c5e734a9-d275-40b2-a0dd-941762dd875c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -251,15 +247,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c2bfec2e-fd5f-4046-aa7a-7efef6fed8b9",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Host Registration with SGX Agent",
@@ -380,7 +374,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "8fd75344-11a2-4ca2-87ed-979fc873917c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -390,15 +383,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2b6a0083-2ecd-4de8-963d-9cb55dd88186",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Request for Platform Specific Information",
@@ -409,7 +400,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "647c31e9-7b20-40f6-b222-3d10aef3940f",
 								"exec": [
 									"pm.environment.set(\"encppid\", pm.response.json()[\"sgx-platform-data\"][\"enc-ppid\"]);\r",
 									"pm.environment.set(\"pceid\", pm.response.json()[\"sgx-platform-data\"][\"pceid\"]);\r",
@@ -513,7 +503,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "7ffbc0f5-8dd3-463a-a881-6179558d3d7f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -523,15 +512,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "86f0d6c1-361b-447c-8f28-9440ca951e68",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Push Platform Information to SGX SCS",
@@ -647,7 +634,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ddf02f7d-8929-4960-a916-b450a56e340a",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -657,15 +643,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "cb30d043-5bba-4af4-8ebf-eed4e245b8e1",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Verify TCB Info",
@@ -775,7 +759,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b163d705-10b6-418c-8735-07e17961555c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -785,15 +768,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d0deab31-c697-4d05-8f25-f8a74e23b4c9",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Verify PCK Certificate",
@@ -947,7 +928,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c5b9480c-361f-486c-94d1-63825fb62d8f",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -957,15 +937,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "12e3387e-d53f-463d-9244-cc855ef5884c",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Verify TCB Status is UpToDate",
@@ -1079,7 +1057,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b13db835-6420-4815-9aea-e6087af216b1",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1089,18 +1066,16 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f6b3d77a-7d56-41bb-a886-0c7cd77c546b",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
-			"name": "Integration with Orchestrator",
+			"name": "Integration with Kubernetes",
 			"item": [
 				{
 					"name": "Configuring Pods to Require Matching Attributes",
@@ -1110,7 +1085,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a9a66eae-0d38-4bb7-b636-cda23e3a7b34",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1120,16 +1094,13 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a3da610a-c056-4558-8992-dcefe31cdc1a",
 								"type": "text/javascript",
 								"exec": [
 									""
 								]
 							}
 						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
+					]
 				},
 				{
 					"name": "Launching a Pod on a Compliant Worker Node",
@@ -1139,7 +1110,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9ef16f60-b9ef-408a-b87a-3f9ac4e1b872",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -1149,24 +1119,20 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "042458b1-2360-40ee-87ed-8264cda77940",
 								"type": "text/javascript",
 								"exec": [
 									""
 								]
 							}
 						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
+					]
 				}
 			],
-			"description": "The Integration Hub (IHUB) allows to support SGX in Kubernetes and Open stack. IHUB pulls the SGX compute nodes information from the SGX Host Verification Service (SHVS) and pushes it to Kubernetes or Open stack. IHUB performs these steps on a regular basis so that the most recent SGX information about nodes is reflected in Kubernetes and Open stack. This integration allows Kubernetes and Open stack to schedule VMs and containers that need to run SGX workloads on compute nodes that support SGX. The SGX data that IHUB pushes to Kubernetes and Open stack consists of SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status up to date/not up to date and platform-data expiry time.",
+			"description": "The Integration Hub (IHUB) allows to support SGX in Kubernetes and Open stack. IHUB pulls the list of hosts details from Kubernetes and then using the host information it pulls the SGX Data from SGX Host Verification Service and pushes it to Kubernetes. IHUB performs these steps on a regular basis so that the most recent SGX information about nodes is reflected in Kubernetes and Openstack. This integration allows Kubernetes and Openstack to schedule VMs and containers that need to run SGX workloads on compute nodes that support SGX. The SGX data that IHUB pushes to Kubernetes consists of SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status up to date/not up to date and platform-data expiry time.",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c7364cf5-e3bf-412b-a50d-328b5cd0af96",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1176,22 +1142,95 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f3b4865c-9a4e-46a4-90aa-cdb80daf579a",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
+			]
+		},
+		{
+			"name": "Integration with OpenStack",
+			"item": [
+				{
+					"name": "Associate Traits",
+					"item": [],
+					"description": "Setup Compute and Controller node for Openstack. Compute node should be setup on SGX host machine, Controller node can be any system. After the compute/controller setup is done, follow the below steps:\n\nIHUB should be installed and configured with Openstack.\n\nNote: While using deployment scripts to install the components, in the env directory of the binaries folder comment \"KUBERNETES_TOKEN\" in the ihub.env before installation.\n\n\nOn the openstack controller, if resource provider is not listing the resources then install the \"osc-placement\":\n\n``` pip3 install osc-placement ```\n\nSource the admin-openrc credentials to gain access to user-only CLI commands and export the os_placement_API_version:\n\n``` source admin-openrc ```\n\nList the set of resources mapped to the Openstack:\n\n``` openstack resource provider list ```\n\nSet the required traits for SGX Hosts:\n\n``` openstack image set --property trait:CUSTOM_ISECL_SGX_ENABLED_TRUE=required <image name> ```\n\nFor example, 'cirros' image can be used for the instances.\n\nView the Traits that has been set:\n\n``` openstack image show <image name> ```\n\nThe trait should be set and assigned to the respective image successfully. For example 'cirros' image can be used for the instances.\n\nVerify the trait is enabled for the SGX Host:\n\n``` openstack resource provider trait list <uuid of the host which the openstack resoruce provider lists> ```\n\nSGX Supported, SGX TCB upto Date, SGX FLC enabled, SGX EPC size attributes of the SGX host for which the 'required' trait set to TRUE or FALSE is displayed. For example, if required trait is set as TRUE:\n\n```\nCUSTOM_ISECL_SGX_ENABLED_TRUE\nCUSTOM_ISECL_SGX_SUPPORTED_TRUE\nCUSTOM_ISECL_SGX_TCBUPTODATE_FALSE\nCUSTOM_ISECL_SGX_FLC_ENABLED_TRUE\nCUSTOM_ISECL_SGX_EPC_SIZE_2_0_GB\n```\n\nFor example, if the required trait is set as FALSE:\n\n```\nCUSTOM_ISECL_SGX_ENABLED_FALSE\nCUSTOM_ISECL_SGX_SUPPORTED_TRUE\nCUSTOM_ISECL_SGX_TCBUPTODATE_FALSE\nCUSTOM_ISECL_SGX_FLC_ENABLED_FALSE\nCUSTOM_ISECL_SGX_EPC_SIZE_0_B\n```",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Create  Instances",
+					"item": [],
+					"description": "Create the instances:\r\n\r\n``` openstack server create --flavor tiny --image <image name> --net vmnet <vm instance name> ```\r\n\r\nInstances should be created and the status should be \"Active\". Instance should be launched successfully.\r\n\r\n```  openstack server list ```\r\n\r\nNote : To unset the trait, use the following CLI commands:\r\n\r\n ``` openstack image unset --property trait:CUSTOM_ISECL_SGX_ENABLED_TRUE <image name> ```\r\n\r\n\r\n ``` openstack image unset --property trait:CUSTOM_ISECL_SGX_ENABLED_FALSE <image name> ```",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
 			],
-			"protocolProfileBehavior": {}
+			"description": "OpenStack can now use “Traits” to provide qualitative data about Nova Compute hosts to establish Trait requirements. The Integration Hub continually push SGX data to the OpenStack Traits resources. This means OpenStack scheduler natively supports workload scheduling incorporating SGX Host information, including SGX enabled/disabled, SGX supported/not supported, FLC enabled/not enabled, EPC memory size, TCB status upto date/not. The OpenStack Placement Service will automatically attempt to place images with Trait requirements on compute nodes that have those Traits.\n\nNOTE: This control only applies to instances launched using the OpenStack scheduler, and the Traits functions will not affect manually-launched instances where a specific Compute Node is defined (since this does not use the scheduler at all). Intel SecL-DC uses existing OpenStack interfaces and does not modify OpenStack code.  The datacenter owner or OpenStack administrator is responsible for the security of the OpenStack workload scheduling process in general, and Intel recommends following published OpenStack security best practices.\n\nSetting Image Traits\nImage Traits define the policy for which Traits are required for that instance to be launched on a Nova Compute node. By setting these Traits to “required” the OpenStack scheduler will require the same Traits to be present on a Nova Compute node in order to launch instances. To set the Image Traits for Intel SecL-DC, a specific naming convention is used. This naming convention will match the Traits that the Integration Hub will automatically push to OpenStack. Two types of Traits are currently supported – one Trait is used to require that the Compute Node must be SGX supported and the other Trait is used to require specific SGX key/value pairs.\n\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "06a0ef57-8895-4da7-9512-d2733b1eb701",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1201,13 +1240,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "b52d8c8a-fdf9-4a10-80be-67a2d626c036",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
