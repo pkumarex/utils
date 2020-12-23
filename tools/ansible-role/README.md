@@ -454,6 +454,31 @@ Update the following vars in `defaults/main.yml`
 tpm_owner_secret: <tpm_secret>
 ```
 
+#### UEFI SecureBoot enabled
+
+If UEFI mode and UEFI SecureBoot feature is enabled, the following option can be used to during runtime in the playbook
+
+```shell
+ansible-playbook <playbook-name> \
+--extra-vars setup=<setup var from supported usecases> \
+--extra-vars binaries_path=<path where built binaries are copied to> \
+--extra-vars uefi_secureboot=yes \
+--extra-vars grub_file_path=<uefi mode grub file path>
+```
+
+or
+
+Update the following vars in `defaults/main.yml`
+
+```yaml
+# Enable/disable for UEFI SecureBoot Mode
+# [yes - UEFI SecureBoot mode, no - Legacy mode]
+uefi_secureboot: 'yes'
+
+# The grub file path for Legacy mode & UEFI Mode. Default is Legacy mode path. Update the below path for UEFI mode with UEFI SecureBoot
+grub_file_path: <uefi mode grub file path>
+```
+
 #### Deploying for Workload Confidentiality with CRIO Runtime
 
 If using for `Launch Time Protection - Workload Confidentiality with CRIO Runtime` , following option can be provided during runtime in playbook. By default, the playbook is configured to install for `Launch Time Protection - Workload Confidentiality with Docker Runtime`

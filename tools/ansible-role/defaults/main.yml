@@ -232,6 +232,9 @@ wpm_container_security: 'yes'
 
 
 # ---------------------------------------- TRUST AGENT ------------------------------------------- #
+# Enable/disable for UEFI SecureBoot Mode
+# [yes - UEFI SecureBoot mode, no - Legacy mode]
+uefi_secureboot: 'no'
 
 # The name of the binary installer as per release tag for  Trust Agent
 ta_installer_file_name: trustagent-v3.3.0.bin
@@ -242,7 +245,7 @@ ta_installer_file_src: "{{binaries_path}}/{{ta_installer_file_name}}"
 # The TPM Storage Root Key(SRK) Password to be used if TPM is already owned
 tpm_owner_secret: "{{tpm_secret | default('')}}"
 
-# The grub file path for legacy mode
+# The grub file path for Legacy mode & UEFI Mode. Default is Legacy mode path. Update the below path for UEFI mode with UEFI SecureBoot
 grub_file_path: /boot/grub2/grub.cfg
 
 # TRUST AGENT - Below is Only for Launch Time Protection - Container Confidentiality 

@@ -3,12 +3,14 @@
   dnf:
     name: tboot-1.9.10
     state: present
+  when: uefi_secureboot == 'no'
 
 
 - name: ISECL - TRUST AGENT | Verify if already in measured launch state
   shell: "txt-stat | grep 'TXT measured launch: TRUE'"
   register: pre_mle_state
   failed_when: pre_mle_state.rc != 1 and pre_mle_state.rc != 0
+  when: uefi_secureboot == 'no'
   
 
 - name: ISECL - TRUST AGENT | Creating backup of grub.cfg 
@@ -16,12 +18,16 @@
     src: /boot/grub2/grub.cfg
     dest: /boot/grub2/grub.bak
   delegate_to: "{{ inventory_hostname }}"
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
-
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  
 
 - name: ISECL - TRUST AGENT | Generate grub.cfg with tboot option
   shell: grub2-mkconfig -o /boot/grub2/grub.cfg
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
 
 
 - name: ISECL - TRUST AGENT | Verify and update /etc/default/grub to use GRUB_DEFAULT=saved
@@ -29,21 +35,27 @@
     path: /etc/default/grub
     regexp: '^GRUB_DEFAULT='
     line: GRUB_DEFAULT=saved
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
 
 
 - name: ISECL - TRUST AGENT | Set the default grub option to Tboot and rebuild grub config
   shell: | 
           grub2-set-default 2
           grub2-mkconfig -o /boot/grub2/grub.cfg
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
 
 
 - name: ISECL - TRUST AGENT | Reboot to enter tboot
   shell: sleep 2 && shutdown -r now "Ansible reboot"
   async: 1
   poll: 0
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
 
 
 - name: ISECL - TRUST AGENT | Wait for active SSH connection
@@ -54,14 +66,18 @@
    state: started
    delay: 30
    timeout: 300
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
 
 
 - name: ISECL - TRUST AGENT | Verify a successful launch into tboot
   shell: "txt-stat | grep 'TXT measured launch: TRUE'"
   register: post_mle_state
   failed_when: "'TXT measured launch: TRUE' not in post_mle_state.stdout"
-  when: "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
+  when: 
+    - uefi_secureboot == 'no'
+    - "'TXT measured launch: TRUE' not in pre_mle_state.stdout"
   
 
 - name: ISECL - TRUST AGENT | Generate trustagent.env
@@ -86,7 +102,8 @@
 
 
 - name: ISECL - TRUST AGENT | Update the grub boot loader
-  shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
+  shell: "grub2-mkconfig -o {{grub_file_path}}"
+  when: uefi_secureboot == 'no'
   
    
 - name: ISECL - TRUST AGENT | Reboot for default SOFTWARE manifest to be measured and extended to TPM
