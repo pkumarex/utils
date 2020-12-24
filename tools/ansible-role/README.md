@@ -522,26 +522,6 @@ uefi_secureboot: 'yes'
 grub_file_path: <uefi mode grub file path>
 ```
 
-#### Deploying for Workload Confidentiality with CRIO Runtime
-
-If using for `Launch Time Protection - Workload Confidentiality with CRIO Runtime` , following option can be provided during runtime in playbook. By default, the playbook is configured to install for `Launch Time Protection - Workload Confidentiality with Docker Runtime`
-
-```shell
-ansible-playbook <playbook-name> \
---extra-vars setup=workload-conf-containers-crio \
---extra-vars binaries_path=<path where built binaries are copied to> \
---extra-vars skip_sdd=yes
-```
-or
-
-Update the following vars in `defaults/main.yml`
-
-```yaml
-#Enable/disable container security for CRIO runtime
-# [yes - Launch Time Protection with CRIO Containers, NA - others]
-skip_secure_docker_daemon: 'yes'
-```
-
 #### Using Docker Notary
 
 If using Docker notary when working with `Launch Time Protection - Workload Confidentiality with Docker Runtime`, following options can be provided during runtime in the playbook
