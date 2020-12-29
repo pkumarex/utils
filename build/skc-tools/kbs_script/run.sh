@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Check OS
+OS=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2)
+temp="${OS%\"}"
+temp="${temp#\"}"
+OS="$temp"
+
 # change this to the KBS VM IP
 KBS_IP=kbs.server.com
 KBS_PORT=9443
@@ -17,7 +23,11 @@ CACERT_PATH=cms-ca.cert
 CONTENT_TYPE="Content-Type: application/json"
 ACCEPT="Accept: application/json"
 
+if [ "$OS" == "rhel" ]; then
 dnf install jq -y
+elif [ "$OS" == "ubuntu" ]; then
+apt-get install jq -y
+fi
 
 aas_token=`curl -k -H "$CONTENT_TYPE" -H "$ACCEPT" --data \{\"username\":\"$AAS_USERNAME\",\"password\":\"$AAS_PASSWORD\"\} https://$AAS_IP:$AAS_PORT/aas/token`
 

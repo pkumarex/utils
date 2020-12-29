@@ -15,7 +15,7 @@ OS_FLAVOUR="$OS""$VER"
 if [[ "$OS" == "rhel" && "$VER" == "8.1" || "$VER" == "8.2" ]]; then
         dnf install -y jq
 elif [[ "$OS" == "ubuntu" && "$VER" == "18.04" ]]; then
-        apt install -y jq
+        apt install -y jq curl
 else
         echo "Unsupported OS. Please use RHEL 8.1/8.2 or Ubuntu 18.04"
         exit 1
@@ -209,7 +209,7 @@ SHVS_TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -H "
 echo "SHVS Token $SHVS_TOKEN"
 
 #  IHUB User and Roles
-
+if [[ "$OS" != "ubuntu" ]]; then
 IHUB_USER=`curl --noproxy "*" -k  -X POST https://$SYSTEM_IP:8444/aas/users -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
 IHUB_USER_ID=`curl --noproxy "*" -k https://$SYSTEM_IP:8444/aas/users?name=admin@hub -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' | jq -r '.[0].user_id'`
 echo "Created IHUB User with user ID $IHUB_USER_ID"
@@ -222,6 +222,7 @@ fi
 
 IHUB_TOKEN=`curl --noproxy "*" -k -X POST https://$SYSTEM_IP:8444/aas/token -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"username": "admin@hub","password": "hubAdminPass"}'`
 echo "IHUB Token $IHUB_TOKEN"
+fi
 
 # SGX Quote Verification Service User and Roles
 
@@ -298,6 +299,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "################ Installed SHVS....  #################"
 
+if [[ "$OS" != "ubuntu" ]]; then
 echo "################ Update IHUB env....  #################"
 sed -i "s/^\(TLS_SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/" ~/ihub.env
 sed -i "s/^\(BEARER_TOKEN\s*=\s*\).*\$/\1$IHUB_TOKEN/" ~/ihub.env
@@ -321,6 +323,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "################ Installed IHUB....  #################"
+fi
 
 echo "################ Update SQVS env....  #################"
 sed -i "s/^\(SAN_LIST\s*=\s*\).*\$/\1$SYSTEM_IP/"  ~/sqvs.env
@@ -347,6 +350,9 @@ sed -i "s@^\(AAS_API_URL\s*=\s*\).*\$@\1$AAS_URL@" ~/kbs.env
 sed -i "s@^\(CMS_BASE_URL\s*=\s*\).*\$@\1$CMS_URL@" ~/kbs.env
 SQVS_URL=https://$SYSTEM_IP:12000/svs/v1
 sed -i "s@^\(SQVS_URL\s*=\s*\).*\$@\1$SQVS_URL@" ~/kbs.env
+ENDPOINT_URL=https://$SYSTEM_IP:9443/v1
+sed -i "s@^\(ENDPOINT_URL\s*=\s*\).*\$@\1$ENDPOINT_URL@" ~/kbs.env
+
 echo "################ Installing KBS....  #################"
 ./kbs-*.bin || exit 1
 if [ $? -ne 0 ]; then
