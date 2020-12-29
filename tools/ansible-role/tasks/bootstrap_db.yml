@@ -37,6 +37,20 @@
     update_cache: yes
   when: ansible_os_family == 'Debian'
 
+- name: ISECL - BOOTSTRAP DB | Disable postgresql module
+  shell: systemctl stop postgresql && systemctl disable postgresql
+  args:
+    chdir: /root
+    executable: /bin/bash
+  when: ansible_os_family == 'Debian'
+  ignore_errors: true
+
+- name: ISECL - BOOTSTRAP DB | Install curl
+  apt:
+    name: curl
+    state: present
+  when: ansible_os_family == 'Debian'
+
 - name: ISECL - BOOTSTRAP DB | Copy postgresdb installer script
   copy:
     src: "{{ isecl_pgdb_installer_file_src }}"
