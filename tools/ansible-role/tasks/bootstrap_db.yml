@@ -35,13 +35,13 @@
 - name: ISECL - BOOTSTRAP DB | Run apt-get update
   apt:
     update_cache: yes
+    force_apt_get: yes
   when: ansible_os_family == 'Debian'
 
 - name: ISECL - BOOTSTRAP DB | Disable postgresql module
-  shell: systemctl stop postgresql && systemctl disable postgresql
-  args:
-    chdir: /root
-    executable: /bin/bash
+  systemd:
+     name: postgresql
+     state: stopped
   when: ansible_os_family == 'Debian'
   ignore_errors: true
 
