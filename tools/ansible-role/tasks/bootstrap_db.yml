@@ -38,12 +38,17 @@
     force_apt_get: yes
   when: ansible_os_family == 'Debian'
 
-- name: ISECL - BOOTSTRAP DB | Disable postgresql module
+- name: ISECL - BOOTSTRAP DB | Check if postgresql service exists
+  stat:
+     path: /etc/init.d/postgresql
+  register: postgresql_service
+  when: ansible_os_family == 'Debian'
+
+- name: ISECL - BOOTSTRAP DB | Disable postgresql service if exists
   systemd:
      name: postgresql
      state: stopped
-  when: ansible_os_family == 'Debian'
-  ignore_errors: true
+  when: ansible_os_family == 'Debian' and postgresql_service.stat.exists
 
 - name: ISECL - BOOTSTRAP DB | Install curl
   apt:
