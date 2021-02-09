@@ -8,6 +8,7 @@ import (
 	"time"
 
 	uuid "github.com/google/uuid"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
 )
 
 type OldFlavorPart struct {
@@ -26,7 +27,7 @@ type Flavor struct {
 	// Hardware section is unique to Platform Flavor type
 	Hardware *Hardware                   `json:"hardware,omitempty"`
 	Pcrs     map[string]map[string]PcrEx `json:"pcrs,omitempty"`
-	PcrLogs  []PcrLogs                   `json:"pcr_logs,omitempty"`
+	PcrLogs  []types.PCRS                `json:"pcr_logs,omitempty"`
 	// External section is unique to AssetTag Flavor type
 	External *External `json:"external,omitempty"`
 	Software *Software `json:"software,omitempty"`

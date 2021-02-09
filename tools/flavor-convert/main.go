@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/antchfx/jsonquery"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
 )
 
 // EventIDList - define map for event id
@@ -363,15 +364,15 @@ func main() {
 				continue
 			}
 
-			var newFlavorPcrs []PcrLogs
-			newFlavorPcrs = make([]PcrLogs, len(pcrsmap))
+			var newFlavorPcrs []types.PCRS
+			newFlavorPcrs = make([]types.PCRS, len(pcrsmap))
 
 			for bank, pcrMap := range flavor.Flavor.Pcrs {
 				index := 0
 				for mapIndex, templateBank := range pcrsmap {
-					pcrIndex := PcrIndex(mapIndex)
+					pcrIndex := types.PcrIndex(mapIndex)
 
-					if SHAAlgorithm(bank) != SHAAlgorithm(templateBank) {
+					if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
 						break
 					}
 					if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
@@ -380,14 +381,14 @@ func main() {
 						newFlavorPcrs[index].Measurement = expectedPcrEx.Value
 						newFlavorPcrs[index].PCRMatches = rules[index].PcrMatches
 
-						var newTpmEvents []NewEventLog
+						var newTpmEvents []types.EventLogCriteria
 						if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
-							newFlavorPcrs[index].EventlogEqual = new(EventlogEquals)
+							newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
 							if rules[index].EventlogEquals.ExcludingTags != nil {
 								newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
 							}
 
-							newTpmEvents = make([]NewEventLog, len(expectedPcrEx.Event))
+							newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
 							for eventIndex, oldEvents := range expectedPcrEx.Event {
 								newTpmEvents[eventIndex].TypeName = oldEvents.Label
 								newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
@@ -399,7 +400,7 @@ func main() {
 						}
 
 						if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
-							newTpmEvents = make([]NewEventLog, len(expectedPcrEx.Event))
+							newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
 							for eventIndex, oldEvents := range expectedPcrEx.Event {
 								newTpmEvents[eventIndex].TypeName = oldEvents.Label
 								newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
