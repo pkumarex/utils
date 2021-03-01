@@ -18,6 +18,7 @@ import (
 
 	"github.com/antchfx/jsonquery"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
+	"github.com/intel-secl/intel-secl/v3/pkg/model/hvs"
 )
 
 // EventIDList - define map for event id
@@ -116,7 +117,7 @@ var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*
 var flavorTemplatePath = "/opt/hvs-flavortemplates"
 
 //getFlavorTemplates method is used to get the flavor templates based on old flavor part file
-func getFlavorTemplates(body []byte) ([]FlavorTemplate, error) {
+func getFlavorTemplates(body []byte) ([]hvs.FlavorTemplate, error) {
 
 	var defaultFlavorTemplates []string
 
@@ -145,8 +146,8 @@ func getFlavorTemplates(body []byte) ([]FlavorTemplate, error) {
 }
 
 //findTemplatesToApply method is used to find the correct templates to apply to convert flavor part
-func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string) ([]FlavorTemplate, error) {
-	var filteredTemplates []FlavorTemplate
+func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string) ([]hvs.FlavorTemplate, error) {
+	var filteredTemplates []hvs.FlavorTemplate
 
 	oldFlavorPartJson, err := jsonquery.Parse(strings.NewReader(string(oldFlavorPart)))
 	if err != nil {
@@ -157,7 +158,7 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 
 	for _, template := range defaultFlavorTemplates {
 
-		flavorTemplate := FlavorTemplate{}
+		flavorTemplate := hvs.FlavorTemplate{}
 
 		err := json.Unmarshal([]byte(template), &flavorTemplate)
 		if err != nil {
@@ -340,7 +341,7 @@ func main() {
 
 			pcrsmap := make(map[int]string)
 
-			var rules PcrRules
+			var rules []hvs.PcrRules
 
 			if flavorname == flavor.Flavor.Meta.Description.FlavorPart {
 
@@ -381,7 +382,7 @@ func main() {
 						newFlavorPcrs[index].PCR.Index = mapIndex
 						newFlavorPcrs[index].PCR.Bank = bank
 						newFlavorPcrs[index].Measurement = expectedPcrEx.Value
-						newFlavorPcrs[index].PCRMatches = rules[index].PcrMatches
+						newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
 
 						var newTpmEvents []types.EventLogCriteria
 						if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
