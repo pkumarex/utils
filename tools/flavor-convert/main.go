@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020 Intel Corporation
+ *  Copyright (C) 2021 Intel Corporation
  *  SPDX-License-Identifier: BSD-3-Clause
  */
 
@@ -100,7 +100,8 @@ const helpStr = `Usage:
 flavor-convert <command> [argument]
 	
 Available Command:
-	-o                To provide old flavor part json file
+	-o                To provide old flavor part json filepath
+	-n                To provide new flavor part json filepath
 	-h|--help         Show this help message
 	-version          Print the current version
 `
@@ -209,6 +210,7 @@ func main() {
 
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part json file")
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
+	newFlavorPartFilePath := flag.String("n", "", "old flavor part json file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
@@ -431,10 +433,17 @@ func main() {
 	fmt.Println("New flavor part json:\n", string(finalFlavorPart))
 
 	//writing the new flavor part into the local file
-	data := []byte(finalFlavorPart)
-	err = ioutil.WriteFile("/opt/newflavorpart.json", data, 0644)
-	if err != nil {
-		fmt.Println("Error in writing the new flavor part file")
-		os.Exit(1)
+	if *newFlavorPartFilePath != "" {
+		// Checking if the output file path is json
+		if fileExtension := filepath.Ext(*newFlavorPartFilePath); fileExtension != ".json" {
+			fmt.Println("\nError in validating the new flavor part file path - the file '%s' is not json: ", *newFlavorPartFilePath)
+			os.Exit(1)
+		}
+		data := []byte(finalFlavorPart)
+		err = ioutil.WriteFile(*newFlavorPartFilePath, data, 0644)
+		if err != nil {
+			fmt.Println("Error in writing the new flavor part json in local file")
+			os.Exit(1)
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Intel Corporation
+ * Copyright (C) 2021 Intel Corporation
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package main
@@ -9,25 +9,24 @@ import (
 )
 
 type FVMeta struct {
-	FlavorPart     string     `json:"flavor_part,omitempty"`
-	Source         string     `json:"source,omitempty"`
-	Label          string     `json:"label,omitempty"`
-	Vendot         string     `json:"vendor,omitempty"`
-	IPAddress      string     `json:"ip_address,omitempty"`
-	BiosName       string     `json:"bios_name,omitempty"`
-	BiosVersion    string     `json:"bios_version,omitempty"`
-	OsName         string     `json:"os_name,omitempty"`
-	OsVersion      string     `json:"os_version,omitempty"`
-	VmmName        string     `json:"vmm_name,omitempty"`
-	VmmVersion     string     `json:"vmm_version,omitempty"`
-	TpmVersion     string     `json:"tpm_version,omitempty"`
-	HardwareUUID   *uuid.UUID `json:"hardware_uuid,omitempty"`
-	Comment        string     `json:"comment,omitempty"`
-	TbootInstalled bool       `json:"tboot_installed,omitempty"`
-	CBNTEnabled    bool       `json:"cbnt_enabled,omitempty"`
-	UEFIEnabled    bool       `json:"uefi_enabled,omitempty"`
-
-	DigestAlgorithm string `json:"digest_algorithm,omitempty"`
+	FlavorPart      string     `json:"flavor_part,omitempty"`
+	Source          string     `json:"source,omitempty"`
+	Label           string     `json:"label,omitempty"`
+	Vendor          string     `json:"vendor,omitempty"`
+	IPAddress       string     `json:"ip_address,omitempty"`
+	BiosName        string     `json:"bios_name,omitempty"`
+	BiosVersion     string     `json:"bios_version,omitempty"`
+	OsName          string     `json:"os_name,omitempty"`
+	OsVersion       string     `json:"os_version,omitempty"`
+	VmmName         string     `json:"vmm_name,omitempty"`
+	VmmVersion      string     `json:"vmm_version,omitempty"`
+	TpmVersion      string     `json:"tpm_version,omitempty"`
+	HardwareUUID    *uuid.UUID `json:"hardware_uuid,omitempty"`
+	Comment         string     `json:"comment,omitempty"`
+	TbootInstalled  bool       `json:"tboot_installed,omitempty"`
+	CBNTEnabled     bool       `json:"cbnt_enabled,omitempty"`
+	UEFIEnabled     bool       `json:"uefi_enabled,omitempty"`
+	DigestAlgorithm string     `json:"digest_algorithm,omitempty"`
 }
 
 type PCR struct {

@@ -8,4 +8,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-replace github.com/intel-secl/intel-secl/v3 => github.com/isteffyx/intel-secl/v3 v3.2.1-0.20210208145927-37c469567f8b
+replace github.com/intel-secl/intel-secl/v3 => github.com/isteffyx/intel-secl/v3 v3.2.2
