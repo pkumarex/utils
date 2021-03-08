@@ -23,67 +23,31 @@ import (
 
 // EventIDList - define map for event id
 var eventIDList = map[string]string{
-	"EV_PREBOOT_CERT":                  "0x00000000",
-	"EV_POST_CODE":                     "0x00000001",
-	"EV_UNUSED":                        "0x00000002",
-	"EV_NO_ACTION":                     "0x00000003",
-	"EV_SEPARATOR":                     "0x00000004",
-	"EV_ACTION":                        "0x00000005",
-	"EV_EVENT_TAG":                     "0x00000006",
-	"EV_S_CRTM_CONTENTS":               "0x00000007",
-	"EV_S_CRTM_VERSION":                "0x00000008",
-	"EV_CPU_MICROCODE":                 "0x00000009",
-	"EV_PLATFORM_CONFIG_FLAGS":         "0x0000000A",
-	"EV_TABLE_OF_DEVICES":              "0x0000000B",
-	"EV_COMPACT_HASH":                  "0x0000000C",
-	"EV_IPL":                           "0x0000000D",
-	"EV_IPL_PARTITION_DATA":            "0x0000000E",
-	"EV_NONHOST_CODE":                  "0x0000000F",
-	"EV_NONHOST_CONFIG":                "0x00000010",
-	"EV_NONHOST_INFO":                  "0x00000011",
-	"EV_OMIT_BOOT_DEVICE_EVENTS":       "0x00000012",
-	"EV_EFI_EVENT_BASE":                "0x80000000",
-	"EV_EFI_VARIABLE_DRIVER_CONFIG":    "0x80000001",
-	"EV_EFI_VARIABLE_BOOT":             "0x80000002",
-	"EV_EFI_BOOT_SERVICES_APPLICATION": "0x80000003",
-	"EV_EFI_BOOT_SERVICES_DRIVER":      "0x80000004",
-	"EV_EFI_RUNTIME_SERVICES_DRIVER":   "0x80000005",
-	"EV_EFI_GPT_EVENT":                 "0x80000006",
-	"EV_EFI_ACTION":                    "0x80000007",
-	"EV_EFI_PLATFORM_FIRMWARE_BLOB":    "0x80000008",
-	"EV_EFI_HANDOFF_TABLES":            "0x80000009",
-	"EV_EFI_PLATFORM_FIRMWARE_BLOB2":   "0x8000000A",
-	"EV_EFI_HANDOFF_TABLES2":           "0x8000000B",
-	"EV_EFI_VARIABLE_BOOT2":            "0x8000000C",
-	"EV_EFI_HCRTM_EVENT":               "0x80000010",
-	"EV_EFI_VARIABLE_AUTHORITY":        "0x800000E0",
-	"EV_EFI_SPDM_FIRMWARE_BLOB":        "0x800000E1",
-	"EV_EFI_SPDM_FIRMWARE_CONFIG":      "0x800000E2",
-	"PCR_MAPPING":                      "0x401",
-	"HASH_START":                       "0x402",
-	"COMBINED_HASH":                    "0x403",
-	"MLE_HASH":                         "0x404",
-	"BIOSAC_REG_DATA":                  "0x40a",
-	"CPU_SCRTM_STAT":                   "0x40b",
-	"LCP_CONTROL_HASH":                 "0x40c",
-	"ELEMENTS_HASH":                    "0x40d",
-	"STM_HASH":                         "0x40e",
-	"OSSINITDATA_CAP_HASH":             "0x40f",
-	"SINIT_PUBKEY_HASH":                "0x410",
-	"LCP_HASH":                         "0x411",
-	"LCP_DETAILS_HASH":                 "0x412",
-	"LCP_AUTHORITIES_HASH":             "0x413",
-	"NV_INFO_HASH":                     "0x414",
-	"EVTYPE_KM_HASH":                   "0x416",
-	"EVTYPE_BPM_HASH":                  "0x417",
-	"EVTYPE_KM_INFO_HASH":              "0x418",
-	"EVTYPE_BPM_INFO_HASH":             "0x419",
-	"EVTYPE_BOOT_POL_HASH":             "0x41a",
-	"CAP_VALUE":                        "0x4ff",
-	"tb_policy":                        "0x501",
-	"vmlinuz":                          "0x501",
-	"initrd":                           "0x501",
-	"asset-tag":                        "0x501",
+	"PCR_MAPPING":          "0x401",
+	"HASH_START":           "0x402",
+	"COMBINED_HASH":        "0x403",
+	"MLE_HASH":             "0x404",
+	"BIOSAC_REG_DATA":      "0x40a",
+	"CPU_SCRTM_STAT":       "0x40b",
+	"LCP_CONTROL_HASH":     "0x40c",
+	"ELEMENTS_HASH":        "0x40d",
+	"STM_HASH":             "0x40e",
+	"OSSINITDATA_CAP_HASH": "0x40f",
+	"SINIT_PUBKEY_HASH":    "0x410",
+	"LCP_HASH":             "0x411",
+	"LCP_DETAILS_HASH":     "0x412",
+	"LCP_AUTHORITIES_HASH": "0x413",
+	"NV_INFO_HASH":         "0x414",
+	"EVTYPE_KM_HASH":       "0x416",
+	"EVTYPE_BPM_HASH":      "0x417",
+	"EVTYPE_KM_INFO_HASH":  "0x418",
+	"EVTYPE_BPM_INFO_HASH": "0x419",
+	"EVTYPE_BOOT_POL_HASH": "0x41a",
+	"CAP_VALUE":            "0x4ff",
+	"tb_policy":            "0x501",
+	"vmlinuz":              "0x501",
+	"initrd":               "0x501",
+	"asset-tag":            "0x501",
 }
 
 const (
@@ -118,7 +82,6 @@ var flavorTemplatePath = "/opt/hvs-flavortemplates"
 
 //getFlavorTemplates method is used to get the flavor templates based on old flavor part file
 func getFlavorTemplates(body []byte) ([]hvs.FlavorTemplate, error) {
-
 	var defaultFlavorTemplates []string
 
 	//read the flavor template file
@@ -142,29 +105,25 @@ func getFlavorTemplates(body []byte) ([]hvs.FlavorTemplate, error) {
 	}
 
 	return filteredTemplate, nil
-
 }
 
 //findTemplatesToApply method is used to find the correct templates to apply to convert flavor part
 func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string) ([]hvs.FlavorTemplate, error) {
 	var filteredTemplates []hvs.FlavorTemplate
+	var conditionEval bool
 
 	oldFlavorPartJson, err := jsonquery.Parse(strings.NewReader(string(oldFlavorPart)))
 	if err != nil {
 		return nil, fmt.Errorf("Error in parsing the old flavor part json")
 	}
 
-	var conditionEval bool
-
 	for _, template := range defaultFlavorTemplates {
-
 		flavorTemplate := hvs.FlavorTemplate{}
 
 		err := json.Unmarshal([]byte(template), &flavorTemplate)
 		if err != nil {
 			return nil, fmt.Errorf("Error in unmarshaling the flavor template")
 		}
-
 		if flavorTemplate.Label == "" {
 			continue
 		}
@@ -172,9 +131,7 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 
 		for _, condition := range flavorTemplate.Condition {
 			conditionEval = true
-
 			flavorPartCondition := flavorTemplateConditions[condition]
-
 			expectedData, _ := jsonquery.Query(oldFlavorPartJson, flavorPartCondition)
 			if expectedData == nil {
 				conditionEval = false
@@ -187,7 +144,6 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 	}
 
 	return filteredTemplates, nil
-
 }
 
 //checkIfValidFile method is used to check if the given input file path is valid or not
@@ -208,7 +164,6 @@ func checkIfValidFile(filename string) (bool, error) {
 
 //main method implements migration of old format of flavor part to new format
 func main() {
-
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part json file")
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
 	newFlavorPartFilePath := flag.String("n", "", "old flavor part json file")
@@ -222,7 +177,6 @@ func main() {
 			fmt.Printf(helpStr)
 		}
 	}
-
 	flag.Parse()
 
 	// Show the current version when the user enters the -version option
@@ -270,7 +224,6 @@ func main() {
 	}
 
 	for flavorIndex, flavor := range oldFlavorPart.SignedFlavor {
-
 		//Updating meta section
 		if flavor.Flavor.Hardware != nil && flavor.Flavor.Hardware.Feature.CBNT.Enabled != nil && flavor.Flavor.Hardware.Feature.CBNT.Enabled.(bool) {
 			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.CbntEnabled = true
@@ -334,90 +287,15 @@ func main() {
 		}
 
 		for _, template := range templates {
-
 			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.FlavorTemplateIds = append(oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.FlavorTemplateIds, template.ID)
-
 			flavorname := flavor.Flavor.Meta.Description.FlavorPart
-
-			pcrsmap := make(map[int]string)
-
-			var rules []hvs.PcrRules
-
-			if flavorname == flavor.Flavor.Meta.Description.FlavorPart {
-
-				if flavorname == platformFlavor && template.FlavorParts.Platform != nil {
-					for _, rules := range template.FlavorParts.Platform.PcrRules {
-						pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
-					}
-					rules = template.FlavorParts.Platform.PcrRules
-
-				} else if flavorname == osFlavor && template.FlavorParts.OS != nil {
-					for _, rules := range template.FlavorParts.OS.PcrRules {
-						pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
-					}
-					rules = template.FlavorParts.OS.PcrRules
-
-				} else if flavorname == hostUniqueFlavor && template.FlavorParts.HostUnique != nil {
-					for _, rules := range template.FlavorParts.HostUnique.PcrRules {
-						pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
-					}
-					rules = template.FlavorParts.HostUnique.PcrRules
-				}
-			} else if flavorname != flavor.Flavor.Meta.Description.FlavorPart {
+			rules, pcrsmap := getPcrRules(flavorname, template)
+			if rules != nil && pcrsmap != nil {
+				//Update PCR section
+				flavor.Flavor.PcrLogs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap)
+			} else {
 				continue
 			}
-
-			var newFlavorPcrs []types.PCRS
-			newFlavorPcrs = make([]types.PCRS, len(pcrsmap))
-
-			for bank, pcrMap := range flavor.Flavor.Pcrs {
-				index := 0
-				for mapIndex, templateBank := range pcrsmap {
-					pcrIndex := types.PcrIndex(mapIndex)
-
-					if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
-						break
-					}
-					if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
-						newFlavorPcrs[index].PCR.Index = mapIndex
-						newFlavorPcrs[index].PCR.Bank = bank
-						newFlavorPcrs[index].Measurement = expectedPcrEx.Value
-						newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
-
-						var newTpmEvents []types.EventLogCriteria
-						if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
-							newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
-							if rules[index].EventlogEquals.ExcludingTags != nil {
-								newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
-							}
-
-							newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
-							for eventIndex, oldEvents := range expectedPcrEx.Event {
-								newTpmEvents[eventIndex].TypeName = oldEvents.Label
-								newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
-								newTpmEvents[eventIndex].Measurement = oldEvents.Value
-								newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
-							}
-							newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
-							newTpmEvents = nil
-						}
-
-						if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
-							newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
-							for eventIndex, oldEvents := range expectedPcrEx.Event {
-								newTpmEvents[eventIndex].TypeName = oldEvents.Label
-								newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
-								newTpmEvents[eventIndex].Measurement = oldEvents.Value
-								newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
-							}
-							newFlavorPcrs[index].EventlogIncludes = newTpmEvents
-							newTpmEvents = nil
-						}
-					}
-					index++
-				}
-			}
-			flavor.Flavor.PcrLogs = newFlavorPcrs
 		}
 		oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Pcrs = nil
 		oldFlavorPart.SignedFlavor[flavorIndex].Flavor.PcrLogs = flavor.Flavor.PcrLogs
@@ -447,4 +325,87 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+//updatePcrSection method is used to update the pcr section in new flavor part
+func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string) []types.PCRS {
+	var newFlavorPcrs []types.PCRS
+	newFlavorPcrs = make([]types.PCRS, len(pcrsmap))
+
+	for bank, pcrMap := range Pcrs {
+		index := 0
+		for mapIndex, templateBank := range pcrsmap {
+			pcrIndex := types.PcrIndex(mapIndex)
+
+			if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
+				break
+			}
+			if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
+				newFlavorPcrs[index].PCR.Index = mapIndex
+				newFlavorPcrs[index].PCR.Bank = bank
+				newFlavorPcrs[index].Measurement = expectedPcrEx.Value
+				newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
+
+				var newTpmEvents []types.EventLogCriteria
+				if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
+					newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
+					if rules[index].EventlogEquals.ExcludingTags != nil {
+						newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
+					}
+
+					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
+					for eventIndex, oldEvents := range expectedPcrEx.Event {
+						newTpmEvents[eventIndex].TypeName = oldEvents.Label
+						newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
+						newTpmEvents[eventIndex].Measurement = oldEvents.Value
+						newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
+					}
+					newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
+					newTpmEvents = nil
+				}
+
+				if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
+					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
+					for eventIndex, oldEvents := range expectedPcrEx.Event {
+						newTpmEvents[eventIndex].TypeName = oldEvents.Label
+						newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
+						newTpmEvents[eventIndex].Measurement = oldEvents.Value
+						newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
+					}
+					newFlavorPcrs[index].EventlogIncludes = newTpmEvents
+					newTpmEvents = nil
+				}
+			}
+			index++
+		}
+	}
+
+	return newFlavorPcrs
+}
+
+//getPcrRules method is used to get the pcr rules defined in the flavor template
+func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules, map[int]string) {
+	pcrsmap := make(map[int]string)
+	var rules []hvs.PcrRules
+
+	if flavorName == platformFlavor && template.FlavorParts.Platform != nil {
+		for _, rules := range template.FlavorParts.Platform.PcrRules {
+			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+		}
+		rules = template.FlavorParts.Platform.PcrRules
+		return rules, pcrsmap
+	} else if flavorName == osFlavor && template.FlavorParts.OS != nil {
+		for _, rules := range template.FlavorParts.OS.PcrRules {
+			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+		}
+		rules = template.FlavorParts.OS.PcrRules
+		return rules, pcrsmap
+	} else if flavorName == hostUniqueFlavor && template.FlavorParts.HostUnique != nil {
+		for _, rules := range template.FlavorParts.HostUnique.PcrRules {
+			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+		}
+		rules = template.FlavorParts.HostUnique.PcrRules
+		return rules, pcrsmap
+	}
+	return nil, nil
 }
