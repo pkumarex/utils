@@ -166,7 +166,7 @@ func checkIfValidFile(filename string) (bool, error) {
 func main() {
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part json file")
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
-	newFlavorPartFilePath := flag.String("n", "", "old flavor part json file")
+	newFlavorPartFilePath := flag.String("n", "", "new flavor part json file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
@@ -242,14 +242,17 @@ func main() {
 			//TXT
 			if flavor.Flavor.Hardware.Feature.TXT.Enabled != nil {
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.TXT.Enabled.(bool))
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled.(string)
 			} else {
 				//if the TXT section not present in oldflavorpart json,assign false to it
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled = "false"
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Supported = "false"
 			}
 
 			//TPM
 			if flavor.Flavor.Hardware.Feature.TPM.Enabled != nil {
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.TPM.Enabled.(bool))
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled.(string)
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Meta.TPMVersion = flavor.Flavor.Hardware.Feature.TPM.Version
 				flavor.Flavor.Hardware.Feature.TPM.Version = ""
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Meta.PCRBanks = flavor.Flavor.Hardware.Feature.TPM.PcrBanks
@@ -257,21 +260,25 @@ func main() {
 			} else {
 				//if the TPM section not present in oldflavorpart json,assign false to it
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled = "false"
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Supported = "false"
 			}
 
 			//CBNT
 			if flavor.Flavor.Hardware.Feature.CBNT.Enabled != nil {
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.CBNT.Enabled.(bool))
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled.(string)
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Meta.Profile = flavor.Flavor.Hardware.Feature.CBNT.Profile
 				flavor.Flavor.Hardware.Feature.CBNT.Profile = ""
 			} else {
 				//if the CBNT section not present in oldflavorpart json,assign false to it
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled = "false"
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Supported = "false"
 			}
 
 			//UEFI
 			if flavor.Flavor.Hardware.Feature.SUEFI != nil {
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Enabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
+				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Supported = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
 				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Meta.SecureBootEnabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
 				flavor.Flavor.Hardware.Feature.SUEFI = nil
 			}

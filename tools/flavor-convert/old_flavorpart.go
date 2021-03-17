@@ -130,27 +130,31 @@ type Feature struct {
 }
 
 type AES_NI struct {
-	Enabled bool `json:"enabled,omitempty"`
+	Supported bool `json:"supported,omitempty"`
+	Enabled   bool `json:"enabled,omitempty"`
 }
 
 type TXT struct {
-	Enabled interface{} `json:"enabled"`
+	Supported string      `json:"supported"`
+	Enabled   interface{} `json:"enabled"`
 }
 
 type TPM struct {
-	Enabled  interface{} `json:"enabled"`
-	Version  string      `json:"version,omitempty"`
-	PcrBanks []string    `json:"pcr_banks,omitempty"`
-	Meta     struct {
+	Supported string      `json:"supported"`
+	Enabled   interface{} `json:"enabled"`
+	Version   string      `json:"version,omitempty"`
+	PcrBanks  []string    `json:"pcr_banks,omitempty"`
+	Meta      struct {
 		TPMVersion string   `json:"tpm_version"`
 		PCRBanks   []string `json:"pcr_banks"`
 	} `json:"meta"`
 }
 
 type CBNT struct {
-	Enabled interface{} `json:"enabled"`
-	Profile string      `json:"profile,omitempty"`
-	Meta    struct {
+	Supported string      `json:"supported"`
+	Enabled   interface{} `json:"enabled"`
+	Profile   string      `json:"profile,omitempty"`
+	Meta      struct {
 		Profile string `json:"profile"`
 		MSR     string `json:"msr"`
 	} `json:"meta"`
@@ -164,11 +168,13 @@ type UEFI struct {
 }
 
 type SUEFI struct {
-	Enabled bool `json:"enabled,omitempty"`
+	Supported bool `json:"supported,omitempty"`
+	Enabled   bool `json:"enabled,omitempty"`
 }
 
 type HardwareFeature struct {
-	Enabled bool `json:"enabled,string"`
+	Supported bool `json:"supported,string"`
+	Enabled   bool `json:"enabled,string"`
 }
 
 type AssetTag struct {
