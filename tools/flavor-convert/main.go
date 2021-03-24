@@ -78,7 +78,7 @@ var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*
 	"//host_info/vendor//*[text()='Linux']":                         "//meta/vendor//*[text()='INTEL']",
 	"//host_info/tpm_version//*[text()='2.0']":                      "//meta/description/tpm_version//*[text()='2.0']"}
 
-var flavorTemplatePath = "/hvs-flavortemplates"
+var flavorTemplatePath = "./flavortemplates"
 
 //getFlavorTemplates method is used to get the flavor templates based on old flavor part file
 func getFlavorTemplates(body []byte) ([]hvs.FlavorTemplate, error) {
