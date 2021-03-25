@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/antchfx/jsonquery"
+	connector "github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
 	"github.com/intel-secl/intel-secl/v3/pkg/model/hvs"
 )
@@ -73,10 +74,12 @@ Available Command:
 
 //To map the conditions in the flavor template with old flavor part
 var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*[text()='true']": "//meta/description/tboot_installed//*[text()='true']",
-	"//host_info/hardware_features/SUEFI/enabled//*[text()='true']": "//hardware/feature/SUEFI/enabled//*[text()='true']",
-	"//host_info/hardware_features/cbnt/enabled//*[text()='true']":  "//hardware/feature/CBNT/enabled//*[text()='true']",
-	"//host_info/vendor//*[text()='Linux']":                         "//meta/vendor//*[text()='INTEL']",
-	"//host_info/tpm_version//*[text()='2.0']":                      "//meta/description/tpm_version//*[text()='2.0']"}
+	"//host_info/hardware_features/UEFI/meta/secure_boot_enabled//*[text()='true']": "//hardware/feature/SUEFI/enabled//*[text()='true']",
+	"//host_info/hardware_features/CBNT/enabled//*[text()='true']":                  "//hardware/feature/CBNT/enabled//*[text()='true']",
+	"//host_info/os_name//*[text()='RedHatEnterprise']":                             "//meta/vendor//*[text()='INTEL']",
+	"//host_info/os_name//*[text()='VMware ESXi']":                                  "//meta/vendor//*[text()='VMWARE']",
+	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='2.0']":           "//meta/description/tpm_version//*[text()='2.0']",
+	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='1.2']":           "//meta/description/tpm_version//*[text()='1.2']"}
 
 var flavorTemplatePath = "./flavortemplates"
 
@@ -231,12 +234,6 @@ func main() {
 			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.SuefiEnabled = true
 		}
 
-		if flavor.Flavor.Meta.Vendor == intelVendor {
-			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.Vendor = "Linux"
-		} else if flavor.Flavor.Meta.Vendor == vmwareVendor {
-			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.Vendor = "VMware"
-		}
-
 		//Updating hardware section
 		if flavor.Flavor.Hardware != nil {
 			//TXT
@@ -299,7 +296,7 @@ func main() {
 			rules, pcrsmap := getPcrRules(flavorname, template)
 			if rules != nil && pcrsmap != nil {
 				//Update PCR section
-				flavor.Flavor.PcrLogs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap)
+				flavor.Flavor.PcrLogs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap, flavor.Flavor.Meta.Vendor)
 			} else {
 				continue
 			}
@@ -335,7 +332,7 @@ func main() {
 }
 
 //updatePcrSection method is used to update the pcr section in new flavor part
-func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string) []types.PCRS {
+func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string, vendor string) []types.PCRS {
 	var newFlavorPcrs []types.PCRS
 	newFlavorPcrs = make([]types.PCRS, len(pcrsmap))
 
@@ -351,34 +348,28 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 				newFlavorPcrs[index].PCR.Index = mapIndex
 				newFlavorPcrs[index].PCR.Bank = bank
 				newFlavorPcrs[index].Measurement = expectedPcrEx.Value
-				newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
+				if rules[index].PcrMatches != nil {
+					newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
+				}
 
 				var newTpmEvents []types.EventLogCriteria
-				if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
+
+				if rules[index].Pcr.Index == newFlavorPcrs[index].PCR.Index &&
+					rules[index].EventlogEquals != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
 					newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
 					if rules[index].EventlogEquals.ExcludingTags != nil {
 						newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
 					}
 
 					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
-					for eventIndex, oldEvents := range expectedPcrEx.Event {
-						newTpmEvents[eventIndex].TypeName = oldEvents.Label
-						newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
-						newTpmEvents[eventIndex].Measurement = oldEvents.Value
-						newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
-					}
+					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
 					newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
 					newTpmEvents = nil
 				}
 
-				if expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
+				if rules[index].Pcr.Index == newFlavorPcrs[index].PCR.Index && rules[index].EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
 					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
-					for eventIndex, oldEvents := range expectedPcrEx.Event {
-						newTpmEvents[eventIndex].TypeName = oldEvents.Label
-						newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
-						newTpmEvents[eventIndex].Measurement = oldEvents.Value
-						newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
-					}
+					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
 					newFlavorPcrs[index].EventlogIncludes = newTpmEvents
 					newTpmEvents = nil
 				}
@@ -415,4 +406,41 @@ func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules
 		return rules, pcrsmap
 	}
 	return nil, nil
+}
+
+//updateTpmEvents This method is used to update the tpm events
+func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLogCriteria, vendor string) []types.EventLogCriteria {
+	//Updating the old event format into new event format
+	for eventIndex, oldEvents := range expectedPcrEvent {
+		if vendor == intelVendor {
+			newTpmEvents[eventIndex].TypeName = oldEvents.Label
+			newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
+			newTpmEvents[eventIndex].Measurement = oldEvents.Value
+			newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
+		} else if vendor == vmwareVendor {
+			if oldEvents.Info["PackageName"] != "" {
+				newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Info["ComponentName"], oldEvents.Info["EventName"]+"_"+oldEvents.Info["PackageName"]+"_"+oldEvents.Info["PackageVendor"])
+			} else {
+				newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Info["ComponentName"], oldEvents.Info["EventName"])
+			}
+			newTpmEvents[eventIndex].TypeName = oldEvents.Label
+			newTpmEvents[eventIndex].Measurement = oldEvents.Value
+
+			switch oldEvents.Info["EventType"] {
+			case connector.TPM_SOFTWARE_COMPONENT_EVENT_TYPE:
+				newTpmEvents[eventIndex].TypeID = connector.VIB_NAME_TYPE_ID
+			case connector.TPM_COMMAND_EVENT_TYPE:
+				newTpmEvents[eventIndex].TypeID = connector.COMMANDLINE_TYPE_ID
+			case connector.TPM_OPTION_EVENT_TYPE:
+				newTpmEvents[eventIndex].TypeID = connector.OPTIONS_FILE_NAME_TYPE_ID
+			case connector.TPM_BOOT_SECURITY_OPTION_EVENT_TYPE:
+				newTpmEvents[eventIndex].TypeID = connector.BOOT_SECURITY_OPTION_TYPE_ID
+			}
+		} else {
+			fmt.Println("UNKNOWN VENDOR - unable to update tpm events")
+			os.Exit(1)
+		}
+	}
+
+	return newTpmEvents
 }
