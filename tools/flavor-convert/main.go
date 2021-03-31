@@ -332,9 +332,9 @@ func main() {
 }
 
 //updatePcrSection method is used to update the pcr section in new flavor part
-func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string, vendor string) []types.PCRS {
-	var newFlavorPcrs []types.PCRS
-	newFlavorPcrs = make([]types.PCRS, len(pcrsmap))
+func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string, vendor string) []types.FlavorPcrs {
+	var newFlavorPcrs []types.FlavorPcrs
+	newFlavorPcrs = make([]types.FlavorPcrs, len(pcrsmap))
 
 	for bank, pcrMap := range Pcrs {
 		index := 0
@@ -345,30 +345,30 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 				break
 			}
 			if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
-				newFlavorPcrs[index].PCR.Index = mapIndex
-				newFlavorPcrs[index].PCR.Bank = bank
+				newFlavorPcrs[index].Pcr.Index = mapIndex
+				newFlavorPcrs[index].Pcr.Bank = bank
 				newFlavorPcrs[index].Measurement = expectedPcrEx.Value
 				if rules[index].PcrMatches != nil {
 					newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
 				}
 
-				var newTpmEvents []types.EventLogCriteria
+				var newTpmEvents []types.EventLog
 
-				if rules[index].Pcr.Index == newFlavorPcrs[index].PCR.Index &&
+				if rules[index].Pcr.Index == newFlavorPcrs[index].Pcr.Index &&
 					rules[index].EventlogEquals != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
 					newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
 					if rules[index].EventlogEquals.ExcludingTags != nil {
 						newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
 					}
 
-					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
+					newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
 					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
 					newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
 					newTpmEvents = nil
 				}
 
-				if rules[index].Pcr.Index == newFlavorPcrs[index].PCR.Index && rules[index].EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
-					newTpmEvents = make([]types.EventLogCriteria, len(expectedPcrEx.Event))
+				if rules[index].Pcr.Index == newFlavorPcrs[index].Pcr.Index && rules[index].EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
+					newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
 					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
 					newFlavorPcrs[index].EventlogIncludes = newTpmEvents
 					newTpmEvents = nil
@@ -409,7 +409,7 @@ func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules
 }
 
 //updateTpmEvents This method is used to update the tpm events
-func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLogCriteria, vendor string) []types.EventLogCriteria {
+func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog, vendor string) []types.EventLog {
 	//Updating the old event format into new event format
 	for eventIndex, oldEvents := range expectedPcrEvent {
 		if vendor == intelVendor {
