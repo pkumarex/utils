@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Intel Corporation
+ * Copyright (C) 2021 Intel Corporation
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package main
@@ -8,7 +8,6 @@ import (
 	"time"
 
 	uuid "github.com/google/uuid"
-	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
 )
 
 type OldFlavorPart struct {
@@ -27,7 +26,6 @@ type Flavor struct {
 	// Hardware section is unique to Platform Flavor type
 	Hardware *Hardware                   `json:"hardware,omitempty"`
 	Pcrs     map[string]map[string]PcrEx `json:"pcrs,omitempty"`
-	PcrLogs  []types.FlavorPcrs          `json:"pcr_logs,omitempty"`
 	// External section is unique to AssetTag Flavor type
 	External *External `json:"external,omitempty"`
 	Software *Software `json:"software,omitempty"`
@@ -90,25 +88,21 @@ type Schema struct {
 }
 
 type Description struct {
-	FlavorPart        string      `json:"flavor_part,omitempty"`
-	Source            string      `json:"source,omitempty"`
-	Label             string      `json:"label,omitempty"`
-	IPAddress         string      `json:"ip_address,omitempty"`
-	BiosName          string      `json:"bios_name,omitempty"`
-	BiosVersion       string      `json:"bios_version,omitempty"`
-	OsName            string      `json:"os_name,omitempty"`
-	OsVersion         string      `json:"os_version,omitempty"`
-	VmmName           string      `json:"vmm_name,omitempty"`
-	VmmVersion        string      `json:"vmm_version,omitempty"`
-	TpmVersion        string      `json:"tpm_version,omitempty"`
-	HardwareUUID      *uuid.UUID  `json:"hardware_uuid,omitempty"`
-	Comment           string      `json:"comment,omitempty"`
-	TbootInstalled    bool        `json:"tboot_installed,string,omitempty"`
-	CbntEnabled       bool        `json:"cbnt_enabled,string,omitempty"`
-	SuefiEnabled      bool        `json:"suefi_enabled,string,omitempty"`
-	DigestAlgorithm   string      `json:"digest_algorithm,omitempty"`
-	FlavorTemplateIds []uuid.UUID `json:"flavor_template_ids,omitempty"`
-	Vendor            string      `json:"vendor,omitempty"`
+	FlavorPart      string     `json:"flavor_part,omitempty"`
+	Source          string     `json:"source,omitempty"`
+	Label           string     `json:"label,omitempty"`
+	IPAddress       string     `json:"ip_address,omitempty"`
+	BiosName        string     `json:"bios_name,omitempty"`
+	BiosVersion     string     `json:"bios_version,omitempty"`
+	OsName          string     `json:"os_name,omitempty"`
+	OsVersion       string     `json:"os_version,omitempty"`
+	VmmName         string     `json:"vmm_name,omitempty"`
+	VmmVersion      string     `json:"vmm_version,omitempty"`
+	TpmVersion      string     `json:"tpm_version,omitempty"`
+	HardwareUUID    *uuid.UUID `json:"hardware_uuid,omitempty"`
+	Comment         string     `json:"comment,omitempty"`
+	TbootInstalled  *bool      `json:"tboot_installed,string,omitempty"`
+	DigestAlgorithm string     `json:"digest_algorithm,omitempty"`
 }
 
 type EventLog struct {
@@ -119,62 +113,34 @@ type EventLog struct {
 }
 
 type Feature struct {
-	AES_NI *AES_NI         `json:"AES_NI,omitempty"`
-	SUEFI  *SUEFI          `json:"SUEFI,omitempty"`
-	TXT    TXT             `json:"TXT"`
-	TPM    TPM             `json:"TPM"`
-	CBNT   CBNT            `json:"CBNT"`
-	UEFI   UEFI            `json:"UEFI"`
-	PFR    HardwareFeature `json:"PFR"`
-	BMC    HardwareFeature `json:"BMC"`
+	AES_NI *AES_NI `json:"AES_NI,omitempty"`
+	SUEFI  *SUEFI  `json:"SUEFI,omitempty"`
+	TXT    *TXT    `json:"TXT"`
+	TPM    *TPM    `json:"TPM"`
+	CBNT   *CBNT   `json:"CBNT"`
 }
 
 type AES_NI struct {
-	Supported bool `json:"supported,omitempty"`
-	Enabled   bool `json:"enabled,omitempty"`
+	Enabled bool `json:"enabled,omitempty"`
 }
 
 type TXT struct {
-	Supported string      `json:"supported"`
-	Enabled   interface{} `json:"enabled"`
+	Enabled bool `json:"enabled"`
 }
 
 type TPM struct {
-	Supported string      `json:"supported"`
-	Enabled   interface{} `json:"enabled"`
-	Version   string      `json:"version,omitempty"`
-	PcrBanks  []string    `json:"pcr_banks,omitempty"`
-	Meta      struct {
-		TPMVersion string   `json:"tpm_version"`
-		PCRBanks   []string `json:"pcr_banks"`
-	} `json:"meta"`
+	Enabled  bool     `json:"enabled"`
+	Version  string   `json:"version,omitempty"`
+	PcrBanks []string `json:"pcr_banks,omitempty"`
 }
 
 type CBNT struct {
-	Supported string      `json:"supported"`
-	Enabled   interface{} `json:"enabled"`
-	Profile   string      `json:"profile,omitempty"`
-	Meta      struct {
-		Profile string `json:"profile"`
-		MSR     string `json:"msr"`
-	} `json:"meta"`
-}
-
-type UEFI struct {
-	HardwareFeature
-	Meta struct {
-		SecureBootEnabled bool `json:"secure_boot_enabled"`
-	} `json:"meta"`
+	Enabled bool   `json:"enabled"`
+	Profile string `json:"profile,omitempty"`
 }
 
 type SUEFI struct {
-	Supported bool `json:"supported,omitempty"`
-	Enabled   bool `json:"enabled,omitempty"`
-}
-
-type HardwareFeature struct {
-	Supported bool `json:"supported,string"`
-	Enabled   bool `json:"enabled,string"`
+	Enabled bool `json:"enabled,omitempty"`
 }
 
 type AssetTag struct {

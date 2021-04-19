@@ -6,6 +6,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -13,13 +15,18 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/antchfx/jsonquery"
+	"github.com/google/uuid"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/common/crypt"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/flavor/model"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/flavor/util"
 	connector "github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector"
+	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/constants"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
 	"github.com/intel-secl/intel-secl/v3/pkg/model/hvs"
+	"github.com/jinzhu/copier"
 )
 
 // EventIDList - define map for event id
@@ -167,13 +174,16 @@ func checkIfValidFile(filename string) (bool, error) {
 
 //main method implements migration of old format of flavor part to new format
 func main() {
-	oldFlavorPartFilePath := flag.String("o", "", "old flavor part json file")
+	oldFlavorPartFilePath := flag.String("o", "", "old flavor part folder path")
+	flavorTemplateFilePath := flag.String("f", "", "flavor templates folder path")
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
 	newFlavorPartFilePath := flag.String("n", "", "new flavor part json file")
+	signingKeyFilePath := flag.String("k", "", "signing-key file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
-		if len(os.Args) <= 2 && !*versionFlag && *oldFlavorPartFilePath == "" {
+		if len(os.Args) <= 2 && !*versionFlag && *oldFlavorPartFilePath == "" &&
+			*flavorTemplateFilePath == "" && *newFlavorPartFilePath == "" {
 			fmt.Println(helpStr)
 		} else {
 			fmt.Println("Invalid Command Usage")
@@ -183,19 +193,34 @@ func main() {
 	flag.Parse()
 
 	// Show the current version when the user enters the -version option
-	if *versionFlag && *oldFlavorPartFilePath != "" {
+	if *versionFlag && *oldFlavorPartFilePath != "" &&
+		*flavorTemplateFilePath != "" && *newFlavorPartFilePath != "" {
 		fmt.Println("Invalid Command Usage")
 		fmt.Printf(helpStr)
 		os.Exit(1)
-	} else if *versionFlag && *oldFlavorPartFilePath == "" {
+	} else if *versionFlag && *oldFlavorPartFilePath == "" &&
+		*flavorTemplateFilePath == "" && *newFlavorPartFilePath == "" {
 		fmt.Println("Current build version: ", BuildVersion)
 		os.Exit(1)
 	} else if *oldFlavorPartFilePath == "" {
 		// Checks for the file data that was entered by the user
-		fmt.Println("Error: Old flavor part json file path is missing")
+		fmt.Println("Error: Old flavor part file path is missing")
+		fmt.Printf(helpStr)
+		os.Exit(1)
+	} else if *flavorTemplateFilePath == "" {
+		// Checks for the file data that was entered by the user
+		fmt.Println("Error: Flavor templates file path is missing")
+		fmt.Printf(helpStr)
+		os.Exit(1)
+	} else if *newFlavorPartFilePath == "" {
+		// Checks for the file data that was entered by the user
+		fmt.Println("Error: New flavor part file path is missing")
 		fmt.Printf(helpStr)
 		os.Exit(1)
 	}
+
+	// Get the private key if signing key file path is provided
+	flavorSignKey := getPrivateKey(*signingKeyFilePath)
 
 	// Validating the old flavor part file path entered
 	if valid, err := checkIfValidFile(*oldFlavorPartFilePath); err != nil && !valid {
@@ -226,87 +251,102 @@ func main() {
 		os.Exit(1)
 	}
 
+	var newFlavor []hvs.Flavor
+	var flavors []hvs.SignedFlavor
+
+	newFlavor = make([]hvs.Flavor, len(oldFlavorPart.SignedFlavor))
+
 	for flavorIndex, flavor := range oldFlavorPart.SignedFlavor {
+
 		//Updating meta section
-		if flavor.Flavor.Hardware != nil && flavor.Flavor.Hardware.Feature.CBNT.Enabled != nil && flavor.Flavor.Hardware.Feature.CBNT.Enabled.(bool) {
-			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.CbntEnabled = true
-		} else if flavor.Flavor.Hardware != nil && flavor.Flavor.Hardware.Feature.SUEFI != nil && flavor.Flavor.Hardware.Feature.SUEFI.Enabled {
-			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.SuefiEnabled = true
+		copier.Copy(&newFlavor[flavorIndex].Meta, &flavor.Flavor.Meta)
+		if flavor.Flavor.Meta.Vendor == intelVendor {
+			newFlavor[flavorIndex].Meta.Vendor = constants.VendorIntel
+		} else if flavor.Flavor.Meta.Vendor == vmwareVendor {
+			newFlavor[flavorIndex].Meta.Vendor = constants.VendorVMware
+		} else {
+			newFlavor[flavorIndex].Meta.Vendor = constants.VendorUnknown
 		}
 
-		//Updating hardware section
+		//Update description
+		var description = make(map[string]interface{})
+		description = updateDescription(description, flavor.Flavor.Meta, flavor.Flavor.Hardware)
+		newFlavor[flavorIndex].Meta.Description = description
+
+		//Updating BIOS section
+		if flavor.Flavor.Bios != nil {
+			newFlavor[flavorIndex].Bios = new(model.Bios)
+			copier.Copy(newFlavor[flavorIndex].Bios, flavor.Flavor.Bios)
+		}
+
+		//Updating Hardware section
 		if flavor.Flavor.Hardware != nil {
+			newFlavor[flavorIndex].Hardware = new(model.Hardware)
+			copier.Copy(newFlavor[flavorIndex].Hardware, flavor.Flavor.Hardware)
+
 			//TXT
-			if flavor.Flavor.Hardware.Feature.TXT.Enabled != nil {
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.TXT.Enabled.(bool))
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled.(string)
-			} else {
-				//if the TXT section not present in oldflavorpart json,assign false to it
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Enabled = "false"
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TXT.Supported = "false"
-			}
+			newFlavor[flavorIndex].Hardware.Feature.TXT.Supported = newFlavor[flavorIndex].Hardware.Feature.TXT.Enabled
 
 			//TPM
-			if flavor.Flavor.Hardware.Feature.TPM.Enabled != nil {
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.TPM.Enabled.(bool))
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled.(string)
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Meta.TPMVersion = flavor.Flavor.Hardware.Feature.TPM.Version
-				flavor.Flavor.Hardware.Feature.TPM.Version = ""
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Meta.PCRBanks = flavor.Flavor.Hardware.Feature.TPM.PcrBanks
-				flavor.Flavor.Hardware.Feature.TPM.PcrBanks = nil
-			} else {
-				//if the TPM section not present in oldflavorpart json,assign false to it
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Enabled = "false"
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.TPM.Supported = "false"
-			}
+			newFlavor[flavorIndex].Hardware.Feature.TPM.Supported = newFlavor[flavorIndex].Hardware.Feature.TPM.Enabled
+			newFlavor[flavorIndex].Hardware.Feature.TPM.Meta.TPMVersion = flavor.Flavor.Hardware.Feature.TPM.Version
+			newFlavor[flavorIndex].Hardware.Feature.TPM.Meta.PCRBanks = flavor.Flavor.Hardware.Feature.TPM.PcrBanks
 
 			//CBNT
-			if flavor.Flavor.Hardware.Feature.CBNT.Enabled != nil {
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled = strconv.FormatBool(flavor.Flavor.Hardware.Feature.CBNT.Enabled.(bool))
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Supported = oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled.(string)
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Meta.Profile = flavor.Flavor.Hardware.Feature.CBNT.Profile
-				flavor.Flavor.Hardware.Feature.CBNT.Profile = ""
-			} else {
-				//if the CBNT section not present in oldflavorpart json,assign false to it
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Enabled = "false"
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.CBNT.Supported = "false"
+			if flavor.Flavor.Hardware.Feature.CBNT != nil {
+				newFlavor[flavorIndex].Hardware.Feature.CBNT.Supported = newFlavor[flavorIndex].Hardware.Feature.CBNT.Enabled
+				newFlavor[flavorIndex].Hardware.Feature.CBNT.Meta.Profile = flavor.Flavor.Hardware.Feature.CBNT.Profile
 			}
 
 			//UEFI
 			if flavor.Flavor.Hardware.Feature.SUEFI != nil {
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Enabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Supported = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
-				oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Hardware.Feature.UEFI.Meta.SecureBootEnabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
-				flavor.Flavor.Hardware.Feature.SUEFI = nil
+				newFlavor[flavorIndex].Hardware.Feature.UEFI.Supported = newFlavor[flavorIndex].Hardware.Feature.UEFI.Enabled
+				newFlavor[flavorIndex].Hardware.Feature.UEFI.Meta.SecureBootEnabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
 			}
 		}
 
-		//removing the signature from the flavors
-		//since the final flavor part file is not a signed flavor(only the flavor collection)
-		oldFlavorPart.SignedFlavor[flavorIndex].Signature = ""
+		//Updating external section
+		if flavor.Flavor.External != nil {
+			newFlavor[flavorIndex].External = new(model.External)
+			copier.Copy(newFlavor[flavorIndex].External, flavor.Flavor.External)
+		}
+
+		//Updating Software section
+		if flavor.Flavor.Software != nil {
+			newFlavor[flavorIndex].Software = new(model.Software)
+			copier.Copy(newFlavor[flavorIndex].Software, flavor.Flavor.Software)
+		}
 
 		// Copying the pcrs sections from old flavor part to new flavor part
-		if flavor.Flavor.Pcrs == nil {
-			continue
-		}
-
-		for _, template := range templates {
-			oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.FlavorTemplateIds = append(oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.FlavorTemplateIds, template.ID)
-			flavorname := flavor.Flavor.Meta.Description.FlavorPart
-			rules, pcrsmap := getPcrRules(flavorname, template)
-			if rules != nil && pcrsmap != nil {
-				//Update PCR section
-				flavor.Flavor.PcrLogs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap, flavor.Flavor.Meta.Vendor)
-			} else {
-				continue
+		if flavor.Flavor.Pcrs != nil {
+			var flavorTemplateIDList []uuid.UUID
+			for _, template := range templates {
+				flavorTemplateIDList = append(flavorTemplateIDList, template.ID)
+				flavorname := flavor.Flavor.Meta.Description.FlavorPart
+				rules, pcrsmap := getPcrRules(flavorname, template)
+				if rules != nil && pcrsmap != nil {
+					//Update PCR section
+					newFlavor[flavorIndex].Pcrs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap, flavor.Flavor.Meta.Vendor)
+				} else {
+					continue
+				}
 			}
+			newFlavor[flavorIndex].Meta.Description["flavor_template_ids"] = flavorTemplateIDList
 		}
-		oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Pcrs = nil
-		oldFlavorPart.SignedFlavor[flavorIndex].Flavor.PcrLogs = flavor.Flavor.PcrLogs
+	}
+
+	signedFlavors, err := util.PlatformFlavorUtil{}.GetSignedFlavorList(newFlavor, flavorSignKey)
+	if err != nil {
+		fmt.Println("Error in getting signing flavor")
+	}
+	flavors = append(flavors, signedFlavors...)
+
+	signedFlavorCollection := hvs.SignedFlavorCollection{
+		SignedFlavors: flavors,
 	}
 
 	//getting the final data
-	finalFlavorPart, err := json.Marshal(oldFlavorPart.SignedFlavor)
+	finalFlavorPart, err := json.Marshal(signedFlavorCollection)
 	if err != nil {
 		fmt.Println("Error in marshaling the final flavor part file")
 		os.Exit(1)
@@ -337,44 +377,46 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 	newFlavorPcrs = make([]types.FlavorPcrs, len(pcrsmap))
 
 	for bank, pcrMap := range Pcrs {
-		index := 0
-		for mapIndex, templateBank := range pcrsmap {
-			pcrIndex := types.PcrIndex(mapIndex)
-
-			if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
-				break
-			}
-			if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
-				newFlavorPcrs[index].Pcr.Index = mapIndex
-				newFlavorPcrs[index].Pcr.Bank = bank
-				newFlavorPcrs[index].Measurement = expectedPcrEx.Value
-				if rules[index].PcrMatches != nil {
-					newFlavorPcrs[index].PCRMatches = *rules[index].PcrMatches
+		for index, rule := range rules {
+			for mapIndex, templateBank := range pcrsmap {
+				if mapIndex != rule.Pcr.Index {
+					continue
 				}
+				pcrIndex := types.PcrIndex(mapIndex)
 
-				var newTpmEvents []types.EventLog
-
-				if rules[index].Pcr.Index == newFlavorPcrs[index].Pcr.Index &&
-					rules[index].EventlogEquals != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogEquals).IsZero() {
-					newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
-					if rules[index].EventlogEquals.ExcludingTags != nil {
-						newFlavorPcrs[index].EventlogEqual.ExcludeTags = rules[index].EventlogEquals.ExcludingTags
+				if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
+					break
+				}
+				if expectedPcrEx, ok := pcrMap[pcrIndex.String()]; ok {
+					newFlavorPcrs[index].Pcr.Index = mapIndex
+					newFlavorPcrs[index].Pcr.Bank = bank
+					newFlavorPcrs[index].Measurement = expectedPcrEx.Value
+					if rule.PcrMatches != nil {
+						newFlavorPcrs[index].PCRMatches = *rule.PcrMatches
 					}
 
-					newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
-					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
-					newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
-					newTpmEvents = nil
-				}
+					var newTpmEvents []types.EventLog
 
-				if rules[index].Pcr.Index == newFlavorPcrs[index].Pcr.Index && rules[index].EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rules[index].EventlogIncludes).IsZero() {
-					newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
-					newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
-					newFlavorPcrs[index].EventlogIncludes = newTpmEvents
-					newTpmEvents = nil
+					if rule.Pcr.Index == newFlavorPcrs[index].Pcr.Index &&
+						rule.EventlogEquals != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rule.EventlogEquals).IsZero() {
+						newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
+						if rule.EventlogEquals.ExcludingTags != nil {
+							newFlavorPcrs[index].EventlogEqual.ExcludeTags = rule.EventlogEquals.ExcludingTags
+						}
+						newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
+						newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
+						newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
+						newTpmEvents = nil
+					}
+
+					if rule.Pcr.Index == newFlavorPcrs[index].Pcr.Index && rule.EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rule.EventlogIncludes).IsZero() {
+						newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
+						newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
+						newFlavorPcrs[index].EventlogIncludes = newTpmEvents
+						newTpmEvents = nil
+					}
 				}
 			}
-			index++
 		}
 	}
 
@@ -443,4 +485,60 @@ func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog,
 	}
 
 	return newTpmEvents
+}
+
+func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
+	var flavorSignKey *rsa.PrivateKey
+	var err error
+	if signingKeyFilePath != "" {
+		key, err := crypt.GetPrivateKeyFromPKCS8File(signingKeyFilePath)
+		if err != nil {
+			fmt.Println("flavorgen/flavor_gen:main() Error getting private key %s", err)
+			os.Exit(1)
+		}
+		flavorSignKey = key.(*rsa.PrivateKey)
+	} else {
+		flavorSignKey, err = rsa.GenerateKey(rand.Reader, 3072)
+		if err != nil {
+			fmt.Println(err, "flavorgen/flavor_create:createFlavor() Couldn't generate RSA key, failed to create flavorsinging key")
+			os.Exit(1)
+		}
+	}
+	return flavorSignKey
+}
+
+func updateDescription(description map[string]interface{}, meta Meta, hardware *Hardware) map[string]interface{} {
+	description[model.TbootInstalled] = meta.Description.TbootInstalled
+	description[model.Label] = meta.Description.Label
+	description[model.FlavorPart] = meta.Description.FlavorPart
+	description[model.Source] = meta.Description.Source
+
+	switch meta.Description.FlavorPart {
+	case platformFlavor:
+		description[model.BiosName] = meta.Description.BiosName
+		description[model.BiosVersion] = meta.Description.BiosVersion
+	case osFlavor:
+		description[model.OsName] = meta.Description.OsName
+		description[model.OsVersion] = meta.Description.OsVersion
+		description[model.VmmName] = meta.Description.VmmName
+		description[model.VmmVersion] = meta.Description.VmmVersion
+	case hostUniqueFlavor:
+		description[model.HardwareUUID] = meta.Description.HardwareUUID
+		description[model.BiosName] = meta.Description.BiosName
+		description[model.BiosVersion] = meta.Description.BiosVersion
+		description[model.OsName] = meta.Description.OsName
+		description[model.OsVersion] = meta.Description.OsVersion
+	}
+
+	if hardware != nil {
+		description[model.TpmVersion] = hardware.Feature.TPM.Version
+		if hardware.Feature.CBNT != nil && hardware.Feature.CBNT.Enabled {
+			//oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.CbntEnabled = true
+			description["cbnt_enabled"] = true
+		} else if hardware.Feature.SUEFI != nil && hardware.Feature.SUEFI.Enabled {
+			//oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.SuefiEnabled = true
+			description["suefi_enabled"] = true
+		}
+	}
+	return description
 }
