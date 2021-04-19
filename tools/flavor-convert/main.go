@@ -88,19 +88,17 @@ var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*
 	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='2.0']":           "//meta/description/tpm_version//*[text()='2.0']",
 	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='1.2']":           "//meta/description/tpm_version//*[text()='1.2']"}
 
-var flavorTemplatePath = "./flavortemplates"
-
 //getFlavorTemplates method is used to get the flavor templates based on old flavor part file
-func getFlavorTemplates(body []byte) ([]hvs.FlavorTemplate, error) {
+func getFlavorTemplates(body []byte, flavorTemplateFilePath string) ([]hvs.FlavorTemplate, error) {
 	var defaultFlavorTemplates []string
 
 	//read the flavor template file
-	templates, err := ioutil.ReadDir(flavorTemplatePath)
+	templates, err := ioutil.ReadDir(flavorTemplateFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("Error in reading flavor template files")
 	}
 	for _, template := range templates {
-		path := flavorTemplatePath + "/" + template.Name()
+		path := flavorTemplateFilePath + "/" + template.Name()
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
 			return nil, fmt.Errorf("Error in reading the template file - ", template.Name())
@@ -236,7 +234,7 @@ func main() {
 	}
 
 	//get the flavor template based on old flavor part file
-	templates, err := getFlavorTemplates(body)
+	templates, err := getFlavorTemplates(body, *flavorTemplateFilePath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
