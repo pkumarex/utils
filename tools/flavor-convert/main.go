@@ -344,7 +344,7 @@ func main() {
 			fmt.Println("Error in getting the signed flavor")
 			os.Exit(1)
 		}
-		fmt.Println("\n" + signedFlavor.Signature)
+		fmt.Println("@" + signedFlavor.Signature)
 	}
 
 	signedFlavors, err := util.PlatformFlavorUtil{}.GetSignedFlavorList(newFlavor, flavorSignKey)
