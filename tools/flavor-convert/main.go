@@ -177,6 +177,7 @@ func main() {
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
 	newFlavorPartFilePath := flag.String("n", "", "new flavor part json file")
 	signingKeyFilePath := flag.String("k", "", "signing-key file")
+	//configFilePath := flag.String("c", "", "db configuration file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
@@ -210,12 +211,12 @@ func main() {
 		fmt.Println("Error: Flavor templates file path is missing")
 		fmt.Printf(helpStr)
 		os.Exit(1)
-	} else if *newFlavorPartFilePath == "" {
+	} /* else if *newFlavorPartFilePath == "" {
 		// Checks for the file data that was entered by the user
 		fmt.Println("Error: New flavor part file path is missing")
 		fmt.Printf(helpStr)
 		os.Exit(1)
-	}
+	} */
 
 	// Get the private key if signing key file path is provided
 	flavorSignKey := getPrivateKey(*signingKeyFilePath)
@@ -331,6 +332,19 @@ func main() {
 			}
 			newFlavor[flavorIndex].Meta.Description["flavor_template_ids"] = flavorTemplateIDList
 		}
+		flavorSection, err := json.Marshal(newFlavor[flavorIndex])
+		if err != nil {
+			fmt.Println("Error in marshaling the flavor section")
+			os.Exit(1)
+		}
+		fmt.Println("\n" + string(flavorSection))
+
+		signedFlavor, err := model.NewSignedFlavor(&newFlavor[flavorIndex], flavorSignKey)
+		if err != nil {
+			fmt.Println("Error in getting the signed flavor")
+			os.Exit(1)
+		}
+		fmt.Println("\n" + signedFlavor.Signature)
 	}
 
 	signedFlavors, err := util.PlatformFlavorUtil{}.GetSignedFlavorList(newFlavor, flavorSignKey)
@@ -351,7 +365,7 @@ func main() {
 	}
 
 	//Printing the final flavor part file in console
-	fmt.Println("New flavor part json:\n", string(finalFlavorPart))
+	//fmt.Println("New flavor part json:\n", string(finalFlavorPart))
 
 	//writing the new flavor part into the local file
 	if *newFlavorPartFilePath != "" {
@@ -367,6 +381,7 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
 }
 
 //updatePcrSection method is used to update the pcr section in new flavor part
