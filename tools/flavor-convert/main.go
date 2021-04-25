@@ -21,7 +21,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/common/crypt"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/flavor/model"
-	"github.com/intel-secl/intel-secl/v3/pkg/lib/flavor/util"
 	connector "github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/constants"
 	"github.com/intel-secl/intel-secl/v3/pkg/lib/host-connector/types"
@@ -175,14 +174,12 @@ func main() {
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part folder path")
 	flavorTemplateFilePath := flag.String("f", "", "flavor templates folder path")
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
-	newFlavorPartFilePath := flag.String("n", "", "new flavor part json file")
 	signingKeyFilePath := flag.String("k", "", "signing-key file")
-	//configFilePath := flag.String("c", "", "db configuration file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
 		if len(os.Args) <= 2 && !*versionFlag && *oldFlavorPartFilePath == "" &&
-			*flavorTemplateFilePath == "" && *newFlavorPartFilePath == "" {
+			*flavorTemplateFilePath == "" {
 			fmt.Println(helpStr)
 		} else {
 			fmt.Println("Invalid Command Usage")
@@ -193,12 +190,12 @@ func main() {
 
 	// Show the current version when the user enters the -version option
 	if *versionFlag && *oldFlavorPartFilePath != "" &&
-		*flavorTemplateFilePath != "" && *newFlavorPartFilePath != "" {
+		*flavorTemplateFilePath != "" {
 		fmt.Println("Invalid Command Usage")
 		fmt.Printf(helpStr)
 		os.Exit(1)
 	} else if *versionFlag && *oldFlavorPartFilePath == "" &&
-		*flavorTemplateFilePath == "" && *newFlavorPartFilePath == "" {
+		*flavorTemplateFilePath == "" {
 		fmt.Println("Current build version: ", BuildVersion)
 		os.Exit(1)
 	} else if *oldFlavorPartFilePath == "" {
@@ -211,12 +208,7 @@ func main() {
 		fmt.Println("Error: Flavor templates file path is missing")
 		fmt.Printf(helpStr)
 		os.Exit(1)
-	} /* else if *newFlavorPartFilePath == "" {
-		// Checks for the file data that was entered by the user
-		fmt.Println("Error: New flavor part file path is missing")
-		fmt.Printf(helpStr)
-		os.Exit(1)
-	} */
+	}
 
 	// Get the private key if signing key file path is provided
 	flavorSignKey := getPrivateKey(*signingKeyFilePath)
@@ -251,8 +243,6 @@ func main() {
 	}
 
 	var newFlavor []hvs.Flavor
-	var flavors []hvs.SignedFlavor
-
 	newFlavor = make([]hvs.Flavor, len(oldFlavorPart.SignedFlavor))
 
 	for flavorIndex, flavor := range oldFlavorPart.SignedFlavor {
@@ -344,44 +334,10 @@ func main() {
 			fmt.Println("Error in getting the signed flavor")
 			os.Exit(1)
 		}
+
+		//used "@" delimiter to split the flavor and signature value in script
 		fmt.Println("@" + signedFlavor.Signature)
 	}
-
-	signedFlavors, err := util.PlatformFlavorUtil{}.GetSignedFlavorList(newFlavor, flavorSignKey)
-	if err != nil {
-		fmt.Println("Error in getting signing flavor")
-	}
-	flavors = append(flavors, signedFlavors...)
-
-	signedFlavorCollection := hvs.SignedFlavorCollection{
-		SignedFlavors: flavors,
-	}
-
-	//getting the final data
-	finalFlavorPart, err := json.Marshal(signedFlavorCollection)
-	if err != nil {
-		fmt.Println("Error in marshaling the final flavor part file")
-		os.Exit(1)
-	}
-
-	//Printing the final flavor part file in console
-	//fmt.Println("New flavor part json:\n", string(finalFlavorPart))
-
-	//writing the new flavor part into the local file
-	if *newFlavorPartFilePath != "" {
-		// Checking if the output file path is json
-		if fileExtension := filepath.Ext(*newFlavorPartFilePath); fileExtension != ".json" {
-			fmt.Println("\nError in validating the new flavor part file path - the file '%s' is not json: ", *newFlavorPartFilePath)
-			os.Exit(1)
-		}
-		data := []byte(finalFlavorPart)
-		err = ioutil.WriteFile(*newFlavorPartFilePath, data, 0644)
-		if err != nil {
-			fmt.Println("Error in writing the new flavor part json in local file")
-			os.Exit(1)
-		}
-	}
-
 }
 
 //updatePcrSection method is used to update the pcr section in new flavor part
@@ -396,7 +352,6 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 					continue
 				}
 				pcrIndex := types.PcrIndex(mapIndex)
-
 				if types.SHAAlgorithm(bank) != types.SHAAlgorithm(templateBank) {
 					break
 				}
@@ -407,9 +362,7 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 					if rule.PcrMatches != nil {
 						newFlavorPcrs[index].PCRMatches = *rule.PcrMatches
 					}
-
 					var newTpmEvents []types.EventLog
-
 					if rule.Pcr.Index == newFlavorPcrs[index].Pcr.Index &&
 						rule.EventlogEquals != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rule.EventlogEquals).IsZero() {
 						newFlavorPcrs[index].EventlogEqual = new(types.EventLogEqual)
@@ -421,7 +374,6 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 						newFlavorPcrs[index].EventlogEqual.Events = newTpmEvents
 						newTpmEvents = nil
 					}
-
 					if rule.Pcr.Index == newFlavorPcrs[index].Pcr.Index && rule.EventlogIncludes != nil && expectedPcrEx.Event != nil && !reflect.ValueOf(rule.EventlogIncludes).IsZero() {
 						newTpmEvents = make([]types.EventLog, len(expectedPcrEx.Event))
 						newTpmEvents = updateTpmEvents(expectedPcrEx.Event, newTpmEvents, vendor)
@@ -460,11 +412,13 @@ func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules
 		rules = template.FlavorParts.HostUnique.PcrRules
 		return rules, pcrsmap
 	}
+
 	return nil, nil
 }
 
-//updateTpmEvents This method is used to update the tpm events
+//updateTpmEvents method is used to update the tpm events
 func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog, vendor string) []types.EventLog {
+
 	//Updating the old event format into new event format
 	for eventIndex, oldEvents := range expectedPcrEvent {
 		if vendor == intelVendor {
@@ -500,6 +454,7 @@ func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog,
 	return newTpmEvents
 }
 
+//getPrivateKey method is used to get the private key from the inputkeypath if present else generates the newkey
 func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 	var flavorSignKey *rsa.PrivateKey
 	var err error
@@ -520,6 +475,7 @@ func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 	return flavorSignKey
 }
 
+//updateDescription method is used to update the description section in flavor
 func updateDescription(description map[string]interface{}, meta Meta, hardware *Hardware) map[string]interface{} {
 	description[model.TbootInstalled] = meta.Description.TbootInstalled
 	description[model.Label] = meta.Description.Label
@@ -546,12 +502,11 @@ func updateDescription(description map[string]interface{}, meta Meta, hardware *
 	if hardware != nil {
 		description[model.TpmVersion] = hardware.Feature.TPM.Version
 		if hardware.Feature.CBNT != nil && hardware.Feature.CBNT.Enabled {
-			//oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.CbntEnabled = true
 			description["cbnt_enabled"] = true
 		} else if hardware.Feature.SUEFI != nil && hardware.Feature.SUEFI.Enabled {
-			//oldFlavorPart.SignedFlavor[flavorIndex].Flavor.Meta.Description.SuefiEnabled = true
 			description["suefi_enabled"] = true
 		}
 	}
+
 	return description
 }
