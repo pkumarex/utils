@@ -461,14 +461,14 @@ func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 	if signingKeyFilePath != "" {
 		key, err := crypt.GetPrivateKeyFromPKCS8File(signingKeyFilePath)
 		if err != nil {
-			fmt.Println("flavorgen/flavor_gen:main() Error getting private key %s", err)
+			fmt.Println("Error getting private key %s", err)
 			os.Exit(1)
 		}
 		flavorSignKey = key.(*rsa.PrivateKey)
 	} else {
 		flavorSignKey, err = rsa.GenerateKey(rand.Reader, 3072)
 		if err != nil {
-			fmt.Println(err, "flavorgen/flavor_create:createFlavor() Couldn't generate RSA key, failed to create flavorsinging key")
+			fmt.Println(err, "Couldn't generate RSA key, failed to create flavorsinging key")
 			os.Exit(1)
 		}
 	}
