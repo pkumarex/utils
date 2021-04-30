@@ -75,6 +75,7 @@ type Software struct {
 	CumulativeHash string                       `json:"cumulative_hash,omitempty"`
 }
 
+// FlavorMeasurement holds the details of software flavor measurement
 type FlavorMeasurement struct {
 	Type       MeasurementType `json:"type"`
 	Value      string          `json:"value"`
@@ -117,6 +118,7 @@ type Description struct {
 	DigestAlgorithm string     `json:"digest_algorithm,omitempty"`
 }
 
+// EventLog contains event log value and information
 type EventLog struct {
 	DigestType string            `json:"digest_type"`
 	Value      string            `json:"value"`
