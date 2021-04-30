@@ -28,7 +28,7 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-// EventIDList - define map for event id
+// eventIDList - define map for event id
 var eventIDList = map[string]string{
 	"PCR_MAPPING":          "0x401",
 	"HASH_START":           "0x402",
@@ -58,25 +58,30 @@ var eventIDList = map[string]string{
 }
 
 const (
-	intelVendor  = "INTEL"
-	vmwareVendor = "VMWARE"
+	IntelVendor  = "INTEL"
+	VmwareVendor = "VMWARE"
 
-	platformFlavor   = "PLATFORM"
-	osFlavor         = "OS"
-	hostUniqueFlavor = "HOST_UNIQUE"
-)
+	PlatformFlavor   = "PLATFORM"
+	OsFlavor         = "OS"
+	HostUniqueFlavor = "HOST_UNIQUE"
 
-var BuildVersion string
+	CbntEnabled       = "cbnt_enabled"
+	SuefiEnabled      = "suefi_enabled"
+	FlaovrTemplateIDs = "flavor_template_ids"
 
-const helpStr = `Usage:
+	HelpStr = `Usage:
 flavor-convert <command> [argument]
 	
 Available Command:
-	-o                To provide old flavor part json filepath
-	-n                To provide new flavor part json filepath
+	-o                To provide old flavor part filepath
+	-f                To provide flavor template filepath
+	-k                To provide signing key filepath
 	-h|--help         Show this help message
-	-version          Print the current version
+	-v|--version      Print the current version
 `
+)
+
+var BuildVersion string
 
 //To map the conditions in the flavor template with old flavor part
 var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*[text()='true']": "//meta/description/tboot_installed//*[text()='true']",
@@ -100,7 +105,7 @@ func getFlavorTemplates(body []byte, flavorTemplateFilePath string) ([]hvs.Flavo
 		path := flavorTemplateFilePath + "/" + template.Name()
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
-			return nil, fmt.Errorf("Error in reading the template file - ", template.Name())
+			return nil, fmt.Errorf("Error in reading the template file - %s", template.Name())
 		}
 		defaultFlavorTemplates = append(defaultFlavorTemplates, string(data))
 	}
@@ -139,13 +144,17 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 		for _, condition := range flavorTemplate.Condition {
 			conditionEval = true
 			flavorPartCondition := flavorTemplateConditions[condition]
-			expectedData, _ := jsonquery.Query(oldFlavorPartJson, flavorPartCondition)
+			expectedData, err := jsonquery.Query(oldFlavorPartJson, flavorPartCondition)
+			if err != nil {
+				fmt.Println("Error when querying the oldFlavorPartJson")
+				os.Exit(1)
+			}
 			if expectedData == nil {
 				conditionEval = false
 				break
 			}
 		}
-		if conditionEval == true {
+		if conditionEval {
 			filteredTemplates = append(filteredTemplates, flavorTemplate)
 		}
 	}
@@ -180,10 +189,10 @@ func main() {
 	flag.Usage = func() {
 		if len(os.Args) <= 2 && !*versionFlag && *oldFlavorPartFilePath == "" &&
 			*flavorTemplateFilePath == "" {
-			fmt.Println(helpStr)
+			fmt.Println(HelpStr)
 		} else {
 			fmt.Println("Invalid Command Usage")
-			fmt.Printf(helpStr)
+			fmt.Printf(HelpStr)
 		}
 	}
 	flag.Parse()
@@ -192,7 +201,7 @@ func main() {
 	if *versionFlag && *oldFlavorPartFilePath != "" &&
 		*flavorTemplateFilePath != "" {
 		fmt.Println("Invalid Command Usage")
-		fmt.Printf(helpStr)
+		fmt.Printf(HelpStr)
 		os.Exit(1)
 	} else if *versionFlag && *oldFlavorPartFilePath == "" &&
 		*flavorTemplateFilePath == "" {
@@ -201,12 +210,12 @@ func main() {
 	} else if *oldFlavorPartFilePath == "" {
 		// Checks for the file data that was entered by the user
 		fmt.Println("Error: Old flavor part file path is missing")
-		fmt.Printf(helpStr)
+		fmt.Printf(HelpStr)
 		os.Exit(1)
 	} else if *flavorTemplateFilePath == "" {
 		// Checks for the file data that was entered by the user
 		fmt.Println("Error: Flavor templates file path is missing")
-		fmt.Printf(helpStr)
+		fmt.Printf(HelpStr)
 		os.Exit(1)
 	}
 
@@ -249,9 +258,9 @@ func main() {
 
 		//Updating meta section
 		copier.Copy(&newFlavor[flavorIndex].Meta, &flavor.Flavor.Meta)
-		if flavor.Flavor.Meta.Vendor == intelVendor {
+		if flavor.Flavor.Meta.Vendor == IntelVendor {
 			newFlavor[flavorIndex].Meta.Vendor = constants.VendorIntel
-		} else if flavor.Flavor.Meta.Vendor == vmwareVendor {
+		} else if flavor.Flavor.Meta.Vendor == VmwareVendor {
 			newFlavor[flavorIndex].Meta.Vendor = constants.VendorVMware
 		} else {
 			newFlavor[flavorIndex].Meta.Vendor = constants.VendorUnknown
@@ -320,7 +329,7 @@ func main() {
 					continue
 				}
 			}
-			newFlavor[flavorIndex].Meta.Description["flavor_template_ids"] = flavorTemplateIDList
+			newFlavor[flavorIndex].Meta.Description[FlaovrTemplateIDs] = flavorTemplateIDList
 		}
 		flavorSection, err := json.Marshal(newFlavor[flavorIndex])
 		if err != nil {
@@ -393,19 +402,19 @@ func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules
 	pcrsmap := make(map[int]string)
 	var rules []hvs.PcrRules
 
-	if flavorName == platformFlavor && template.FlavorParts.Platform != nil {
+	if flavorName == PlatformFlavor && template.FlavorParts.Platform != nil {
 		for _, rules := range template.FlavorParts.Platform.PcrRules {
 			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
 		rules = template.FlavorParts.Platform.PcrRules
 		return rules, pcrsmap
-	} else if flavorName == osFlavor && template.FlavorParts.OS != nil {
+	} else if flavorName == OsFlavor && template.FlavorParts.OS != nil {
 		for _, rules := range template.FlavorParts.OS.PcrRules {
 			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
 		rules = template.FlavorParts.OS.PcrRules
 		return rules, pcrsmap
-	} else if flavorName == hostUniqueFlavor && template.FlavorParts.HostUnique != nil {
+	} else if flavorName == HostUniqueFlavor && template.FlavorParts.HostUnique != nil {
 		for _, rules := range template.FlavorParts.HostUnique.PcrRules {
 			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
@@ -421,12 +430,12 @@ func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog,
 
 	//Updating the old event format into new event format
 	for eventIndex, oldEvents := range expectedPcrEvent {
-		if vendor == intelVendor {
+		if vendor == IntelVendor {
 			newTpmEvents[eventIndex].TypeName = oldEvents.Label
 			newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Label)
 			newTpmEvents[eventIndex].Measurement = oldEvents.Value
 			newTpmEvents[eventIndex].TypeID = eventIDList[oldEvents.Label]
-		} else if vendor == vmwareVendor {
+		} else if vendor == VmwareVendor {
 			if oldEvents.Info["PackageName"] != "" {
 				newTpmEvents[eventIndex].Tags = append(newTpmEvents[eventIndex].Tags, oldEvents.Info["ComponentName"], oldEvents.Info["EventName"]+"_"+oldEvents.Info["PackageName"]+"_"+oldEvents.Info["PackageVendor"])
 			} else {
@@ -461,7 +470,7 @@ func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 	if signingKeyFilePath != "" {
 		key, err := crypt.GetPrivateKeyFromPKCS8File(signingKeyFilePath)
 		if err != nil {
-			fmt.Println("Error getting private key %s", err)
+			fmt.Println("Error getting private key", err)
 			os.Exit(1)
 		}
 		flavorSignKey = key.(*rsa.PrivateKey)
@@ -483,15 +492,15 @@ func updateDescription(description map[string]interface{}, meta Meta, hardware *
 	description[model.Source] = meta.Description.Source
 
 	switch meta.Description.FlavorPart {
-	case platformFlavor:
+	case PlatformFlavor:
 		description[model.BiosName] = meta.Description.BiosName
 		description[model.BiosVersion] = meta.Description.BiosVersion
-	case osFlavor:
+	case OsFlavor:
 		description[model.OsName] = meta.Description.OsName
 		description[model.OsVersion] = meta.Description.OsVersion
 		description[model.VmmName] = meta.Description.VmmName
 		description[model.VmmVersion] = meta.Description.VmmVersion
-	case hostUniqueFlavor:
+	case HostUniqueFlavor:
 		description[model.HardwareUUID] = meta.Description.HardwareUUID
 		description[model.BiosName] = meta.Description.BiosName
 		description[model.BiosVersion] = meta.Description.BiosVersion
@@ -502,9 +511,9 @@ func updateDescription(description map[string]interface{}, meta Meta, hardware *
 	if hardware != nil {
 		description[model.TpmVersion] = hardware.Feature.TPM.Version
 		if hardware.Feature.CBNT != nil && hardware.Feature.CBNT.Enabled {
-			description["cbnt_enabled"] = true
+			description[CbntEnabled] = true
 		} else if hardware.Feature.SUEFI != nil && hardware.Feature.SUEFI.Enabled {
-			description["suefi_enabled"] = true
+			description[SuefiEnabled] = true
 		}
 	}
 

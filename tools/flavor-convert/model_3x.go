@@ -7,18 +7,22 @@ package main
 import (
 	"time"
 
-	uuid "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
+// OldFlavorPart is a list of SignedFlavor objects
 type OldFlavorPart struct {
 	SignedFlavor []SignedFlavors `json:"signed_flavors"`
 }
 
+// SignedFlavor combines the Flavor along with the cryptographically signed hash that authenticates its source
 type SignedFlavors struct {
 	Flavor    Flavor `json:"flavor,omitempty"`
 	Signature string `json:"signature,omitempty"`
 }
 
+// Flavor is a standardized set of expectations that determines what platform
+// measurements will be considered “trusted.”
 type Flavor struct {
 	// Meta section is mandatory for all Flavor types
 	Meta Meta  `json:"meta"`
@@ -31,6 +35,7 @@ type Flavor struct {
 	Software *Software `json:"software,omitempty"`
 }
 
+// Meta holds metadata information related to the Flavor
 type Meta struct {
 	Schema      *Schema     `json:"schema,omitempty"`
 	ID          uuid.UUID   `json:"id"`
@@ -39,16 +44,19 @@ type Meta struct {
 	Vendor      string      `json:"vendor,omitempty"`
 }
 
+// PcrEx holds the details of the pcr information
 type PcrEx struct {
 	Value string     `json:"value"`
 	Event []EventLog `json:"event,omitempty"`
 }
 
+// Bios holds details of the Bios vendor firmware information
 type Bios struct {
 	BiosName    string `json:"bios_name,omitempty"`
 	BiosVersion string `json:"bios_version,omitempty"`
 }
 
+// Hardware contains information about the host's Hardware, Processor and Platform Features
 type Hardware struct {
 	Vendor         string   `json:"vendor,omitempty"`
 	ProcessorInfo  string   `json:"processor_info,omitempty"`
@@ -56,10 +64,12 @@ type Hardware struct {
 	Feature        *Feature `json:"feature,omitempty"`
 }
 
+// External is a component of flavor that encloses the AssetTag cert
 type External struct {
 	AssetTag AssetTag `json:"asset_tag,omitempty"`
 }
 
+// Software consists of integrity measurements of Software/OS related resources
 type Software struct {
 	Measurements   map[string]FlavorMeasurement `json:"measurements,omitempty"`
 	CumulativeHash string                       `json:"cumulative_hash,omitempty"`
@@ -83,10 +93,12 @@ const (
 	MeasurementTypeSymlink MeasurementType = "symlinkMeasurementType"
 )
 
+// Schema defines the Uri of the schema
 type Schema struct {
 	Uri string `json:"uri,omitempty"`
 }
 
+// Description contains information about the host hardware identifiers
 type Description struct {
 	FlavorPart      string     `json:"flavor_part,omitempty"`
 	Source          string     `json:"source,omitempty"`
@@ -112,6 +124,7 @@ type EventLog struct {
 	Info       map[string]string `json:"info"`
 }
 
+// Feature encapsulates the presence of various Platform security features on the Host hardware
 type Feature struct {
 	AES_NI *AES_NI `json:"AES_NI,omitempty"`
 	SUEFI  *SUEFI  `json:"SUEFI,omitempty"`
@@ -120,29 +133,35 @@ type Feature struct {
 	CBNT   *CBNT   `json:"CBNT"`
 }
 
+// AES_NI
 type AES_NI struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
+// TXT
 type TXT struct {
 	Enabled bool `json:"enabled"`
 }
 
+// TPM
 type TPM struct {
 	Enabled  bool     `json:"enabled"`
 	Version  string   `json:"version,omitempty"`
 	PcrBanks []string `json:"pcr_banks,omitempty"`
 }
 
+//CBNT
 type CBNT struct {
 	Enabled bool   `json:"enabled"`
 	Profile string `json:"profile,omitempty"`
 }
 
+// SUEFI
 type SUEFI struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
+// AssetTag is used to hold the Asset Tag certificate provisioned by VS for the host
 type AssetTag struct {
 	TagCertificate X509AttributeCertificate `json:"tag_certificate"`
 }
@@ -172,6 +191,7 @@ type AttrObjects struct {
 	KVPair TagKvAttribute `json:"objects"`
 }
 
+// TagKvAttribute struct is the key-value asset-tag attributes
 type TagKvAttribute struct {
 	Key   string `json:"name"`
 	Value string `json:"value"`
