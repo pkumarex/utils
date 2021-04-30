@@ -144,11 +144,7 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 		for _, condition := range flavorTemplate.Condition {
 			conditionEval = true
 			flavorPartCondition := flavorTemplateConditions[condition]
-			expectedData, err := jsonquery.Query(oldFlavorPartJson, flavorPartCondition)
-			if err != nil {
-				fmt.Println("Error when querying the oldFlavorPartJson")
-				os.Exit(1)
-			}
+			expectedData, _ := jsonquery.Query(oldFlavorPartJson, flavorPartCondition)
 			if expectedData == nil {
 				conditionEval = false
 				break
