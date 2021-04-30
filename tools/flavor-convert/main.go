@@ -180,14 +180,16 @@ func checkIfValidFile(filename string) (bool, error) {
 
 //main method implements migration of old format of flavor part to new format
 func main() {
+	var versionFlag bool
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part folder path")
 	flavorTemplateFilePath := flag.String("f", "", "flavor templates folder path")
-	versionFlag := flag.Bool("version", false, "Print the current version and exit")
+	flag.BoolVar(&versionFlag, "version", false, "Print the current version and exit")
+	flag.BoolVar(&versionFlag, "v", false, "Print the current version and exit - short alternative")
 	signingKeyFilePath := flag.String("k", "", "signing-key file")
 
 	// Showing useful information when the user enters the -h|--help option
 	flag.Usage = func() {
-		if len(os.Args) <= 2 && !*versionFlag && *oldFlavorPartFilePath == "" &&
+		if len(os.Args) <= 2 && !versionFlag && *oldFlavorPartFilePath == "" &&
 			*flavorTemplateFilePath == "" {
 			fmt.Println(HelpStr)
 		} else {
@@ -198,12 +200,12 @@ func main() {
 	flag.Parse()
 
 	// Show the current version when the user enters the -version option
-	if *versionFlag && *oldFlavorPartFilePath != "" &&
+	if versionFlag && *oldFlavorPartFilePath != "" &&
 		*flavorTemplateFilePath != "" {
 		fmt.Println("Invalid Command Usage")
 		fmt.Printf(HelpStr)
 		os.Exit(1)
-	} else if *versionFlag && *oldFlavorPartFilePath == "" &&
+	} else if versionFlag && *oldFlavorPartFilePath == "" &&
 		*flavorTemplateFilePath == "" {
 		fmt.Println("Current build version: ", BuildVersion)
 		os.Exit(1)
