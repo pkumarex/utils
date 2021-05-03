@@ -48,7 +48,17 @@ git clone $INTEL_SECL_GIT
 echo "Inserting the basic flavor templates to DB"
 
 FILE='/tmp/listofbasictemplates.txt'
+if test -f $FILE; then
+  echo "Removing the existing $FILE..."
+  rm -f $FILE
+fi
+
 ls $BASIC_TEMPLATES_TO_INSERT > $FILE
+#Checking the file exists with data. If not, throw error and exit from script
+if ! [ -s $FILE ];then
+    echo "There are no templates present in local machine to upload to DB and Hence EXIT"
+    exit
+fi
 
 #Check the DB for the existence of flavor_template table. If yes, dropping it
 echo "Checking the DB for the existence of flavor_template table"
