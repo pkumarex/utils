@@ -246,6 +246,14 @@ FILE='/tmp/listofoldflavorjson.txt'
 ls $OLD_FLAVORS_DIR > $FILE
 
 while read line; do
+#Collecting required data
+id=`cat ${OLD_FLAVORS_DIR}${line} | jq '.signed_flavors['${index}'].flavor.meta.id'`
+#Removing double quotes from ID
+newid=`echo $id | sed 's/^.\(.*\).$/\1/'`
+newflavor_part=`cat ${OLD_FLAVORS_DIR}${line} | jq '.signed_flavors['${index}'].flavor.meta.description.flavor_part'`
+created_at=$(date --rfc-3339=ns)
+
+if [ $newflavor_part != '"SOFTWARE"' ] ; then
 if [ $TAG ] ; then
 ConvertedData=$($TOOL_DIR/utils/tools/flavor-convert/flavor-convert-${TAG} -o ${OLD_FLAVORS_DIR}${line} -f $TEMPLATE_DIR -k ${SIGNING_CERT_DIR}flavor-signing.key)
 else
@@ -256,16 +264,12 @@ convertedFlavor=$(echo $ConvertedData | cut -f1 -d@)
 newsignature=$(echo $ConvertedData | cut -f2 -d@)
 
 #Upload the new flavor back to the DB
-id=`cat ${OLD_FLAVORS_DIR}${line} | jq '.signed_flavors['${index}'].flavor.meta.id'`
-label=`cat ${OLD_FLAVORS_DIR}${line} | jq '.signed_flavors['${index}'].flavor.meta.description.label'`
-newflavor_part=`cat ${OLD_FLAVORS_DIR}${line} | jq '.signed_flavors['${index}'].flavor.meta.description.flavor_part'`
-newlabel=`echo $label | sed 's/^.\(.*\).$/\1/'`
-newid=`echo $id | sed 's/^.\(.*\).$/\1/'`
-created_at=$(date --rfc-3339=ns)
-
 psql -h $HVS_DB_HOSTNAME -p $HVS_DB_PORT -U $HVS_DB_USERNAME -d $HVS_DB_NAME <<EOF
 UPDATE flavor SET content='${convertedFlavor}',created_at='${created_at}',signature='${newsignature}' WHERE id='${newid}';
 EOF
+else
+echo "Skipping Flavor conversion for SOFTWARE flavor type"
+fi
 
 done < $FILE
 
