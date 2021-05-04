@@ -240,6 +240,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if len(templates) <= 0 {
+		fmt.Println("No flavor templates are matched with the old flavor part")
+		os.Exit(1)
+	}
+
 	var oldFlavorPart OldFlavorPart
 
 	//unmarshaling the old flavor part file into OldFlavorPart struct
@@ -498,12 +503,14 @@ func updateDescription(description map[string]interface{}, meta Meta, hardware *
 		description[model.OsVersion] = meta.Description.OsVersion
 		description[model.VmmName] = meta.Description.VmmName
 		description[model.VmmVersion] = meta.Description.VmmVersion
+		description[model.TpmVersion] = meta.Description.TpmVersion
 	case HostUniqueFlavor:
 		description[model.HardwareUUID] = meta.Description.HardwareUUID
 		description[model.BiosName] = meta.Description.BiosName
 		description[model.BiosVersion] = meta.Description.BiosVersion
 		description[model.OsName] = meta.Description.OsName
 		description[model.OsVersion] = meta.Description.OsVersion
+		description[model.TpmVersion] = meta.Description.TpmVersion
 	}
 
 	if hardware != nil {
