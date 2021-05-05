@@ -87,7 +87,7 @@ Available Command:
 `
 )
 
-var BuildVersion string
+var buildVersion string
 
 // To map the conditions in the flavor template with old flavor part
 var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*[text()='true']": "//meta/description/tboot_installed//*[text()='true']",
@@ -163,15 +163,15 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 }
 
 // checkIfValidFile method is used to check if the given input file path is valid or not
-func checkIfValidFile(filename string) (bool, error) {
+func checkIfValidFile(fileName string) (bool, error) {
 	// Checking if the input file is json
-	if fileExtension := filepath.Ext(filename); fileExtension != ".json" {
-		return false, fmt.Errorf("File '%s' is not json", filename)
+	if fileExtension := filepath.Ext(fileName); fileExtension != ".json" {
+		return false, fmt.Errorf("File '%s' is not json", fileName)
 	}
 
 	// Checking if filepath entered belongs to an existing file
-	if _, err := os.Stat(filename); err != nil && os.IsNotExist(err) {
-		return false, fmt.Errorf("File %s does not exist", filename)
+	if _, err := os.Stat(fileName); err != nil && os.IsNotExist(err) {
+		return false, fmt.Errorf("File %s does not exist", fileName)
 	}
 
 	// returns true if this is a valid file
@@ -207,7 +207,7 @@ func main() {
 		os.Exit(1)
 	} else if versionFlag && *oldFlavorPartFilePath == "" &&
 		*flavorTemplateFilePath == "" {
-		fmt.Println("Current build version: ", BuildVersion)
+		fmt.Println("Current build version: ", buildVersion)
 		os.Exit(1)
 	} else if *oldFlavorPartFilePath == "" {
 		// Checks for the file data that was entered by the user
@@ -353,13 +353,13 @@ func main() {
 }
 
 // updatePcrSection method is used to update the pcr section in new flavor part
-func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string, vendor string) []types.FlavorPcrs {
+func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsMap map[int]string, vendor string) []types.FlavorPcrs {
 	var newFlavorPcrs []types.FlavorPcrs
-	newFlavorPcrs = make([]types.FlavorPcrs, len(pcrsmap))
+	newFlavorPcrs = make([]types.FlavorPcrs, len(pcrsMap))
 
 	for bank, pcrMap := range Pcrs {
 		for index, rule := range rules {
-			for mapIndex, templateBank := range pcrsmap {
+			for mapIndex, templateBank := range pcrsMap {
 				if mapIndex != rule.Pcr.Index {
 					continue
 				}
@@ -402,27 +402,27 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 
 // getPcrRules method is used to get the pcr rules defined in the flavor template
 func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules, map[int]string) {
-	pcrsmap := make(map[int]string)
+	pcrsMap := make(map[int]string)
 	var rules []hvs.PcrRules
 
 	if flavorName == PlatformFlavor && template.FlavorParts.Platform != nil {
 		for _, rules := range template.FlavorParts.Platform.PcrRules {
-			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+			pcrsMap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
 		rules = template.FlavorParts.Platform.PcrRules
-		return rules, pcrsmap
+		return rules, pcrsMap
 	} else if flavorName == OsFlavor && template.FlavorParts.OS != nil {
 		for _, rules := range template.FlavorParts.OS.PcrRules {
-			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+			pcrsMap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
 		rules = template.FlavorParts.OS.PcrRules
-		return rules, pcrsmap
+		return rules, pcrsMap
 	} else if flavorName == HostUniqueFlavor && template.FlavorParts.HostUnique != nil {
 		for _, rules := range template.FlavorParts.HostUnique.PcrRules {
-			pcrsmap[rules.Pcr.Index] = rules.Pcr.Bank
+			pcrsMap[rules.Pcr.Index] = rules.Pcr.Bank
 		}
 		rules = template.FlavorParts.HostUnique.PcrRules
-		return rules, pcrsmap
+		return rules, pcrsMap
 	}
 
 	return nil, nil
