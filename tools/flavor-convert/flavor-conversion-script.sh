@@ -25,6 +25,15 @@ INTEL_SECL_GIT=https://github.com/pkumarex/intel-secl.git
 #exporting papassfile which contains DB password
 export PGPASSFILE=/home/.pgpass
 
+#Initial check to make sure DB is accessible
+psql -h $HVS_DB_HOSTNAME -p $HVS_DB_PORT -U $HVS_DB_USERNAME -d $HVS_DB_NAME <<EOF
+EOF
+
+if [ $? -ne 0 ]; then
+   echo "Accessing DB is failed. Hence stopping the script"
+   exit
+fi
+
 #Creating the required directories and removing older ones if exists
 for directory in $TOOL_DIR $TEMPLATES_CLONE_DIR $TEMPLATE_DIR $OLD_FLAVORS_DIR $SIGNING_CERT_DIR; do
 if [ -d $directory ]; then
