@@ -88,6 +88,7 @@ type FlavorMeasurement struct {
 
 type MeasurementType string
 
+// MeasurementType constants
 const (
 	MeasurementTypeFile    MeasurementType = "fileMeasurementType"
 	MeasurementTypeDir     MeasurementType = "directoryMeasurementType"

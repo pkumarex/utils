@@ -58,17 +58,23 @@ var eventIDList = map[string]string{
 }
 
 const (
+	// Vendor
 	IntelVendor  = "INTEL"
 	VmwareVendor = "VMWARE"
 
+	// Flavor
 	PlatformFlavor   = "PLATFORM"
 	OsFlavor         = "OS"
 	HostUniqueFlavor = "HOST_UNIQUE"
 
-	CbntEnabled       = "cbnt_enabled"
-	SuefiEnabled      = "suefi_enabled"
-	FlaovrTemplateIDs = "flavor_template_ids"
+	// Hardware
+	CbntEnabled  = "cbnt_enabled"
+	SuefiEnabled = "suefi_enabled"
 
+	// Flavor template
+	FlavorTemplateIDs = "flavor_template_ids"
+
+	// Help string
 	HelpStr = `Usage:
 flavor-convert <command> [argument]
 	
@@ -83,7 +89,7 @@ Available Command:
 
 var BuildVersion string
 
-//To map the conditions in the flavor template with old flavor part
+// To map the conditions in the flavor template with old flavor part
 var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*[text()='true']": "//meta/description/tboot_installed//*[text()='true']",
 	"//host_info/hardware_features/UEFI/meta/secure_boot_enabled//*[text()='true']": "//hardware/feature/SUEFI/enabled//*[text()='true']",
 	"//host_info/hardware_features/CBNT/enabled//*[text()='true']":                  "//hardware/feature/CBNT/enabled//*[text()='true']",
@@ -92,11 +98,11 @@ var flavorTemplateConditions = map[string]string{"//host_info/tboot_installed//*
 	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='2.0']":           "//meta/description/tpm_version//*[text()='2.0']",
 	"//host_info/hardware_features/TPM/meta/tpm_version//*[text()='1.2']":           "//meta/description/tpm_version//*[text()='1.2']"}
 
-//getFlavorTemplates method is used to get the flavor templates based on old flavor part file
+// getFlavorTemplates method is used to get the flavor templates based on old flavor part file
 func getFlavorTemplates(body []byte, flavorTemplateFilePath string) ([]hvs.FlavorTemplate, error) {
 	var defaultFlavorTemplates []string
 
-	//read the flavor template file
+	// read the flavor template file
 	templates, err := ioutil.ReadDir(flavorTemplateFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("Error in reading flavor template files")
@@ -119,7 +125,7 @@ func getFlavorTemplates(body []byte, flavorTemplateFilePath string) ([]hvs.Flavo
 	return filteredTemplate, nil
 }
 
-//findTemplatesToApply method is used to find the correct templates to apply to convert flavor part
+// findTemplatesToApply method is used to find the correct templates to apply to convert flavor part
 func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string) ([]hvs.FlavorTemplate, error) {
 	var filteredTemplates []hvs.FlavorTemplate
 	var conditionEval bool
@@ -131,7 +137,6 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 
 	for _, template := range defaultFlavorTemplates {
 		flavorTemplate := hvs.FlavorTemplate{}
-
 		err := json.Unmarshal([]byte(template), &flavorTemplate)
 		if err != nil {
 			return nil, fmt.Errorf("Error in unmarshaling the flavor template")
@@ -140,7 +145,6 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 			continue
 		}
 		conditionEval = false
-
 		for _, condition := range flavorTemplate.Condition {
 			conditionEval = true
 			flavorPartCondition := flavorTemplateConditions[condition]
@@ -158,7 +162,7 @@ func findTemplatesToApply(oldFlavorPart []byte, defaultFlavorTemplates []string)
 	return filteredTemplates, nil
 }
 
-//checkIfValidFile method is used to check if the given input file path is valid or not
+// checkIfValidFile method is used to check if the given input file path is valid or not
 func checkIfValidFile(filename string) (bool, error) {
 	// Checking if the input file is json
 	if fileExtension := filepath.Ext(filename); fileExtension != ".json" {
@@ -174,7 +178,7 @@ func checkIfValidFile(filename string) (bool, error) {
 	return true, nil
 }
 
-//main method implements migration of old format of flavor part to new format
+// main method implements migration of old format of flavor part to new format
 func main() {
 	var versionFlag bool
 	oldFlavorPartFilePath := flag.String("o", "", "old flavor part folder path")
@@ -195,7 +199,7 @@ func main() {
 	}
 	flag.Parse()
 
-	// Show the current version when the user enters the -version option
+	// Show the current version when the user enters the version option
 	if versionFlag && *oldFlavorPartFilePath != "" &&
 		*flavorTemplateFilePath != "" {
 		fmt.Println("Invalid Command Usage")
@@ -226,20 +230,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	//reading the data from oldFlavorPartFilePath
+	// reading the data from oldFlavorPartFilePath
 	body, err := ioutil.ReadFile(*oldFlavorPartFilePath)
 	if err != nil {
 		fmt.Println("Error in reading the old flavor part file data")
 		os.Exit(1)
 	}
 
-	//get the flavor template based on old flavor part file
+	// get the flavor template based on old flavor part file
 	templates, err := getFlavorTemplates(body, *flavorTemplateFilePath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 	if len(templates) <= 0 {
 		fmt.Println("No flavor templates are matched with the old flavor part")
 		os.Exit(1)
@@ -247,7 +250,7 @@ func main() {
 
 	var oldFlavorPart OldFlavorPart
 
-	//unmarshaling the old flavor part file into OldFlavorPart struct
+	// unmarshaling the old flavor part file into OldFlavorPart struct
 	err = json.Unmarshal(body, &oldFlavorPart)
 	if err != nil {
 		fmt.Println("Error in unmarshaling the old flavor part file", err)
@@ -256,10 +259,8 @@ func main() {
 
 	var newFlavor []hvs.Flavor
 	newFlavor = make([]hvs.Flavor, len(oldFlavorPart.SignedFlavor))
-
 	for flavorIndex, flavor := range oldFlavorPart.SignedFlavor {
-
-		//Updating meta section
+		// Updating meta section
 		copier.Copy(&newFlavor[flavorIndex].Meta, &flavor.Flavor.Meta)
 		if flavor.Flavor.Meta.Vendor == IntelVendor {
 			newFlavor[flavorIndex].Meta.Vendor = constants.VendorIntel
@@ -269,50 +270,50 @@ func main() {
 			newFlavor[flavorIndex].Meta.Vendor = constants.VendorUnknown
 		}
 
-		//Update description
+		// Update description
 		var description = make(map[string]interface{})
 		description = updateDescription(description, flavor.Flavor.Meta, flavor.Flavor.Hardware)
 		newFlavor[flavorIndex].Meta.Description = description
 
-		//Updating BIOS section
+		// Updating BIOS section
 		if flavor.Flavor.Bios != nil {
 			newFlavor[flavorIndex].Bios = new(model.Bios)
 			copier.Copy(newFlavor[flavorIndex].Bios, flavor.Flavor.Bios)
 		}
 
-		//Updating Hardware section
+		// Updating Hardware section
 		if flavor.Flavor.Hardware != nil {
 			newFlavor[flavorIndex].Hardware = new(model.Hardware)
 			copier.Copy(newFlavor[flavorIndex].Hardware, flavor.Flavor.Hardware)
 
-			//TXT
+			// TXT
 			newFlavor[flavorIndex].Hardware.Feature.TXT.Supported = newFlavor[flavorIndex].Hardware.Feature.TXT.Enabled
 
-			//TPM
+			// TPM
 			newFlavor[flavorIndex].Hardware.Feature.TPM.Supported = newFlavor[flavorIndex].Hardware.Feature.TPM.Enabled
 			newFlavor[flavorIndex].Hardware.Feature.TPM.Meta.TPMVersion = flavor.Flavor.Hardware.Feature.TPM.Version
 			newFlavor[flavorIndex].Hardware.Feature.TPM.Meta.PCRBanks = flavor.Flavor.Hardware.Feature.TPM.PcrBanks
 
-			//CBNT
+			// CBNT
 			if flavor.Flavor.Hardware.Feature.CBNT != nil {
 				newFlavor[flavorIndex].Hardware.Feature.CBNT.Supported = newFlavor[flavorIndex].Hardware.Feature.CBNT.Enabled
 				newFlavor[flavorIndex].Hardware.Feature.CBNT.Meta.Profile = flavor.Flavor.Hardware.Feature.CBNT.Profile
 			}
 
-			//UEFI
+			// UEFI
 			if flavor.Flavor.Hardware.Feature.SUEFI != nil {
 				newFlavor[flavorIndex].Hardware.Feature.UEFI.Supported = newFlavor[flavorIndex].Hardware.Feature.UEFI.Enabled
 				newFlavor[flavorIndex].Hardware.Feature.UEFI.Meta.SecureBootEnabled = flavor.Flavor.Hardware.Feature.SUEFI.Enabled
 			}
 		}
 
-		//Updating external section
+		// Updating external section
 		if flavor.Flavor.External != nil {
 			newFlavor[flavorIndex].External = new(model.External)
 			copier.Copy(newFlavor[flavorIndex].External, flavor.Flavor.External)
 		}
 
-		//Updating Software section
+		// Updating Software section
 		if flavor.Flavor.Software != nil {
 			newFlavor[flavorIndex].Software = new(model.Software)
 			copier.Copy(newFlavor[flavorIndex].Software, flavor.Flavor.Software)
@@ -326,13 +327,13 @@ func main() {
 				flavorname := flavor.Flavor.Meta.Description.FlavorPart
 				rules, pcrsmap := getPcrRules(flavorname, template)
 				if rules != nil && pcrsmap != nil {
-					//Update PCR section
+					// Update PCR section
 					newFlavor[flavorIndex].Pcrs = updatePcrSection(flavor.Flavor.Pcrs, rules, pcrsmap, flavor.Flavor.Meta.Vendor)
 				} else {
 					continue
 				}
 			}
-			newFlavor[flavorIndex].Meta.Description[FlaovrTemplateIDs] = flavorTemplateIDList
+			newFlavor[flavorIndex].Meta.Description[FlavorTemplateIDs] = flavorTemplateIDList
 		}
 		flavorSection, err := json.Marshal(newFlavor[flavorIndex])
 		if err != nil {
@@ -340,19 +341,18 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println("\n" + string(flavorSection))
-
 		signedFlavor, err := model.NewSignedFlavor(&newFlavor[flavorIndex], flavorSignKey)
 		if err != nil {
 			fmt.Println("Error in getting the signed flavor")
 			os.Exit(1)
 		}
 
-		//used "@" delimiter to split the flavor and signature value in script
+		// "@" delimiter used to split the flavor and signature value in script
 		fmt.Println("@" + signedFlavor.Signature)
 	}
 }
 
-//updatePcrSection method is used to update the pcr section in new flavor part
+// updatePcrSection method is used to update the pcr section in new flavor part
 func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pcrsmap map[int]string, vendor string) []types.FlavorPcrs {
 	var newFlavorPcrs []types.FlavorPcrs
 	newFlavorPcrs = make([]types.FlavorPcrs, len(pcrsmap))
@@ -400,7 +400,7 @@ func updatePcrSection(Pcrs map[string]map[string]PcrEx, rules []hvs.PcrRules, pc
 	return newFlavorPcrs
 }
 
-//getPcrRules method is used to get the pcr rules defined in the flavor template
+// getPcrRules method is used to get the pcr rules defined in the flavor template
 func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules, map[int]string) {
 	pcrsmap := make(map[int]string)
 	var rules []hvs.PcrRules
@@ -428,10 +428,9 @@ func getPcrRules(flavorName string, template hvs.FlavorTemplate) ([]hvs.PcrRules
 	return nil, nil
 }
 
-//updateTpmEvents method is used to update the tpm events
+// updateTpmEvents method is used to update the tpm events
 func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog, vendor string) []types.EventLog {
-
-	//Updating the old event format into new event format
+	// Updating the old event format into new event format
 	for eventIndex, oldEvents := range expectedPcrEvent {
 		if vendor == IntelVendor {
 			newTpmEvents[eventIndex].TypeName = oldEvents.Label
@@ -466,7 +465,7 @@ func updateTpmEvents(expectedPcrEvent []EventLog, newTpmEvents []types.EventLog,
 	return newTpmEvents
 }
 
-//getPrivateKey method is used to get the private key from the inputkeypath if present else generates the newkey
+// getPrivateKey method is used to get the private key from the inputkeypath if present else generates the newkey
 func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 	var flavorSignKey *rsa.PrivateKey
 	var err error
@@ -484,10 +483,11 @@ func getPrivateKey(signingKeyFilePath string) *rsa.PrivateKey {
 			os.Exit(1)
 		}
 	}
+
 	return flavorSignKey
 }
 
-//updateDescription method is used to update the description section in flavor
+// updateDescription method is used to update the description section in flavor
 func updateDescription(description map[string]interface{}, meta Meta, hardware *Hardware) map[string]interface{} {
 	description[model.TbootInstalled] = meta.Description.TbootInstalled
 	description[model.Label] = meta.Description.Label
